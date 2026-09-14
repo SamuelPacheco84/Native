@@ -1,0 +1,14 @@
+{
+  "name": "nativa-productos-naturales",
+  "version": "1.0.0",
+  "description": "Tienda de productos naturales y artesanales NATIVA: miel, granola, tés, infusiones, aceites, vinagres y mermeladas 100% conscientes.",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "node -e \"console.log('Build ready')\""
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}

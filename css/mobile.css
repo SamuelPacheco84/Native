@@ -1,7 +1,36 @@
+/* ==========================================================================
+   NATIVA - Mobile Stylesheet (max-width: 768px)
+   Reutiliza el mismo comportamiento responsive base
+   ========================================================================== */
+
 /* Navbar */
-#navbar .logo{
+#navbar .nav-wrapper {
+  flex-direction: column;
+  gap: 14px;
+  padding: 14px 0;
+  text-align: center;
+}
+
+#navbar .logo {
   float: none;
   text-align: center;
+}
+
+#navbar .logo a {
+  justify-content: center;
+}
+
+.nav-search {
+  width: 100%;
+  max-width: 100%;
+}
+
+#navbar ul#main-nav {
+  float: none;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
 }
 
 #navbar ul, 
@@ -10,74 +39,254 @@
 }
 
 #navbar ul li a {
-  padding: 5px;
+  padding: 8px 12px;
+  font-size: 12px;
 }
 
-/* Showcase */
+.nav-action-btn {
+  padding: 8px 12px;
+  font-size: 12px;
+}
+
+/* Showcase & Carrusel */
 #showcase-home {
-  height: 30vh;
-  padding: 10px;
+  min-height: auto;
+  padding: 20px 10px;
+}
+
+.carousel-container {
+  padding: 0 5px;
 }
 
 #showcase .showcase-banner,
-#showcase-home .showcase-banner{
-  /* background: var(--secondary-color); */
-  height: 100%;
-  width: 80%;
+#showcase-home .showcase-banner {
+  flex-direction: column;
+  padding: 26px 18px;
+  width: 100%;
+  text-align: center;
+  gap: 20px;
+}
+
+.slide-content-text {
+  max-width: 100%;
 }
 
 #showcase h1,
-#showcase-home h1 {
-  font-size: 30px;
-  line-height: 1em;
-  padding: 10px;
+#showcase-home h1,
+.slide-content-text h1.subpage {
+  font-size: 26px;
+  line-height: 1.2;
+  padding: 6px 0;
 }
 
 #showcase p,
-#showcase-home p {
-  font-size: 18px;
+#showcase-home p,
+.slide-content-text p.large {
+  font-size: 17px;
 }
 
-/* Portfolio */
+.slide-quote {
+  font-size: 14px;
+}
+
+.slide-media-visual {
+  max-width: 100%;
+}
+
+.slide-media-visual img {
+  max-height: 220px;
+}
+
+.carousel-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 13px;
+}
+
+.carousel-btn.prev {
+  left: -4px;
+}
+
+.carousel-btn.next {
+  right: -4px;
+}
+
+/* Portfolio / Productos */
+#portfolio {
+  padding-top: 30px;
+  padding-bottom: 50px;
+}
+
+.section-header h2 {
+  font-size: 24px;
+}
+
+.section-header p.section-subtitle {
+  font-size: 15px;
+}
+
 #portfolio .portfolio-nav {
-  display: none;
+  margin-bottom: 20px;
+}
+
+#portfolio ul {
+  gap: 6px;
+}
+
+#portfolio ul li a {
+  padding: 8px 14px;
+  font-size: 12px;
 }
 
 .box {
   float: none;
   width: 100%;
-  padding:10px;
+  padding: 10px 0;
+}
+
+.product-img-wrap {
+  height: 200px;
 }
 
 /* Contact */
 #contact {
-  height: 100%;
+  height: auto;
+  padding-top: 30px;
+  padding-bottom: 50px;
 }
 
 #contact .box-contact-features {
   float: none;
   width: 100%;
+  padding: 15px 0;
 }
 
-#contact .features-contact .box-form{
+#contact .features-contact .box-form {
   float: none;
   width: 100%;
+  padding: 15px 0;
 }
 
-/* Single Project */
+/* Single Project / Detalle de Producto Responsive */
 .box-portfolio {
   float: none;
   width: 100%;
+  padding: 10px 0;
 }
 
+.product-breadcrumb-bar {
+  margin-top: 130px;
+}
+
+.product-detail-grid {
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+.product-gallery-image-wrap {
+  height: 270px;
+  padding: 16px;
+}
+
+.product-gallery-card {
+  padding: 20px 16px;
+}
+
+.product-info-column {
+  padding: 24px 20px;
+}
+
+.product-main-title {
+  font-size: 24px;
+}
+
+.product-price-amount {
+  font-size: 24px;
+}
+
+.product-qty-row {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.qty-picker {
+  justify-content: center;
+}
+
+.btn-add-cart-detail {
+  width: 100%;
+}
+
+.product-trust-strip {
+  grid-template-columns: 1fr;
+  gap: 8px;
+}
+
+.product-extended-details {
+  grid-template-columns: 1fr;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.extended-card {
+  padding: 22px 18px;
+}
+
+.product-nav-strip {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 12px;
+}
+
+.product-nav-strip .btn-nav-prod {
+  justify-content: center;
+}
 
 /* Footer */
 #main-footer {
   text-align: center;
+  padding: 25px 0;
+}
+
+#main-footer .footer-wrap {
+  flex-direction: column;
+  justify-content: center;
+  gap: 16px;
+}
+
+#main-footer .footer-brand {
+  flex-direction: column;
+  gap: 8px;
 }
 
 #main-footer p,
 #main-footer ul,
 #main-footer ul li {
   float: none;
+  justify-content: center;
+}
+
+/* WhatsApp Flotante en Móvil */
+.whatsapp-float {
+  bottom: 20px;
+  right: 20px;
+  width: 52px;
+  height: 52px;
+  padding: 0;
+}
+
+.whatsapp-float .whatsapp-icon,
+.whatsapp-float svg {
+  width: 28px;
+  height: 28px;
+}
+
+.whatsapp-float i.fab,
+.whatsapp-float i {
+  font-size: 26px;
+}
+
+/* Drawer Carrito */
+.cart-drawer {
+  max-width: 100%;
 }

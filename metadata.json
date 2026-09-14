@@ -1,0 +1,6 @@
+{
+  "name": "NATIVA | Productos Naturales y Artesanales",
+  "description": "Tienda de productos naturales y artesanales NATIVA: miel, granola, tés, infusiones, aceites, vinagres y mermeladas 100% conscientes.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

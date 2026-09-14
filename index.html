@@ -1,114 +1,1028 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Tipografía Oficial: Montserrat (Títulos, botones, navegación) y Lora (Citas y frases emocionales) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/mobile.css">
-  <title>Portafolio de Milena Hernández | Bienvenidos</title>
+  <title>NATIVA | Productos Naturales y Artesanales</title>
+  <meta name="description" content="Tienda de productos naturales y artesanales NATIVA: miel, granola, tés, infusiones, aceites, vinagres y mermeladas 100% conscientes.">
+  <meta property="og:title" content="NATIVA | Productos Naturales y Artesanales">
+  <meta property="og:description" content="Tienda de productos naturales y artesanales NATIVA: miel, granola, tés, infusiones, aceites, vinagres y mermeladas 100% conscientes.">
 </head>
 <body>
+
+  <!-- Header Verde con Buscador, Login y Carrito -->
   <header>
     <nav id="navbar">
       <div class="container">
-        <h1 class="logo"><a href="index.html">Lorem</a></h1>
-        <ul id="main-nav" class="txt-btn">
-          <li><a class="current" href="index.html">Portfolio</a></li>
-          <li><a href="contact.html">Contact</a></li>
-        </ul>
+        <div class="nav-wrapper">
+          <h1 class="logo">
+            <a href="index.html" id="brand-logo-link" aria-label="Nativa Inicio">
+              <img src="img/logo.png" alt="Nativa" class="brand-logo">
+            </a>
+          </h1>
+
+          <!-- Buscador en Header -->
+          <div class="nav-search" id="nav-search-container">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="product-search" class="search-input" placeholder="Buscar miel, tés, frutos secos, aceites..." aria-label="Buscar productos">
+            <button type="button" id="clear-search-btn" class="clear-search" aria-label="Limpiar búsqueda"><i class="fas fa-times"></i></button>
+          </div>
+
+          <!-- Navegación y Botones de Acción -->
+          <ul id="main-nav" class="txt-btn">
+            <li><a class="current" href="#portfolio" id="nav-productos"><i class="fas fa-leaf"></i> Productos</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <li>
+              <button type="button" class="nav-action-btn" id="open-login-btn" aria-label="Iniciar Sesión">
+                <i class="fas fa-user"></i> <span>Ingresar</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="nav-action-btn cart-btn-wrap" id="open-cart-btn" aria-label="Ver Carrito de Compras">
+                <i class="fas fa-shopping-cart"></i> <span>Carrito</span>
+                <span class="cart-counter" id="cart-counter-badge">0</span>
+              </button>
+            </li>
+          </ul>
+        </div>
       </div>
     </nav>
 
+    <!-- Banner Principal tipo Carrusel con fondo.png -->
     <div id="showcase-home">
-      <div class="showcase-banner">
-        <h1 class="subpage">Lorem Portfolio</h1>
-        <p class="large">This is a creative portfolio</p>
+      <div class="carousel-container">
+        <!-- Flecha Anterior -->
+        <button type="button" class="carousel-btn prev" id="carousel-prev" aria-label="Slide anterior">
+          <i class="fas fa-chevron-left"></i>
+        </button>
+
+        <!-- Viewport del Carrusel -->
+        <div class="carousel-viewport">
+          <div class="carousel-track" id="carousel-track">
+            
+            <!-- Slide 1: Producto Destacado "Té Vital" -->
+            <div class="showcase-banner carousel-slide">
+              <div class="slide-content-text">
+                <span class="slide-badge">Producto Destacado</span>
+                <h1 class="subpage">Té Vital</h1>
+                <p class="large">Energía Natural y Bienestar</p>
+                <p class="slide-quote lora-text">"Infusión revitalizante de hierbas puras y antioxidantes diseñada para activar tu mente y nutrir tu cuerpo cada mañana."</p>
+                <a href="#portfolio" class="btn btn-primary" id="btn-discover-te">
+                  <i class="fas fa-seedling"></i> Descubrir Té Vital
+                </a>
+              </div>
+              <div class="slide-media-visual">
+                <img src="img/Té Vital_ Energía Natural y Bienestar.png" alt="Té Vital: Energía Natural y Bienestar">
+              </div>
+            </div>
+
+            <!-- Slide 2: 100% Orgánico y Artesanal -->
+            <div class="showcase-banner carousel-slide">
+              <div class="slide-content-text">
+                <span class="slide-badge">100% Artesanal</span>
+                <h1 class="subpage">Cosecha Consciente</h1>
+                <p class="large">De la Tierra a Tu Mesa</p>
+                <p class="slide-quote lora-text">"Elaborado por familias campesinas y pequeños productores con respeto por los ciclos biológicos y la biodiversidad."</p>
+                <a href="#portfolio" class="btn btn-primary">
+                  <i class="fas fa-store"></i> Ver Catálogo Completo
+                </a>
+              </div>
+              <div class="slide-media-visual">
+                <img src="img/foto1.png" alt="Cosecha y Procesos Artesanales Nativa">
+              </div>
+            </div>
+
+            <!-- Slide 3: Nutrición Viva -->
+            <div class="showcase-banner carousel-slide">
+              <div class="slide-content-text">
+                <span class="slide-badge">Vida Saludable</span>
+                <h1 class="subpage">Nutrición & Armonía</h1>
+                <p class="large">Ingredientes Puros y Vivos</p>
+                <p class="slide-quote lora-text">"Sin aditivos químicos, conservantes ni endulzantes artificiales. Sabor auténtico directo de la naturaleza."</p>
+                <a href="#portfolio" class="btn btn-primary">
+                  <i class="fas fa-heart"></i> Explorar Bienestar
+                </a>
+              </div>
+              <div class="slide-media-visual">
+                <img src="img/foto2.png" alt="Bienestar y Salud Natural">
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Flecha Siguiente -->
+        <button type="button" class="carousel-btn next" id="carousel-next" aria-label="Slide siguiente">
+          <i class="fas fa-chevron-right"></i>
+        </button>
+
+        <!-- Puntos Indicadores -->
+        <div class="carousel-dots" id="carousel-dots-container">
+          <span class="dot active" data-index="0"></span>
+          <span class="dot" data-index="1"></span>
+          <span class="dot" data-index="2"></span>
+        </div>
       </div>
     </div>
-
   </header>
 
+  <!-- Sección de Contenido en Cuadrícula de Tarjetas de Producto -->
   <section id="portfolio">
     <div class="container">
+      
+      <!-- Encabezado de la Sección -->
+      <div class="section-header">
+        <h2>Nuestra Selección Artesanal</h2>
+        <p class="section-subtitle lora-text">Alimentos nobles, puros y creados con respeto por la tierra</p>
+      </div>
+
+      <!-- Filtros por Categoría -->
       <div class="portfolio-nav">
-        <ul class="txt-btn">
-          <li><a href="#">All</a></li>
-          <li><a href="#">Graphic Design</a></li>
-          <li><a href="#">Branding</a></li>
-          <li><a href="#">Logo Design</a></li>
-          <li><a href="#">Illustration</a></li>
+        <ul class="txt-btn" id="category-filters">
+          <li><a href="javascript:void(0)" class="current filter-btn" data-filter="all">Todos</a></li>
+          <li><a href="javascript:void(0)" class="filter-btn" data-filter="miel">Miel & Dulces</a></li>
+          <li><a href="javascript:void(0)" class="filter-btn" data-filter="tes">Tés & Infusiones</a></li>
+          <li><a href="javascript:void(0)" class="filter-btn" data-filter="despensa">Despensa</a></li>
+          <li><a href="javascript:void(0)" class="filter-btn" data-filter="frutos">Frutos Secos</a></li>
         </ul>
       </div>
+
+      <!-- Mensaje cuando no hay resultados de búsqueda -->
+      <div class="no-results-message" id="no-results-msg">
+        <i class="fas fa-search"></i>
+        <h3>No encontramos productos para tu búsqueda</h3>
+        <p class="lora-text">Intenta con otro término o explora nuestras categorías.</p>
+        <button type="button" class="btn btn-light" id="reset-search-btn" style="margin-top: 15px;">Ver Todos los Productos</button>
+      </div>
+
+      <!-- Fila 1 de Productos -->
       <div class="portfolio-content">
-        <div class="box">
-          <a href="portfolio-1.html">
-            <img src="img/portfolio/1-green.png" alt="">
-          </a>
+        <!-- Producto 1 -->
+        <div class="box" data-category="despensa" data-name="granola nativa artesanal">
+          <div class="product-card">
+            <span class="card-badge">Artesanal</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-1.html">
+                <img src="img/productos/Granola_Nativa.png" alt="Granola Nativa Artesanal" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Despensa Natural</span>
+              <h4 class="product-title"><a href="portfolio-1.html">Granola Nativa Artesanal</a></h4>
+              <p class="product-desc lora-text">Avena tostada a fuego lento con miel pura de abejas, semillas de chía, girasol y frutos secos crujientes.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$18.500</span>
+                <button type="button" class="btn btn-buy" data-id="prod-1" data-name="Granola Nativa Artesanal" data-price="18500" data-img="img/productos/Granola_Nativa.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-2.html">
-            <img src="img/portfolio/2-blue.png" alt="">
-          </a>
+
+        <!-- Producto 2 -->
+        <div class="box" data-category="miel" data-name="miel de montaña pura">
+          <div class="product-card">
+            <span class="card-badge">100% Pura</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-2.html">
+                <img src="img/productos/Miel_de_Montaña.png" alt="Miel de Montaña Pura" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Miel & Dulces</span>
+              <h4 class="product-title"><a href="portfolio-2.html">Miel de Montaña Pura</a></h4>
+              <p class="product-desc lora-text">Cosecha cruda y silvestre de bosque altoandino, sin pasteurizar, conservando todas sus enzimas y propiedades activas.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$22.000</span>
+                <button type="button" class="btn btn-buy" data-id="prod-2" data-name="Miel de Montaña Pura" data-price="22000" data-img="img/productos/Miel_de_Montaña.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-3.html">
-            <img src="img/portfolio/3-green.png" alt="">
-          </a>
+
+        <!-- Producto 3 -->
+        <div class="box" data-category="tes" data-name="infusión relax calma">
+          <div class="product-card">
+            <span class="card-badge promo">Popular</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-3.html">
+                <img src="img/productos/Infusión_relax.png" alt="Infusión Relax" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Tés & Infusiones</span>
+              <h4 class="product-title"><a href="portfolio-3.html">Infusión Relax y Calma</a></h4>
+              <p class="product-desc lora-text">Mezcla reconfortante de flor de manzanilla, toronjil, melisa y toques de lavanda silvestre para un descanso reparador.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$14.900</span>
+                <button type="button" class="btn btn-buy" data-id="prod-3" data-name="Infusión Relax y Calma" data-price="14900" data-img="img/productos/Infusión_relax.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Fila 2 de Productos -->
       <div class="portfolio-content">
-        <div class="box">
-          <a href="portfolio-4.html">
-            <img src="img/portfolio/4-purple.png" alt="">
-          </a>
+        <!-- Producto 4 -->
+        <div class="box" data-category="miel" data-name="mermelada artesanal de frutos silvestres">
+          <div class="product-card">
+            <span class="card-badge">Sin Conservantes</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-4.html">
+                <img src="img/productos/MERMELADA ARTESANAL DE FRUTOS SILVESTRES.png" alt="Mermelada de Frutos Silvestres" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Miel & Dulces</span>
+              <h4 class="product-title"><a href="portfolio-4.html">Mermelada Frutos Silvestres</a></h4>
+              <p class="product-desc lora-text">Arándanos, frambuesas y moras recolectadas a mano, con cocción suave en pailas de cobre y endulzadas con panela pura.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$16.800</span>
+                <button type="button" class="btn btn-buy" data-id="prod-4" data-name="Mermelada Frutos Silvestres" data-price="16800" data-img="img/productos/MERMELADA ARTESANAL DE FRUTOS SILVESTRES.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-5.html">
-            <img src="img/portfolio/5-green.png" alt="">
-          </a>
+
+        <!-- Producto 5 -->
+        <div class="box" data-category="despensa" data-name="aceite de coco extravirgen prensado frio">
+          <div class="product-card">
+            <span class="card-badge">Prensado en Frío</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-5.html">
+                <img src="img/productos/ACEITE  DECOCO EXTRAVIRGEN.png.png" alt="Aceite de Coco Extravirgen" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Despensa Natural</span>
+              <h4 class="product-title"><a href="portfolio-5.html">Aceite de Coco Extravirgen</a></h4>
+              <p class="product-desc lora-text">100% puro y virgen de primera prensada en frío. Aroma suave, ideal para gastronomía consciente y cuidado de la piel.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$24.500</span>
+                <button type="button" class="btn btn-buy" data-id="prod-5" data-name="Aceite de Coco Extravirgen" data-price="24500" data-img="img/productos/ACEITE  DECOCO EXTRAVIRGEN.png.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-6.html">
-            <img src="img/portfolio/6-purple.png" alt="">
-          </a>
+
+        <!-- Producto 6 -->
+        <div class="box" data-category="despensa" data-name="vinagre de manzana artesanal madre probioticos">
+          <div class="product-card">
+            <span class="card-badge">Con Madre Viva</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-6.html">
+                <img src="img/productos/VINAGRE DE MANZANA ARTESANAL.png" alt="Vinagre de Manzana Artesanal" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Despensa Natural</span>
+              <h4 class="product-title"><a href="portfolio-6.html">Vinagre de Manzana Artesanal</a></h4>
+              <p class="product-desc lora-text">Fermentación natural viva, crudo y sin filtrar. Conserva la 'madre' del vinagre con enzimas activas y probióticos benéficos.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$15.600</span>
+                <button type="button" class="btn btn-buy" data-id="prod-6" data-name="Vinagre de Manzana Artesanal" data-price="15600" data-img="img/productos/VINAGRE DE MANZANA ARTESANAL.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Fila 3 de Productos -->
       <div class="portfolio-content">
-        <div class="box">
-          <a href="portfolio-7.html">
-            <img src="img/portfolio/7-green.png" alt="">
-          </a>
+        <!-- Producto 7 -->
+        <div class="box" data-category="miel" data-name="jarabe de arce puro maple syrup">
+          <div class="product-card">
+            <span class="card-badge">Grado A</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-7.html">
+                <img src="img/productos/JARABE DE ARCE  PURO.png" alt="Jarabe de Arce Puro" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Miel & Dulces</span>
+              <h4 class="product-title"><a href="portfolio-7.html">Jarabe de Arce Puro</a></h4>
+              <p class="product-desc lora-text">Savia pura evaporada artesanalmente de bosques sustentables. Sabor ambarino delicado con notas a caramelo natural.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$28.000</span>
+                <button type="button" class="btn btn-buy" data-id="prod-7" data-name="Jarabe de Arce Puro" data-price="28000" data-img="img/productos/JARABE DE ARCE  PURO.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-8.html">
-            <img src="img/portfolio/8-blue.png" alt="">
-          </a>
+
+        <!-- Producto 8 -->
+        <div class="box" data-category="despensa" data-name="azúcar mascabado orgánico panela">
+          <div class="product-card">
+            <span class="card-badge">No Refinado</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-8.html">
+                <img src="img/productos/AZUCAR MASCABADO ORGÁNICO.png" alt="Azúcar Mascabado Orgánico" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Despensa Natural</span>
+              <h4 class="product-title"><a href="portfolio-8.html">Azúcar Mascabado Orgánico</a></h4>
+              <p class="product-desc lora-text">Azúcar integral de caña virgen que retiene su melaza natural, rica en potasio, hierro, calcio y magnesio.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$11.200</span>
+                <button type="button" class="btn btn-buy" data-id="prod-8" data-name="Azúcar Mascabado Orgánico" data-price="11200" data-img="img/productos/AZUCAR MASCABADO ORGÁNICO.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="box">
-          <a href="portfolio-9.html">
-            <img src="img/portfolio/9-green.png" alt="">
-          </a>
+
+        <!-- Producto 9 -->
+        <div class="box" data-category="frutos" data-name="nueces mariposa naturales omega 3">
+          <div class="product-card">
+            <span class="card-badge">Cosecha Fresca</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-9.html">
+                <img src="img/productos/NUECES MARIPOSA NATURALES.png" alt="Nueces Mariposa Naturales" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Frutos Secos</span>
+              <h4 class="product-title"><a href="portfolio-9.html">Nueces Mariposa Naturales</a></h4>
+              <p class="product-desc lora-text">Mitades enteras seleccionadas de calibre extra grande. Crocantes, sin sal añadida y repletas de ácidos grasos Omega-3.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$19.800</span>
+                <button type="button" class="btn btn-buy" data-id="prod-9" data-name="Nueces Mariposa Naturales" data-price="19800" data-img="img/productos/NUECES MARIPOSA NATURALES.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- Fila 4 de Productos -->
+      <div class="portfolio-content">
+        <!-- Producto 10 -->
+        <div class="box" data-category="frutos" data-name="avellanas enteras tostadas frutos secos">
+          <div class="product-card">
+            <span class="card-badge">Tueste Lento</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-1.html">
+                <img src="img/productos/AVELLANAS ENTERAS TOSTADAS.png" alt="Avellanas Enteras Tostadas" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Frutos Secos</span>
+              <h4 class="product-title"><a href="portfolio-1.html">Avellanas Enteras Tostadas</a></h4>
+              <p class="product-desc lora-text">Avellanas europeas tostadas con calor seco sin aceites agregados. Aroma tostado irresistible y fuente natural de vitamina E.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$21.500</span>
+                <button type="button" class="btn btn-buy" data-id="prod-10" data-name="Avellanas Enteras Tostadas" data-price="21500" data-img="img/productos/AVELLANAS ENTERAS TOSTADAS.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 11 -->
+        <div class="box" data-category="despensa" data-name="galletas de avena y miel artesanal">
+          <div class="product-card">
+            <span class="card-badge">Horneado Diario</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-2.html">
+                <img src="img/productos/GALLETAS DE AVENA Y MIEL.png" alt="Galletas de Avena y Miel" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Despensa Natural</span>
+              <h4 class="product-title"><a href="portfolio-2.html">Galletas de Avena y Miel</a></h4>
+              <p class="product-desc lora-text">Receta tradicional horneada con copos enteros de avena, miel pura de abejas y canela. Textura crocante y energía sana.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$12.500</span>
+                <button type="button" class="btn btn-buy" data-id="prod-11" data-name="Galletas de Avena y Miel" data-price="12500" data-img="img/productos/GALLETAS DE AVENA Y MIEL.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Producto 12: Té Vital Blend Especial -->
+        <div class="box" data-category="tes" data-name="té vital blend energía natural te verde">
+          <div class="product-card">
+            <span class="card-badge promo">Destacado</span>
+            <div class="product-img-wrap">
+              <a href="portfolio-3.html">
+                <img src="img/Té Vital_ Energía Natural y Bienestar.png" alt="Té Vital Blend Energético" loading="lazy">
+              </a>
+            </div>
+            <div class="product-info">
+              <span class="product-cat">Tés & Infusiones</span>
+              <h4 class="product-title"><a href="portfolio-3.html">Té Vital Blend Energético</a></h4>
+              <p class="product-desc lora-text">Nuestra fórmula insignia con té verde premium, jengibre fresco, cáscara de naranja y hierbas tonificantes.</p>
+              <div class="product-bottom-row">
+                <span class="product-price">$16.500</span>
+                <button type="button" class="btn btn-buy" data-id="prod-12" data-name="Té Vital Blend Energético" data-price="16500" data-img="img/Té Vital_ Energía Natural y Bienestar.png">
+                  <i class="fas fa-shopping-bag"></i> Comprar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </section>
 
   <hr>
 
+  <!-- Footer Oficial -->
   <footer id="main-footer">
     <div class="container">
-      <p class="small">Lorem Portfolio 2020 &copy;</p>
-      <!-- <div class="social"> -->
+      <div class="footer-wrap">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="Nativa" class="footer-logo">
+          <p class="small">NATIVA &copy; 2026. Alimentos naturales y conscientes. Todos los derechos reservados.</p>
+        </div>
         <ul>
-          <li><a href="#"><i class="fab fa-facebook-f"></i></a></li>
-          <li><a href="#"><i class="fab fa-twitter"></i></a></li>
-          <li><a href="#"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+          <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+          <li><a href="https://wa.me/573005427742" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></li>
         </ul>
-      <!-- </div> -->
+      </div>
     </div>
   </footer>
 
+  <!-- Botón Flotante de WhatsApp -->
+  <a href="https://wa.me/573005427742?text=Hola%20NATIVA,%20quiero%20hacer%20una%20consulta%20de%20productos%20naturales" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chatea con nosotros por WhatsApp">
+    <svg class="whatsapp-icon" viewBox="0 0 448 512" width="32" height="32" fill="currentColor" aria-hidden="true">
+      <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
+    </svg>
+  </a>
+
+  <!-- Drawer Lateral del Carrito de Compras -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de Compras">
+    <div class="cart-drawer-header">
+      <h3><i class="fas fa-shopping-cart"></i> Tu Carrito</h3>
+      <button type="button" class="close-cart" id="close-cart-btn" aria-label="Cerrar Carrito">&times;</button>
+    </div>
+    <div class="cart-drawer-body" id="cart-items-container">
+      <div class="cart-empty-state" id="cart-empty-msg">
+        <i class="fas fa-shopping-basket"></i>
+        <h4>Tu carrito está vacío</h4>
+        <p class="lora-text">Descubre nuestros productos naturales y agrega tus favoritos.</p>
+      </div>
+      <div id="cart-list"></div>
+    </div>
+    <div class="cart-drawer-footer" id="cart-footer" style="display: none;">
+      <div class="cart-subtotal-row">
+        <span>Subtotal:</span>
+        <span id="cart-total-amount">$0</span>
+      </div>
+      <a href="javascript:void(0)" class="btn btn-primary" id="checkout-whatsapp-btn" style="width: 100%; text-align: center;">
+        <i class="fab fa-whatsapp"></i> Finalizar Pedido por WhatsApp
+      </a>
+    </div>
+  </aside>
+
+  <!-- Modal de Login / Cuenta -->
+  <div class="modal-overlay" id="login-modal-overlay">
+    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
+      <div class="modal-header">
+        <h3 id="login-title"><i class="fas fa-user-circle"></i> Iniciar Sesión</h3>
+        <button type="button" class="close-modal-btn" id="close-login-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="login-form" onsubmit="event.preventDefault(); handleLoginSubmit();">
+        <div class="single-form" style="margin-bottom: 14px;">
+          <label for="login-email" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Correo Electrónico</label>
+          <input type="email" id="login-email" placeholder="tu@email.com" required style="width:100%; padding:10px 14px; border:1px solid var(--border-subtle); border-radius:6px;">
+        </div>
+        <div class="single-form" style="margin-bottom: 20px;">
+          <label for="login-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Contraseña</label>
+          <input type="password" id="login-password" placeholder="••••••••" required style="width:100%; padding:10px 14px; border:1px solid var(--border-subtle); border-radius:6px;">
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Ingresar a Nativa</button>
+        
+        <!-- O iniciar sesión con -->
+        <div class="auth-divider"><span>o iniciar sesión con:</span></div>
+        <div class="social-auth-grid">
+          <button type="button" class="btn-social google-btn" onclick="handleSocialAuth('Google')">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.36 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12s.46 3.84 1.26 5.42l4.02-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social facebook-btn" onclick="handleSocialAuth('Facebook')">
+            <i class="fab fa-facebook-f"></i>
+            <span>Facebook</span>
+          </button>
+        </div>
+
+        <p class="small lora-text" style="text-align:center; margin-top:14px; color:var(--text-muted); font-size:13px;">
+          ¿Aún no tienes cuenta? 
+          <button type="button" id="switch-to-register-btn" class="auth-switch-link">Registrarse</button>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal Flotante de Registro -->
+  <div class="modal-overlay" id="register-modal-overlay">
+    <div class="modal-dialog modal-dialog-register" role="dialog" aria-modal="true" aria-labelledby="register-title">
+      <div class="modal-header">
+        <h3 id="register-title"><i class="fas fa-user-plus"></i> Registrarse</h3>
+        <button type="button" class="close-modal-btn" id="close-register-btn" aria-label="Cerrar">&times;</button>
+      </div>
+      <form id="register-form" onsubmit="event.preventDefault(); handleRegisterSubmit();">
+        <div class="auth-form-grid">
+          <div class="single-form" style="margin-bottom: 12px;">
+            <label for="reg-nombre" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Nombre</label>
+            <input type="text" id="reg-nombre" placeholder="Tu nombre" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+          </div>
+          <div class="single-form" style="margin-bottom: 12px;">
+            <label for="reg-apellido" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Apellido</label>
+            <input type="text" id="reg-apellido" placeholder="Tu apellido" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+          </div>
+        </div>
+
+        <div class="single-form" style="margin-bottom: 12px;">
+          <label for="reg-correo" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Correo Electrónico</label>
+          <input type="email" id="reg-correo" placeholder="tu@email.com" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+        </div>
+
+        <div class="single-form" style="margin-bottom: 12px;">
+          <label for="reg-numero" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Número</label>
+          <input type="tel" id="reg-numero" placeholder="+57 300 000 0000" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+        </div>
+
+        <div class="auth-form-grid">
+          <div class="single-form" style="margin-bottom: 12px;">
+            <label for="reg-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Contraseña</label>
+            <input type="password" id="reg-password" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+          </div>
+          <div class="single-form" style="margin-bottom: 12px;">
+            <label for="reg-confirm-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Confirmar Contraseña</label>
+            <input type="password" id="reg-confirm-password" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
+          </div>
+        </div>
+
+        <div id="reg-error-msg" style="display:none; background:#fff2ee; color:#c9744e; border:1px solid #f2c7b5; padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:12px; font-weight:600;"></div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:4px;">Registrarse en Nativa</button>
+
+        <!-- O registrarse con -->
+        <div class="auth-divider"><span>o registrarse con:</span></div>
+        <div class="social-auth-grid">
+          <button type="button" class="btn-social google-btn" onclick="handleSocialAuth('Google')">
+            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
+              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.36 7.31 24 12 24z"/>
+              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12s.46 3.84 1.26 5.42l4.02-3.15z"/>
+              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
+            </svg>
+            <span>Google</span>
+          </button>
+          <button type="button" class="btn-social facebook-btn" onclick="handleSocialAuth('Facebook')">
+            <i class="fab fa-facebook-f"></i>
+            <span>Facebook</span>
+          </button>
+        </div>
+
+        <p class="small lora-text" style="text-align:center; margin-top:12px; color:var(--text-muted); font-size:13px;">
+          ¿Ya tienes una cuenta? 
+          <button type="button" id="switch-to-login-btn" class="auth-switch-link">Iniciar Sesión</button>
+        </p>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Notificación de Producto Agregado -->
+  <div class="toast-notice" id="cart-toast">
+    <i class="fas fa-check-circle" style="color: #6F9E73; font-size: 18px;"></i>
+    <span id="toast-message">¡Producto añadido al carrito!</span>
+  </div>
+
+  <!-- Script Interactivo para Carrusel, Búsqueda, Filtros y Carrito -->
+  <script>
+    // ==========================================
+    // 1. Carrusel del Header Showcase
+    // ==========================================
+    (function initCarousel() {
+      const track = document.getElementById('carousel-track');
+      const dotsContainer = document.getElementById('carousel-dots-container');
+      const prevBtn = document.getElementById('carousel-prev');
+      const nextBtn = document.getElementById('carousel-next');
+      if (!track || !dotsContainer) return;
+
+      const slides = track.querySelectorAll('.carousel-slide');
+      const dots = dotsContainer.querySelectorAll('.dot');
+      let currentSlide = 0;
+      let autoPlayInterval = null;
+
+      function updateSlide(index) {
+        if (index < 0) index = slides.length - 1;
+        if (index >= slides.length) index = 0;
+        currentSlide = index;
+        track.style.transform = `translateX(-${currentSlide * 100}%)`;
+
+        dots.forEach((d, i) => {
+          if (i === currentSlide) d.classList.add('active');
+          else d.classList.remove('active');
+        });
+      }
+
+      function nextSlide() {
+        updateSlide(currentSlide + 1);
+      }
+
+      function prevSlide() {
+        updateSlide(currentSlide - 1);
+      }
+
+      if (nextBtn) nextBtn.addEventListener('click', () => { nextSlide(); resetAutoplay(); });
+      if (prevBtn) prevBtn.addEventListener('click', () => { prevSlide(); resetAutoplay(); });
+
+      dots.forEach((dot, idx) => {
+        dot.addEventListener('click', () => {
+          updateSlide(idx);
+          resetAutoplay();
+        });
+      });
+
+      function startAutoplay() {
+        autoPlayInterval = setInterval(nextSlide, 5500);
+      }
+
+      function resetAutoplay() {
+        clearInterval(autoPlayInterval);
+        startAutoplay();
+      }
+
+      startAutoplay();
+    })();
+
+    // ==========================================
+    // 2. Filtros de Categoría y Búsqueda en Vivo
+    // ==========================================
+    (function initFiltersAndSearch() {
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const searchInput = document.getElementById('product-search');
+      const clearSearchBtn = document.getElementById('clear-search-btn');
+      const resetSearchBtn = document.getElementById('reset-search-btn');
+      const noResultsMsg = document.getElementById('no-results-msg');
+      const productBoxes = document.querySelectorAll('#portfolio .box');
+
+      let currentCategory = 'all';
+      let currentQuery = '';
+
+      function applyFilters() {
+        let visibleCount = 0;
+        const q = currentQuery.toLowerCase().trim();
+
+        productBoxes.forEach(box => {
+          const cat = box.getAttribute('data-category') || '';
+          const name = (box.getAttribute('data-name') || '').toLowerCase();
+          const matchesCat = (currentCategory === 'all' || cat === currentCategory);
+          const matchesQuery = !q || name.includes(q);
+
+          if (matchesCat && matchesQuery) {
+            box.classList.remove('hidden-product');
+            box.style.display = '';
+            visibleCount++;
+          } else {
+            box.classList.add('hidden-product');
+            box.style.display = 'none';
+          }
+        });
+
+        if (noResultsMsg) {
+          noResultsMsg.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
+
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          e.preventDefault();
+          filterBtns.forEach(b => b.classList.remove('current'));
+          this.classList.add('current');
+          currentCategory = this.getAttribute('data-filter') || 'all';
+          applyFilters();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          currentQuery = this.value;
+          if (clearSearchBtn) {
+            clearSearchBtn.style.display = this.value ? 'block' : 'none';
+          }
+          applyFilters();
+        });
+      }
+
+      if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function() {
+          if (searchInput) {
+            searchInput.value = '';
+            currentQuery = '';
+            this.style.display = 'none';
+            applyFilters();
+            searchInput.focus();
+          }
+        });
+      }
+
+      if (resetSearchBtn) {
+        resetSearchBtn.addEventListener('click', function() {
+          if (searchInput) {
+            searchInput.value = '';
+            currentQuery = '';
+          }
+          if (clearSearchBtn) clearSearchBtn.style.display = 'none';
+          filterBtns.forEach(b => b.classList.remove('current'));
+          const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+          if (allBtn) allBtn.classList.add('current');
+          currentCategory = 'all';
+          applyFilters();
+        });
+      }
+    })();
+
+    // ==========================================
+    // 3. Sistema de Carrito de Compras
+    // ==========================================
+    let cart = [];
+    try {
+      const saved = localStorage.getItem('nativa_cart');
+      if (saved) cart = JSON.parse(saved);
+    } catch(e) {}
+
+    function saveCart() {
+      try {
+        localStorage.setItem('nativa_cart', JSON.stringify(cart));
+      } catch(e) {}
+      renderCart();
+    }
+
+    function formatPrice(number) {
+      return '$' + number.toLocaleString('es-CO');
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('cart-toast');
+      const toastMsg = document.getElementById('toast-message');
+      if (!toast || !toastMsg) return;
+      toastMsg.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
+
+    function renderCart() {
+      const badge = document.getElementById('cart-counter-badge');
+      const cartList = document.getElementById('cart-list');
+      const emptyMsg = document.getElementById('cart-empty-msg');
+      const footer = document.getElementById('cart-footer');
+      const totalAmount = document.getElementById('cart-total-amount');
+
+      const totalItems = cart.reduce((sum, item) => sum + item.qty, 0);
+      if (badge) badge.textContent = totalItems;
+
+      if (!cartList) return;
+
+      if (cart.length === 0) {
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        if (footer) footer.style.display = 'none';
+        cartList.innerHTML = '';
+        return;
+      }
+
+      if (emptyMsg) emptyMsg.style.display = 'none';
+      if (footer) footer.style.display = 'block';
+
+      let total = 0;
+      cartList.innerHTML = cart.map((item, index) => {
+        total += item.price * item.qty;
+        return `
+          <div class="cart-item">
+            <img src="${item.img}" alt="${item.name}" class="cart-item-img">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatPrice(item.price * item.qty)}</div>
+              <div class="cart-item-qty">
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)">-</button>
+                <span>${item.qty}</span>
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
+                <button type="button" class="remove-item-btn" onclick="removeItem(${index})" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      if (totalAmount) totalAmount.textContent = formatPrice(total);
+
+      const checkoutBtn = document.getElementById('checkout-whatsapp-btn');
+      if (checkoutBtn) {
+        const orderSummary = cart.map(i => `• ${i.name} (x${i.qty}): ${formatPrice(i.price * i.qty)}`).join('%0A');
+        const text = `Hola NATIVA, quiero confirmar el siguiente pedido:%0A%0A${orderSummary}%0A%0ATotal: ${formatPrice(total)}%0A%0A¿Cuáles son los métodos de pago disponibles?`;
+        checkoutBtn.href = `https://wa.me/573005427742?text=${text}`;
+        checkoutBtn.target = '_blank';
+      }
+    }
+
+    function addToCart(id, name, price, img) {
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ id, name, price, img, qty: 1 });
+      }
+      saveCart();
+      showToast(`¡${name} agregado al carrito!`);
+    }
+
+    function changeQty(index, delta) {
+      if (cart[index]) {
+        cart[index].qty += delta;
+        if (cart[index].qty <= 0) {
+          cart.splice(index, 1);
+        }
+        saveCart();
+      }
+    }
+
+    function removeItem(index) {
+      if (cart[index]) {
+        cart.splice(index, 1);
+        saveCart();
+      }
+    }
+
+    // Event listeners para botones "Comprar"
+    document.querySelectorAll('.btn-buy').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const name = this.getAttribute('data-name');
+        const price = parseInt(this.getAttribute('data-price'), 10) || 0;
+        const img = this.getAttribute('data-img');
+        addToCart(id, name, price, img);
+
+        // Feedback visual en el botón
+        const originalText = this.innerHTML;
+        this.innerHTML = '<i class="fas fa-check"></i> ¡Listo!';
+        this.classList.add('added');
+        setTimeout(() => {
+          this.innerHTML = originalText;
+          this.classList.remove('added');
+        }, 1200);
+      });
+    });
+
+    // Drawer de Carrito
+    const openCartBtn = document.getElementById('open-cart-btn');
+    const closeCartBtn = document.getElementById('close-cart-btn');
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartOverlay = document.getElementById('cart-overlay');
+
+    function openCart() {
+      if (cartDrawer) cartDrawer.classList.add('open');
+      if (cartOverlay) cartOverlay.classList.add('show');
+    }
+
+    function closeCart() {
+      if (cartDrawer) cartDrawer.classList.remove('open');
+      if (cartOverlay) cartOverlay.classList.remove('show');
+    }
+
+    if (openCartBtn) openCartBtn.addEventListener('click', openCart);
+    if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+    if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+    // Modal de Login y Registro
+    const openLoginBtn = document.getElementById('open-login-btn');
+    const closeLoginBtn = document.getElementById('close-login-btn');
+    const loginModal = document.getElementById('login-modal-overlay');
+
+    const registerModal = document.getElementById('register-modal-overlay');
+    const closeRegisterBtn = document.getElementById('close-register-btn');
+    const switchToRegisterBtn = document.getElementById('switch-to-register-btn');
+    const switchToLoginBtn = document.getElementById('switch-to-login-btn');
+
+    if (openLoginBtn && loginModal) {
+      openLoginBtn.addEventListener('click', () => {
+        if (registerModal) registerModal.classList.remove('active');
+        loginModal.classList.add('active');
+      });
+    }
+    if (closeLoginBtn && loginModal) {
+      closeLoginBtn.addEventListener('click', () => loginModal.classList.remove('active'));
+    }
+    if (loginModal) {
+      loginModal.addEventListener('click', (e) => {
+        if (e.target === loginModal) loginModal.classList.remove('active');
+      });
+    }
+
+    // Modal de Registro
+    if (closeRegisterBtn && registerModal) {
+      closeRegisterBtn.addEventListener('click', () => registerModal.classList.remove('active'));
+    }
+    if (registerModal) {
+      registerModal.addEventListener('click', (e) => {
+        if (e.target === registerModal) registerModal.classList.remove('active');
+      });
+    }
+
+    // Intercambiar entre Login y Registro
+    if (switchToRegisterBtn) {
+      switchToRegisterBtn.addEventListener('click', () => {
+        if (loginModal) loginModal.classList.remove('active');
+        if (registerModal) registerModal.classList.add('active');
+      });
+    }
+
+    if (switchToLoginBtn) {
+      switchToLoginBtn.addEventListener('click', () => {
+        if (registerModal) registerModal.classList.remove('active');
+        if (loginModal) loginModal.classList.add('active');
+      });
+    }
+
+    function handleLoginSubmit() {
+      const email = document.getElementById('login-email').value;
+      if (loginModal) loginModal.classList.remove('active');
+      showToast(`¡Bienvenido/a de nuevo a Nativa!`);
+    }
+
+    function handleRegisterSubmit() {
+      const nombre = document.getElementById('reg-nombre').value.trim();
+      const pass = document.getElementById('reg-password').value;
+      const confirmPass = document.getElementById('reg-confirm-password').value;
+      const errorMsg = document.getElementById('reg-error-msg');
+
+      if (pass !== confirmPass) {
+        if (errorMsg) {
+          errorMsg.textContent = 'Las contraseñas no coinciden. Por favor verifícalas.';
+          errorMsg.style.display = 'block';
+        }
+        return;
+      }
+
+      if (errorMsg) {
+        errorMsg.style.display = 'none';
+      }
+
+      if (registerModal) registerModal.classList.remove('active');
+      document.getElementById('register-form').reset();
+      showToast(`¡Cuenta creada con éxito! Bienvenido/a a Nativa, ${nombre || 'amigo/a'}`);
+    }
+
+    function handleSocialAuth(provider) {
+      if (loginModal) loginModal.classList.remove('active');
+      if (registerModal) registerModal.classList.remove('active');
+      showToast(`Autenticado con éxito a través de ${provider}. ¡Bienvenido/a a Nativa!`);
+    }
+
+    // Navegación suave al catálogo desde el botón Productos
+    const navProductos = document.getElementById('nav-productos');
+    if (navProductos) {
+      navProductos.addEventListener('click', (e) => {
+        const portfolioSec = document.getElementById('portfolio');
+        if (portfolioSec) {
+          e.preventDefault();
+          portfolioSec.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+
+    // Inicializar vista de carrito
+    renderCart();
+  </script>
 </body>
 </html>
