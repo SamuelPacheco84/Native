@@ -40,9 +40,9 @@
             <li><a class="current" href="#portfolio" id="nav-productos"><i class="fas fa-leaf"></i> Productos</a></li>
             <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
             <li>
-              <button type="button" class="nav-action-btn" id="open-login-btn" aria-label="Iniciar Sesión">
-                <i class="fas fa-user"></i> <span>Ingresar</span>
-              </button>
+              <a href="perfil.html" class="nav-action-btn" id="open-login-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                <i class="fas fa-user-circle"></i> <span id="nav-user-label">Perfil</span>
+              </a>
             </li>
             <li>
               <button type="button" class="nav-action-btn cart-btn-wrap" id="open-cart-btn" aria-label="Ver Carrito de Compras">
@@ -385,13 +385,13 @@
           <div class="product-card">
             <span class="card-badge">Tueste Lento</span>
             <div class="product-img-wrap">
-              <a href="portfolio-1.html">
+              <a href="portfolio-10.html">
                 <img src="img/productos/AVELLANAS ENTERAS TOSTADAS.png" alt="Avellanas Enteras Tostadas" loading="lazy">
               </a>
             </div>
             <div class="product-info">
               <span class="product-cat">Frutos Secos</span>
-              <h4 class="product-title"><a href="portfolio-1.html">Avellanas Enteras Tostadas</a></h4>
+              <h4 class="product-title"><a href="portfolio-10.html">Avellanas Enteras Tostadas</a></h4>
               <p class="product-desc lora-text">Avellanas europeas tostadas con calor seco sin aceites agregados. Aroma tostado irresistible y fuente natural de vitamina E.</p>
               <div class="product-bottom-row">
                 <span class="product-price">$21.500</span>
@@ -408,13 +408,13 @@
           <div class="product-card">
             <span class="card-badge">Horneado Diario</span>
             <div class="product-img-wrap">
-              <a href="portfolio-2.html">
+              <a href="portfolio-11.html">
                 <img src="img/productos/GALLETAS DE AVENA Y MIEL.png" alt="Galletas de Avena y Miel" loading="lazy">
               </a>
             </div>
             <div class="product-info">
               <span class="product-cat">Despensa Natural</span>
-              <h4 class="product-title"><a href="portfolio-2.html">Galletas de Avena y Miel</a></h4>
+              <h4 class="product-title"><a href="portfolio-11.html">Galletas de Avena y Miel</a></h4>
               <p class="product-desc lora-text">Receta tradicional horneada con copos enteros de avena, miel pura de abejas y canela. Textura crocante y energía sana.</p>
               <div class="product-bottom-row">
                 <span class="product-price">$12.500</span>
@@ -431,13 +431,13 @@
           <div class="product-card">
             <span class="card-badge promo">Destacado</span>
             <div class="product-img-wrap">
-              <a href="portfolio-3.html">
+              <a href="portfolio-12.html">
                 <img src="img/Té Vital_ Energía Natural y Bienestar.png" alt="Té Vital Blend Energético" loading="lazy">
               </a>
             </div>
             <div class="product-info">
               <span class="product-cat">Tés & Infusiones</span>
-              <h4 class="product-title"><a href="portfolio-3.html">Té Vital Blend Energético</a></h4>
+              <h4 class="product-title"><a href="portfolio-12.html">Té Vital Blend Energético</a></h4>
               <p class="product-desc lora-text">Nuestra fórmula insignia con té verde premium, jengibre fresco, cáscara de naranja y hierbas tonificantes.</p>
               <div class="product-bottom-row">
                 <span class="product-price">$16.500</span>
@@ -452,8 +452,6 @@
 
     </div>
   </section>
-
-  <hr>
 
   <!-- Footer Oficial -->
   <footer id="main-footer">
@@ -500,11 +498,308 @@
         <span>Subtotal:</span>
         <span id="cart-total-amount">$0</span>
       </div>
-      <a href="javascript:void(0)" class="btn btn-primary" id="checkout-whatsapp-btn" style="width: 100%; text-align: center;">
-        <i class="fab fa-whatsapp"></i> Finalizar Pedido por WhatsApp
+      <button type="button" class="btn btn-primary" id="btn-finalizar-compra" style="width: 100%; justify-content: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+        <i class="fas fa-lock"></i> FINALIZAR COMPRA
+      </button>
+      <a href="javascript:void(0)" class="btn btn-whatsapp-cart" id="checkout-whatsapp-btn" style="width: 100%; text-align: center; justify-content: center;">
+        <i class="fab fa-whatsapp"></i> pedir por WhatsApp
       </a>
     </div>
   </aside>
+
+  <!-- Modal de Checkout / Finalizar Compra -->
+  <div class="modal-overlay" id="checkout-modal-overlay">
+    <div class="modal-dialog checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkout-dialog-title">
+      <!-- Encabezado -->
+      <div class="checkout-header">
+        <h3 id="checkout-dialog-title"><i class="fas fa-shield-alt"></i> Finalizar Compra Segura</h3>
+        <button type="button" class="close-modal-btn" id="close-checkout-btn" aria-label="Cerrar ventana">&times;</button>
+      </div>
+
+      <!-- Barra de Pasos -->
+      <div class="checkout-steps-bar">
+        <div class="checkout-step-tab active" id="step-tab-1">
+          <span class="step-num">1</span>
+          <span>Datos de Envío</span>
+        </div>
+        <div class="checkout-step-tab" id="step-tab-2">
+          <span class="step-num">2</span>
+          <span>Método de Pago</span>
+        </div>
+        <div class="checkout-step-tab" id="step-tab-3">
+          <span class="step-num">3</span>
+          <span>Confirmación</span>
+        </div>
+      </div>
+
+      <div class="checkout-body">
+        <!-- Paso 1: Datos de Envío -->
+        <div class="checkout-step-view active" id="checkout-step-1">
+          <div class="checkout-order-summary-box">
+            <div>
+              <strong style="color: var(--verde-bosque);">Resumen de tu orden</strong>
+              <div class="items-count" id="checkout-items-summary">0 productos en tu carrito</div>
+            </div>
+            <div class="total-price" id="checkout-total-price">$0</div>
+          </div>
+
+          <form id="checkout-shipping-form" onsubmit="event.preventDefault(); goToCheckoutStep2();">
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-nombre">Nombre <span style="color:#e53e3e;">*</span></label>
+                <input type="text" id="checkout-nombre" placeholder="Ej. Carlos" required>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-apellido">Apellido <span style="color:#e53e3e;">*</span></label>
+                <input type="text" id="checkout-apellido" placeholder="Ej. Gómez" required>
+              </div>
+            </div>
+
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-telefono">Número de Teléfono <span style="color:#e53e3e;">*</span></label>
+                <input type="tel" id="checkout-telefono" placeholder="Ej. 300 123 4567" required>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-email">
+                  <span>Correo Electrónico <span style="color:#e53e3e;">*</span></span>
+                  <span class="badge-autofill" id="email-autofill-badge" style="display:none;"><i class="fas fa-check-circle"></i> Autocompletado</span>
+                </label>
+                <input type="email" id="checkout-email" placeholder="ejemplo@correo.com" required>
+              </div>
+            </div>
+
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-departamento">Departamento <span style="color:#e53e3e;">*</span></label>
+                <select id="checkout-departamento" required onchange="handleDepartmentChange()">
+                  <option value="">Selecciona tu departamento...</option>
+                </select>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-ciudad">Ciudad <span style="color:#e53e3e;">*</span></label>
+                <select id="checkout-ciudad" required>
+                  <option value="">Primero selecciona departamento...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkout-direccion">Dirección de Entrega <span style="color:#e53e3e;">*</span></label>
+              <input type="text" id="checkout-direccion" placeholder="Ej. Calle 123 # 45 - 67, Apto 402, Barrio Los Rosales" required>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkout-notas">Indicaciones de entrega (opcional)</label>
+              <input type="text" id="checkout-notas" placeholder="Ej. Dejar en portería o timbre 201">
+            </div>
+
+            <div id="checkout-step1-error" style="display:none; background:#fff2ee; color:#c9744e; border:1px solid #f2c7b5; padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:12px; font-weight:600;"></div>
+
+            <div class="checkout-actions-row" style="justify-content: flex-end;">
+              <button type="submit" class="btn-checkout-next">
+                Siguiente <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 2: Método de Pago -->
+        <div class="checkout-step-view" id="checkout-step-2">
+          <div class="checkout-order-summary-box">
+            <div>
+              <strong style="color: var(--verde-bosque);">Total a Pagar</strong>
+              <div class="items-count" id="checkout-step2-destinatario">Envío a: -</div>
+            </div>
+            <div class="total-price" id="checkout-step2-total">$0</div>
+          </div>
+
+          <p style="font-size:13px; font-weight:600; color:var(--verde-bosque); margin-bottom:10px;">
+            Selecciona la forma en que deseas pagar:
+          </p>
+
+          <div class="payment-methods-list">
+            <!-- 1. Efectivo (Efecty, Baloto, etc.) -->
+            <label class="payment-method-card selected" id="card-method-efectivo" onclick="selectPaymentMethod('efectivo')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-efectivo" value="efectivo" checked>
+                <div class="payment-method-title">
+                  <i class="fas fa-money-bill-wave" style="color: #d97706; margin-right: 6px;"></i>
+                  Efectivo (Efecty, Baloto u otras sucursales)
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge">Efecty</span>
+                  <span class="payment-method-badge">Baloto</span>
+                  <span class="payment-method-badge">Su Red</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-efectivo">
+                <p style="margin:0 0 6px 0;">Generaremos un <strong>ID único de pago</strong> y un código de convenio exclusivo. Tendrás un <strong>tiempo límite de 24 horas</strong> para pagar en cualquier sucursal del país.</p>
+                <div style="background:#fef3c7; border:1px solid #fde68a; padding:8px 12px; border-radius:6px; font-size:12px; color:#92400e; display:flex; align-items:center; gap:8px;">
+                  <i class="fas fa-clock"></i> Plazo máximo de 24 horas para realizar el pago en ventanilla.
+                </div>
+              </div>
+            </label>
+
+            <!-- 2. Nequi -->
+            <label class="payment-method-card" id="card-method-nequi" onclick="selectPaymentMethod('nequi')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-nequi" value="nequi">
+                <div class="payment-method-title">
+                  <i class="fas fa-mobile-alt" style="color: #6366f1; margin-right: 6px;"></i>
+                  Nequi
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge" style="background:#f3e8ff; color:#7e22ce;">App Nequi</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-nequi">
+                <p style="margin:0 0 8px 0;">Ingresa tu número celular registrado en Nequi. Enviaremos una solicitud de cobro instantánea a tu aplicación para que apruebes el pago.</p>
+                <div class="checkout-field" style="margin-bottom:0; max-width:280px;">
+                  <label for="nequi-celular" style="font-size:12px;">Número celular Nequi</label>
+                  <input type="tel" id="nequi-celular" placeholder="300 000 0000">
+                </div>
+              </div>
+            </label>
+
+            <!-- 3. Bancos (PSE / Transferencia) -->
+            <label class="payment-method-card" id="card-method-bancos" onclick="selectPaymentMethod('bancos')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-bancos" value="bancos">
+                <div class="payment-method-title">
+                  <i class="fas fa-university" style="color: #0284c7; margin-right: 6px;"></i>
+                  Bancos (Transferencia Bancaria / PSE)
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge" style="background:#e0f2fe; color:#0369a1;">PSE</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-bancos">
+                <p style="margin:0 0 8px 0;">Se enviará una notificación a tu banco para debitar de tu cuenta de ahorros o corriente.</p>
+                <div class="checkout-grid-2">
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="banco-select" style="font-size:12px;">Selecciona tu Banco</label>
+                    <select id="banco-select">
+                      <option value="Bancolombia">Bancolombia</option>
+                      <option value="Banco de Bogotá">Banco de Bogotá</option>
+                      <option value="Davivienda">Davivienda</option>
+                      <option value="BBVA Colombia">BBVA Colombia</option>
+                      <option value="Banco de Occidente">Banco de Occidente</option>
+                      <option value="Banco Popular">Banco Popular</option>
+                      <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                      <option value="Banco Agrario">Banco Agrario</option>
+                      <option value="Banco Caja Social">Banco Caja Social</option>
+                      <option value="Daviplata">Daviplata</option>
+                      <option value="Dale">Dale</option>
+                      <option value="Nu Colombia">Nu Colombia</option>
+                    </select>
+                  </div>
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="tipo-cliente-select" style="font-size:12px;">Tipo de Persona</label>
+                    <select id="tipo-cliente-select">
+                      <option value="Natural">Persona Natural</option>
+                      <option value="Juridica">Persona Jurídica</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </label>
+
+            <!-- 4. Tarjetas de Crédito o Débito -->
+            <label class="payment-method-card" id="card-method-tarjetas" onclick="selectPaymentMethod('tarjetas')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-tarjetas" value="tarjetas">
+                <div class="payment-method-title">
+                  <i class="fas fa-credit-card" style="color: var(--verde-bosque); margin-right: 6px;"></i>
+                  Tarjetas de Crédito o Débito
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge">Visa</span>
+                  <span class="payment-method-badge">Mastercard</span>
+                  <span class="payment-method-badge">Amex</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-tarjetas">
+                <div class="checkout-field">
+                  <label for="card-num" style="font-size:12px;">Número de Tarjeta</label>
+                  <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="checkout-grid-2">
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="card-holder" style="font-size:12px;">Titular de la Tarjeta</label>
+                    <input type="text" id="card-holder" placeholder="Nombre como figura en tarjeta">
+                  </div>
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <div class="checkout-field" style="margin-bottom:0;">
+                      <label for="card-exp" style="font-size:12px;">Vence</label>
+                      <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5">
+                    </div>
+                    <div class="checkout-field" style="margin-bottom:0;">
+                      <label for="card-cvv" style="font-size:12px;">CVV</label>
+                      <input type="password" id="card-cvv" placeholder="•••" maxlength="4">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="checkout-actions-row">
+            <button type="button" class="btn-checkout-prev" onclick="goToCheckoutStep1()">
+              <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button type="button" class="btn-checkout-finish" onclick="submitFinalCheckout()">
+              <i class="fas fa-lock"></i> Finalizar Compra
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 3: Confirmación y Estado del Pago -->
+        <div class="checkout-step-view" id="checkout-step-3">
+          <!-- Contenido inyectado dinámicamente según el método de pago -->
+          <div id="confirmation-dynamic-content"></div>
+
+          <div class="checkout-actions-row" style="justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+            <button type="button" class="btn btn-primary" onclick="finishCheckoutAndClose()" style="padding: 11px 26px; font-weight: 600; border-radius: 8px;">
+              <i class="fas fa-shopping-bag"></i> Volver a la Tienda
+            </button>
+            <button type="button" class="btn-checkout-prev" onclick="window.print()" style="padding: 11px 20px; border-radius: 8px;">
+              <i class="fas fa-print"></i> Imprimir Resumen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Correo Electrónico Recibido (Gmail / Inbox Style) -->
+  <div class="email-modal-overlay" id="email-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="email-subject-title">
+    <div class="email-modal-card">
+      <div class="email-client-header">
+        <h4 id="email-client-heading"><i class="fas fa-envelope"></i> Bandeja de Entrada - Correo Oficial de Nativa</h4>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <button type="button" class="email-client-close" onclick="closeEmailModal()" aria-label="Cerrar correo">&times;</button>
+        </div>
+      </div>
+      <div class="email-meta-box">
+        <div class="email-meta-row">
+          <span class="label">De:</span>
+          <span class="value"><strong>Nativa Alimentos Naturales</strong> &lt;pedidos@nativa.com.co&gt;</span>
+        </div>
+        <div class="email-meta-row">
+          <span class="label">Para:</span>
+          <span class="value" id="email-to-recipient">usuario@correo.com</span>
+        </div>
+        <div class="email-meta-row">
+          <span class="label">Asunto:</span>
+          <span class="value" id="email-subject-title">🌿 Confirmación de Pedido y Enlace de Rastreo</span>
+        </div>
+      </div>
+      <div class="email-body-scroll" id="email-body-content">
+        <!-- Contenido del Correo inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
 
   <!-- Modal de Login / Cuenta -->
   <div class="modal-overlay" id="login-modal-overlay">
@@ -924,7 +1219,7 @@
     if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
     if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
 
-    // Modal de Login y Registro
+    // Modal de Login y Registro / Perfil
     const openLoginBtn = document.getElementById('open-login-btn');
     const closeLoginBtn = document.getElementById('close-login-btn');
     const loginModal = document.getElementById('login-modal-overlay');
@@ -934,12 +1229,6 @@
     const switchToRegisterBtn = document.getElementById('switch-to-register-btn');
     const switchToLoginBtn = document.getElementById('switch-to-login-btn');
 
-    if (openLoginBtn && loginModal) {
-      openLoginBtn.addEventListener('click', () => {
-        if (registerModal) registerModal.classList.remove('active');
-        loginModal.classList.add('active');
-      });
-    }
     if (closeLoginBtn && loginModal) {
       closeLoginBtn.addEventListener('click', () => loginModal.classList.remove('active'));
     }
@@ -975,13 +1264,19 @@
     }
 
     function handleLoginSubmit() {
-      const email = document.getElementById('login-email').value;
+      const email = document.getElementById('login-email').value.trim();
+      if (email) {
+        localStorage.setItem('nativa_user_email', email);
+      }
       if (loginModal) loginModal.classList.remove('active');
       showToast(`¡Bienvenido/a de nuevo a Nativa!`);
     }
 
     function handleRegisterSubmit() {
       const nombre = document.getElementById('reg-nombre').value.trim();
+      const apellido = document.getElementById('reg-apellido').value.trim();
+      const correo = document.getElementById('reg-correo').value.trim();
+      const numero = document.getElementById('reg-numero').value.trim();
       const pass = document.getElementById('reg-password').value;
       const confirmPass = document.getElementById('reg-confirm-password').value;
       const errorMsg = document.getElementById('reg-error-msg');
@@ -997,6 +1292,12 @@
       if (errorMsg) {
         errorMsg.style.display = 'none';
       }
+
+      // Guardar datos registrados para autocompletar checkout
+      localStorage.setItem('nativa_user_email', correo);
+      if (nombre) localStorage.setItem('nativa_user_name', nombre);
+      if (apellido) localStorage.setItem('nativa_user_lastname', apellido);
+      if (numero) localStorage.setItem('nativa_user_phone', numero);
 
       if (registerModal) registerModal.classList.remove('active');
       document.getElementById('register-form').reset();
@@ -1021,8 +1322,1056 @@
       });
     }
 
+    // ==========================================
+    // 7. Módulo de Finalizar Compra / Checkout Multi-Paso
+    // ==========================================
+    const colombiaData = {
+      "Amazonas": ["Leticia", "Puerto Nariño"],
+      "Antioquia": ["Medellín", "Bello", "Itagüí", "Envigado", "Rionegro", "Apartadó", "Turbo", "Caucasia", "Sabaneta", "La Ceja", "Marinilla"],
+      "Arauca": ["Arauca", "Saravena", "Tame", "Arauquita"],
+      "Atlántico": ["Barranquilla", "Soledad", "Malambo", "Sabanalarga", "Puerto Colombia", "Galapa", "Baranoa"],
+      "Bogotá D.C.": ["Bogotá D.C."],
+      "Bolívar": ["Cartagena", "Magangué", "Carmen de Bolívar", "Turbaco", "Arjona", "San Juan Nepomuceno"],
+      "Boyacá": ["Tunja", "Duitama", "Sogamoso", "Chiquinquirá", "Paipa", "Villa de Leyva", "Moniquirá", "Puerto Boyacá"],
+      "Caldas": ["Manizales", "La Dorada", "Chinchiná", "Villamaría", "Riosucio", "Anserma"],
+      "Caquetá": ["Florencia", "San Vicente del Caguán", "Cartagena del Chairá"],
+      "Casanare": ["Yopal", "Aguazul", "Villanueva", "Paz de Ariporo", "Tauramena"],
+      "Cauca": ["Popayán", "Santander de Quilichao", "Puerto Tejada", "Patía", "Piendamó"],
+      "Cesar": ["Valledupar", "Aguachica", "Agustín Codazzi", "Bosconia", "Curumaní"],
+      "Chocó": ["Quibdó", "Istmina", "Condoto", "Tadó"],
+      "Córdoba": ["Montería", "Cereté", "Lorica", "Sahagún", "Montelíbano", "Planeta Rica"],
+      "Cundinamarca": ["Soacha", "Facatativá", "Chía", "Zipaquirá", "Fusagasugá", "Madrid", "Funza", "Mosquera", "Girardot", "Cajicá", "Cota", "Sopó"],
+      "Guainía": ["Inírida"],
+      "Guaviare": ["San José del Guaviare", "Calamar"],
+      "Huila": ["Neiva", "Pitalito", "Garzón", "La Plata", "Campoalegre"],
+      "La Guajira": ["Riohacha", "Maicao", "Uribia", "San Juan del Cesar", "Fonseca"],
+      "Magdalena": ["Santa Marta", "Ciénaga", "Fundación", "El Banco", "Plato", "Aracataca"],
+      "Meta": ["Villavicencio", "Acacías", "Granada", "Puerto López", "San Martín"],
+      "Nariño": ["Pasto", "Tumaco", "Ipiales", "Túquerres", "La Unión"],
+      "Norte de Santander": ["Cúcuta", "Ocaña", "Villa del Rosario", "Los Patios", "Pamplona", "Tibú"],
+      "Putumayo": ["Mocoa", "Puerto Asís", "Orito", "Valle del Guamuez"],
+      "Quindío": ["Armenia", "Calarcá", "La Tebaida", "Montenegro", "Quimbaya", "Salento", "Circasia"],
+      "Risaralda": ["Pereira", "Dosquebradas", "Santa Rosa de Cabal", "La Virginia", "Belén de Umbría"],
+      "San Andrés y Providencia": ["San Andrés", "Providencia"],
+      "Santander": ["Bucaramanga", "Floridablanca", "Girón", "Piedecuesta", "Barrancabermeja", "San Gil", "Socorro", "Barbosa"],
+      "Sucre": ["Sincelejo", "Corozal", "San Marcos", "Tolú", "Sampués", "Coveñas"],
+      "Tolima": ["Ibagué", "Espinal", "Melgar", "Chaparral", "Mariquita", "Honda", "Líbano"],
+      "Valle del Cauca": ["Cali", "Buenaventura", "Palmira", "Tuluá", "Yumbo", "Cartago", "Buga", "Jamundí", "Candelaria", "Sevilla"],
+      "Vaupés": ["Mitú"],
+      "Vichada": ["Puerto Carreño", "Santa Rosalía"]
+    };
+
+    const checkoutModal = document.getElementById('checkout-modal-overlay');
+    const closeCheckoutBtn = document.getElementById('close-checkout-btn');
+    const btnFinalizarCompra = document.getElementById('btn-finalizar-compra');
+
+    let checkoutData = {
+      nombre: '',
+      apellido: '',
+      telefono: '',
+      email: '',
+      departamento: '',
+      ciudad: '',
+      direccion: '',
+      notas: '',
+      metodoPago: 'efectivo',
+      orderId: '',
+      total: 0
+    };
+
+    function initDepartments() {
+      const deptSelect = document.getElementById('checkout-departamento');
+      if (!deptSelect) return;
+      const currentVal = deptSelect.value;
+      deptSelect.innerHTML = '<option value="">Selecciona tu departamento...</option>' + 
+        Object.keys(colombiaData).sort().map(d => `<option value="${d}">${d}</option>`).join('');
+      if (currentVal) deptSelect.value = currentVal;
+    }
+
+    function handleDepartmentChange() {
+      const deptSelect = document.getElementById('checkout-departamento');
+      const ciudadSelect = document.getElementById('checkout-ciudad');
+      if (!deptSelect || !ciudadSelect) return;
+
+      const selectedDept = deptSelect.value;
+      if (!selectedDept || !colombiaData[selectedDept]) {
+        ciudadSelect.innerHTML = '<option value="">Primero selecciona departamento...</option>';
+        return;
+      }
+
+      const cities = colombiaData[selectedDept];
+      ciudadSelect.innerHTML = '<option value="">Selecciona tu ciudad...</option>' + 
+        cities.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function setStep(stepNum) {
+      [1, 2, 3].forEach(num => {
+        const tab = document.getElementById(`step-tab-${num}`);
+        const view = document.getElementById(`checkout-step-${num}`);
+        if (tab) {
+          tab.classList.remove('active', 'completed');
+          if (num < stepNum) tab.classList.add('completed');
+          if (num === stepNum) tab.classList.add('active');
+        }
+        if (view) {
+          if (num === stepNum) {
+            view.classList.add('active');
+          } else {
+            view.classList.remove('active');
+          }
+        }
+      });
+    }
+
+    function goToCheckoutStep1() {
+      setStep(1);
+    }
+
+    function goToCheckoutStep2() {
+      const nombre = document.getElementById('checkout-nombre').value.trim();
+      const apellido = document.getElementById('checkout-apellido').value.trim();
+      const telefono = document.getElementById('checkout-telefono').value.trim();
+      const email = document.getElementById('checkout-email').value.trim();
+      const departamento = document.getElementById('checkout-departamento').value;
+      const ciudad = document.getElementById('checkout-ciudad').value;
+      const direccion = document.getElementById('checkout-direccion').value.trim();
+      const notas = document.getElementById('checkout-notas') ? document.getElementById('checkout-notas').value.trim() : '';
+      const errBox = document.getElementById('checkout-step1-error');
+
+      if (!nombre || !apellido || !telefono || !email || !departamento || !ciudad || !direccion) {
+        if (errBox) {
+          errBox.textContent = 'Por favor completa todos los campos obligatorios (*) para continuar.';
+          errBox.style.display = 'block';
+        }
+        return;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+
+      checkoutData.nombre = nombre;
+      checkoutData.apellido = apellido;
+      checkoutData.telefono = telefono;
+      checkoutData.email = email;
+      checkoutData.departamento = departamento;
+      checkoutData.ciudad = ciudad;
+      checkoutData.direccion = direccion;
+      checkoutData.notas = notas;
+
+      // Guardar el email para próximos pedidos
+      localStorage.setItem('nativa_user_email', email);
+
+      const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+      checkoutData.total = total;
+
+      const step2Dest = document.getElementById('checkout-step2-destinatario');
+      if (step2Dest) {
+        step2Dest.textContent = `Destino: ${ciudad}, ${departamento} (${nombre} ${apellido})`;
+      }
+      const step2Total = document.getElementById('checkout-step2-total');
+      if (step2Total) {
+        step2Total.textContent = formatPrice(total);
+      }
+
+      setStep(2);
+    }
+
+    function selectPaymentMethod(method) {
+      checkoutData.metodoPago = method;
+      ['efectivo', 'nequi', 'bancos', 'tarjetas'].forEach(m => {
+        const card = document.getElementById(`card-method-${m}`);
+        const radio = document.getElementById(`pay-${m}`);
+        if (card) {
+          if (m === method) {
+            card.classList.add('selected');
+            if (radio) radio.checked = true;
+          } else {
+            card.classList.remove('selected');
+            if (radio) radio.checked = false;
+          }
+        }
+      });
+    }
+
+    function generateUniqueId(prefix) {
+      const rand = Math.floor(100000 + Math.random() * 900000);
+      return `${prefix}-${rand}`;
+    }
+
+    function getPaymentMethodLabel(method) {
+      switch (method) {
+        case 'efectivo': return 'Efectivo en Sucursal (Efecty / Baloto)';
+        case 'nequi': return 'Nequi (Transferencia Directa)';
+        case 'bancos': return 'PSE / Débito Bancario';
+        case 'tarjetas': return 'Tarjeta de Crédito / Débito';
+        default: return 'Pago Electrónico Nativa';
+      }
+    }
+
+    function getSavedOrders() {
+      try {
+        const raw = localStorage.getItem('nativa_orders');
+        return raw ? JSON.parse(raw) : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveOrder(order) {
+      const orders = getSavedOrders();
+      const existingIdx = orders.findIndex(o => o.id === order.id);
+      if (existingIdx >= 0) {
+        orders[existingIdx] = order;
+      } else {
+        orders.unshift(order);
+      }
+      localStorage.setItem('nativa_orders', JSON.stringify(orders));
+    }
+
+    let currentTrackingOrder = null;
+
+    function submitFinalCheckout() {
+      const method = checkoutData.metodoPago || 'efectivo';
+      const container = document.getElementById('confirmation-dynamic-content');
+      if (!container) return;
+
+      const totalFormatted = formatPrice(checkoutData.total);
+      const itemsList = cart.map(item => `
+        <div class="confirmation-summary-row">
+          <span>${item.name} (x${item.qty})</span>
+          <strong>${formatPrice(item.price * item.qty)}</strong>
+        </div>
+      `).join('');
+
+      let orderId = '';
+      let isWaitingPayment = false;
+      let entidad = '';
+      let phoneNequi = '';
+
+      if (method === 'nequi' || method === 'bancos') {
+        orderId = generateUniqueId('NAT-PSE');
+        isWaitingPayment = true;
+        entidad = method === 'nequi' ? 'Nequi' : (document.getElementById('banco-select')?.value || 'Bancolombia');
+        phoneNequi = document.getElementById('nequi-celular')?.value.trim() || checkoutData.telefono;
+      } else if (method === 'efectivo') {
+        orderId = generateUniqueId('NAT-EF');
+        isWaitingPayment = true;
+      } else {
+        orderId = generateUniqueId('NAT-TC');
+        isWaitingPayment = false;
+      }
+
+      checkoutData.orderId = orderId;
+      const guideNumber = 'SE-' + Math.floor(10000000 + Math.random() * 90000000) + 'CO';
+
+      // Fecha estimada de entrega (entre 2 y 4 días hábiles)
+      const now = new Date();
+      const deliveryStart = new Date(now);
+      deliveryStart.setDate(now.getDate() + 2);
+      const deliveryEnd = new Date(now);
+      deliveryEnd.setDate(now.getDate() + 4);
+
+      const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+      const days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      const estimatedDeliveryText = `Llega entre el ${days[deliveryStart.getDay()]} ${deliveryStart.getDate()} y el ${days[deliveryEnd.getDay()]} ${deliveryEnd.getDate()} de ${months[deliveryEnd.getMonth()]}`;
+
+      // Crear Objeto de Orden Completo con máxima compatibilidad
+      const newOrder = {
+        id: orderId,
+        guide: guideNumber,
+        trackingNumber: guideNumber,
+        carrier: 'Servientrega Express',
+        createdDate: now.toISOString(),
+        date: `${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`,
+        dateDisplay: `${now.getDate()} de ${months[now.getMonth()]} de ${now.getFullYear()}`,
+        timestamp: Date.now(),
+        estimatedDelivery: estimatedDeliveryText,
+        method: method,
+        paymentMethod: getPaymentMethodLabel(method),
+        bankEntity: entidad,
+        nequiPhone: phoneNequi,
+        paymentStatus: isWaitingPayment ? 'esperando_pago' : 'aprobado',
+        status: isWaitingPayment ? 'Pendiente de Pago' : 'En Preparación',
+        currentStep: isWaitingPayment ? 1 : 2,
+        total: checkoutData.total,
+        totalFormatted: totalFormatted,
+        customer: {
+          nombre: checkoutData.nombre,
+          apellido: checkoutData.apellido,
+          telefono: checkoutData.telefono,
+          email: checkoutData.email,
+          departamento: checkoutData.departamento,
+          ciudad: checkoutData.ciudad,
+          direccion: checkoutData.direccion,
+          notas: checkoutData.notas || 'Entrega estándar a domicilio'
+        },
+        shippingAddress: {
+          fullName: `${checkoutData.nombre} ${checkoutData.apellido}`.trim(),
+          nombre: checkoutData.nombre,
+          apellido: checkoutData.apellido,
+          phone: checkoutData.telefono,
+          telefono: checkoutData.telefono,
+          email: checkoutData.email,
+          address: checkoutData.direccion,
+          direccion: checkoutData.direccion,
+          city: checkoutData.ciudad,
+          ciudad: checkoutData.ciudad,
+          department: checkoutData.departamento,
+          departamento: checkoutData.departamento,
+          notas: checkoutData.notas || 'Entrega estándar a domicilio'
+        },
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: item.price,
+          qty: item.qty || 1,
+          img: item.img || 'img/productos/Granola_Nativa.png'
+        }))
+      };
+
+      saveOrder(newOrder);
+      currentTrackingOrder = newOrder;
+
+      // Vaciar el carrito de compras tras confirmar el pedido
+      cart = [];
+      saveCart();
+
+      const emailStatusBoxHtml = `
+        <div id="email-status-box-${orderId}" style="background:#ecfdf5; border:1px solid #10b981; border-radius:10px; padding:14px 18px; margin-bottom:18px; font-size:13.5px; color:#065f46; display:flex; align-items:center; gap:12px; box-shadow:0 2px 8px rgba(16,185,129,0.08);">
+          <div style="width:34px; height:34px; border-radius:50%; background:#d1fae5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <i class="fas fa-spinner fa-spin" id="email-status-icon-${orderId}" style="color:#059669; font-size:16px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:700; color:#064e3b; margin-bottom:2px;" id="email-status-title-${orderId}">Despachando confirmación por correo...</div>
+            <div id="email-status-desc-${orderId}" style="color:#047857; font-size:12.5px;">Enviando resumen detallado y botón de rastreo a <strong>${checkoutData.email}</strong></div>
+          </div>
+        </div>
+      `;
+
+      // Disparar envío de correo real y persistencia en servidor
+      fetch('/api/send-order-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          order: newOrder,
+          baseUrl: window.location.origin
+        })
+      })
+      .then(res => res.json())
+      .then(result => {
+        const icon = document.getElementById(`email-status-icon-${orderId}`);
+        const title = document.getElementById(`email-status-title-${orderId}`);
+        const desc = document.getElementById(`email-status-desc-${orderId}`);
+        if (result && result.success) {
+          console.log('✅ Correo real de confirmación despachado exitosamente:', result.messageId);
+          if (icon) icon.className = 'fas fa-check-circle text-emerald-600';
+          if (title) title.textContent = '¡Correo de confirmación enviado exitosamente!';
+          if (desc) desc.innerHTML = `Se envió el comprobante del pedido #${orderId} y enlace de rastreo a <strong>${checkoutData.email}</strong>.`;
+        } else {
+          console.log('ℹ️ Respuesta de servicio de correo:', result ? result.message : 'OK');
+          if (icon) icon.className = 'fas fa-check-circle text-emerald-600';
+          if (title) title.textContent = '¡Pedido registrado en el sistema!';
+          if (desc) desc.innerHTML = `Tu orden #${orderId} se encuentra guardada en el sistema y lista para preparación.`;
+        }
+      })
+      .catch(err => {
+        console.warn('Nota sobre envío SMTP en backend:', err.message);
+        const icon = document.getElementById(`email-status-icon-${orderId}`);
+        const title = document.getElementById(`email-status-title-${orderId}`);
+        const desc = document.getElementById(`email-status-desc-${orderId}`);
+        if (icon) icon.className = 'fas fa-check-circle text-emerald-600';
+        if (title) title.textContent = '¡Pedido registrado en el sistema!';
+        if (desc) desc.innerHTML = `Tu orden #${orderId} se encuentra registrada localmente y en tu perfil.`;
+      });
+
+      // Renderizar la pantalla de confirmación Paso 3
+      if (method === 'nequi' || method === 'bancos') {
+        container.innerHTML = `
+          <div class="confirmation-status-box status-bank">
+            <div class="confirmation-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="confirmation-title">¡Notificación enviada a tu banco!</div>
+            <div class="confirmation-message">
+              Se le envió una notificación a tu entidad bancaria (<strong>${entidad}</strong>)${method === 'nequi' ? ` asociada a tu línea <strong>${phoneNequi}</strong>` : ''}.<br><br>
+              <strong>Debes de esperar que se realice el pago:</strong> por favor ingresa a tu aplicación o banca virtual para autorizar la solicitud y confirmar la transacción.
+            </div>
+            <div style="display:inline-flex; align-items:center; gap:8px; background:#dcfce7; color:#166534; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:700; margin-bottom:10px;">
+              <i class="fas fa-spinner fa-spin"></i> Esperando confirmación de la entidad bancaria...
+            </div>
+            <div>
+              <button type="button" class="btn btn-sm" style="background:#15803d; color:#ffffff; border-radius:20px; padding:6px 14px; font-size:12px; cursor:pointer; border:none;" onclick="simulateApproveBankPayment('${orderId}')">
+                <i class="fas fa-check-double"></i> Simular Autorización Bancaria Aprobada
+              </button>
+            </div>
+          </div>
+
+          ${emailStatusBoxHtml}
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-receipt"></i> Resumen de la Orden (Ref: ${orderId})</h5>
+            <div class="confirmation-summary-row">
+              <span>Cliente:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Correo de Notificación:</span>
+              <strong>${checkoutData.email}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Envío a:</span>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Método:</span>
+              <strong>${method === 'nequi' ? 'Nequi' : 'PSE / Débito Bancario (' + entidad + ')'}</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+            <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
+              <span>Total a Pagar:</span>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
+            </div>
+          </div>
+        `;
+      } else if (method === 'efectivo') {
+        container.innerHTML = `
+          <div class="confirmation-status-box status-cash">
+            <div class="confirmation-icon">
+              <i class="fas fa-receipt"></i>
+            </div>
+            <div class="confirmation-title">¡Código de Pago en Efectivo Generado!</div>
+            
+            <div style="margin: 12px 0;">
+              <div class="unique-id-display">
+                <span>Tu ID Único de Pago:</span>
+                <span class="unique-id-value">${orderId}</span>
+              </div>
+            </div>
+
+            <div class="cash-timer-badge">
+              <i class="fas fa-hourglass-half"></i> Tiempo límite: 24 horas para pagar
+            </div>
+
+            <div class="confirmation-message">
+              Acércate a cualquier sucursal de <strong>Efecty, Baloto, Paga Todo o Su Red</strong> con tu <strong>ID único de pago (${orderId})</strong> y el código de convenio Nativa <strong>#98412</strong>.<br><br>
+              <strong style="color:#b91c1c;">⚠️ Se tiene un tiempo límite de 24 horas para pagar.</strong> Al transcurrir las 24h sin realizarse el pago, el pedido y la referencia caducarán automáticamente.
+            </div>
+
+            <div>
+              <button type="button" class="btn btn-sm" style="background:#92400e; color:#ffffff; border-radius:20px; padding:6px 14px; font-size:12px; cursor:pointer; border:none;" onclick="simulateApproveCashPayment('${orderId}')">
+                <i class="fas fa-money-bill-wave"></i> Simular Pago Realizado en Efecty/Baloto
+              </button>
+            </div>
+          </div>
+
+          ${emailStatusBoxHtml}
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-store"></i> Instrucciones de Pago en Sucursal</h5>
+            <div class="confirmation-summary-row">
+              <span>Convenio Nacional:</span>
+              <strong>Nativa Cosmética Natural (#98412)</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>ID Único / Referencia:</span>
+              <strong style="color:#92400e; font-family:monospace; font-size:15px;">${orderId}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Valor Exacto en Caja:</span>
+              <strong style="font-size:1.15rem; color:var(--verde-bosque);">${totalFormatted}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Destinatario:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido} (${checkoutData.ciudad})</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Dirección de Entrega:</span>
+              <strong>${checkoutData.direccion}</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="confirmation-status-box status-bank">
+            <div class="confirmation-icon" style="background:var(--verde-natural);">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="confirmation-title">¡Pago con Tarjeta Aprobado!</div>
+            <div class="confirmation-message">
+              Hemos recibido y confirmado tu pago por un monto total de <strong>${totalFormatted}</strong>. La referencia de compra es <strong>${orderId}</strong> y tu pedido ya está siendo preparado en bodega.
+            </div>
+          </div>
+
+          ${emailStatusBoxHtml}
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-receipt"></i> Resumen del Pedido</h5>
+            <div class="confirmation-summary-row">
+              <span>ID de Orden:</span>
+              <strong style="font-family:monospace;">${orderId}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Cliente:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Entrega:</span>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+            <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
+              <span>Total Pagado:</span>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
+            </div>
+          </div>
+        `;
+      }
+
+      setStep(3);
+    }
+
+    function simulateApproveBankPayment(orderId) {
+      const orders = getSavedOrders();
+      const order = orders.find(o => o.id === orderId) || currentTrackingOrder;
+      if (order) {
+        order.paymentStatus = 'aprobado';
+        order.currentStep = 2; // En Bodega
+        saveOrder(order);
+        currentTrackingOrder = order;
+        showToast('¡Pago bancario confirmado con éxito! Tu pedido ha pasado a preparación.');
+        submitFinalCheckout(); // Re-renderizar o actualizar estado
+      }
+    }
+
+    function simulateApproveCashPayment(orderId) {
+      const orders = getSavedOrders();
+      const order = orders.find(o => o.id === orderId) || currentTrackingOrder;
+      if (order) {
+        order.paymentStatus = 'aprobado';
+        order.currentStep = 2; // En Bodega
+        saveOrder(order);
+        currentTrackingOrder = order;
+        showToast('¡Pago en Efecty/Baloto validado! Tu pedido ha pasado a preparación.');
+        submitFinalCheckout();
+      }
+    }
+
+    function goToTrackingFromCheckout() {
+      const orderId = checkoutData.orderId || (currentTrackingOrder ? currentTrackingOrder.id : '');
+      cart = [];
+      saveCart();
+      closeCheckoutModal();
+      window.location.href = `perfil.html?order=${encodeURIComponent(orderId)}`;
+    }
+
+    function openEmailModalFromCheckout() {
+      const orderId = checkoutData.orderId || (currentTrackingOrder ? currentTrackingOrder.id : null);
+      if (orderId) {
+        openEmailModal(orderId);
+      } else {
+        showToast('No se encontró el ID de la orden.');
+      }
+    }
+
+    function openCurrentOrderEmail() {
+      if (currentTrackingOrder && currentTrackingOrder.id) {
+        openEmailModal(currentTrackingOrder.id);
+      } else {
+        showToast('No hay una orden activa en pantalla.');
+      }
+    }
+
+    function openEmailModal(orderId) {
+      const orders = getSavedOrders();
+      const order = orders.find(o => o.id === orderId) || currentTrackingOrder;
+
+      if (!order) {
+        showToast('Orden no encontrada.');
+        return;
+      }
+
+      const emailModal = document.getElementById('email-modal-overlay');
+      const recipientSpan = document.getElementById('email-to-recipient');
+      const subjectSpan = document.getElementById('email-subject-title');
+      const bodyContainer = document.getElementById('email-body-content');
+
+      if (!emailModal || !bodyContainer) return;
+
+      if (recipientSpan) recipientSpan.textContent = order.customer.email || 'usuario@correo.com';
+      if (subjectSpan) subjectSpan.textContent = `🌿 ¡Confirmación de Pedido #${order.id} en Nativa!`;
+
+      const paymentLabel = getPaymentMethodLabel(order.method);
+
+      const itemsHtml = (order.items || []).map(item => `
+        <tr>
+          <td>
+            <strong>${item.name}</strong>
+          </td>
+          <td style="text-align:center;">x${item.qty}</td>
+          <td style="text-align:right;">${formatPrice(item.price)}</td>
+          <td style="text-align:right; font-weight:700;">${formatPrice(item.price * item.qty)}</td>
+        </tr>
+      `).join('');
+
+      let paymentAlertBox = '';
+      if (order.method === 'efectivo') {
+        paymentAlertBox = `
+          <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:12px; margin:16px 0; color:#92400e; font-size:13px;">
+            <strong>⚠️ Recordatorio de Pago en Efectivo (Convenio #98412):</strong><br>
+            Tu ID único de pago es <strong>${order.id}</strong>. Tienes un <strong>tiempo límite de 24 horas</strong> para acudir a cualquier sucursal de Efecty, Baloto o Paga Todo y realizar el pago en efectivo de ${order.totalFormatted}.
+          </div>
+        `;
+      } else if (order.method === 'nequi' || order.method === 'bancos') {
+        paymentAlertBox = `
+          <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:8px; padding:12px; margin:16px 0; color:#1e40af; font-size:13px;">
+            <strong>ℹ️ Notificación enviada a tu banco:</strong><br>
+            Se envió la solicitud de débito a ${order.bankEntity || 'tu entidad'}. Por favor confirma la transacción en tu app bancaria para que tu pedido sea despachado inmediatamente.
+          </div>
+        `;
+      }
+
+      bodyContainer.innerHTML = `
+        <div class="email-brand-banner">
+          <img src="img/logo.png" alt="Nativa">
+          <p style="margin:0; font-size:13px; color:#4a7c3d; font-weight:600;">ALIMENTOS Y COSMÉTICA NATURAL CONSCIENTE</p>
+        </div>
+
+        <h3 style="color:#1f361a; font-size:20px; margin:0 0 10px 0;">¡Hola, ${order.customer.nombre}! 🌿</h3>
+        <p style="font-size:14px; line-height:1.6; color:#475569; margin-bottom:16px;">
+          Muchas gracias por tu compra en <strong>Nativa</strong>. Hemos recibido tu orden y estamos procesándola para que disfrutes de lo mejor de la naturaleza en la comodidad de tu hogar.
+        </p>
+
+        <!-- Hero del Pedido con Botón de Rastreo Destacado -->
+        <div class="email-order-hero">
+          <div style="font-size:12px; color:#64748b; margin-bottom:4px;">NÚMERO DE PEDIDO</div>
+          <div class="hero-id">#${order.id}</div>
+          <div style="font-size:13px; color:#15803d; font-weight:700; margin-top:6px;">
+            <i class="fas fa-truck"></i> ${order.estimatedDelivery || 'Entrega estimada en 2 a 4 días hábiles'}
+          </div>
+        </div>
+
+        ${paymentAlertBox}
+
+        <!-- BOTÓN PRINCIPAL PARA RASTREAR PEDIDO -->
+        <div class="email-cta-button-wrap">
+          <button type="button" class="email-btn-track" onclick="trackFromEmail('${order.id}')">
+            <i class="fas fa-truck-moving"></i> RASTREAR MI PEDIDO EN VIVO
+          </button>
+        </div>
+
+        <!-- Tabla de Productos Pedidos -->
+        <h4 style="margin:20px 0 8px 0; font-size:15px; color:#1f361a;"><i class="fas fa-box"></i> Detalle de lo Pedido</h4>
+        <table class="email-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th style="text-align:center;">Cant.</th>
+              <th style="text-align:right;">Precio</th>
+              <th style="text-align:right;">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${itemsHtml}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" style="text-align:right; font-weight:600;">Envío Nacional:</td>
+              <td style="text-align:right; color:#15803d; font-weight:700;">¡GRATIS!</td>
+            </tr>
+            <tr>
+              <td colspan="3" style="text-align:right; font-weight:700; font-size:15px;">Total:</td>
+              <td style="text-align:right; font-weight:800; font-size:16px; color:#1f361a;">${order.totalFormatted}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <!-- Datos de Envío -->
+        <div style="background:#f8faf7; border:1px solid #e2ece0; border-radius:8px; padding:14px 18px; margin-top:20px;">
+          <h4 style="margin:0 0 10px 0; font-size:14px; color:#1f361a;"><i class="fas fa-map-marker-alt"></i> Datos de Envío Registrados</h4>
+          <div style="font-size:13px; line-height:1.7; color:#334155;">
+            <strong>Destinatario:</strong> ${order.customer.nombre} ${order.customer.apellido}<br>
+            <strong>Dirección:</strong> ${order.customer.direccion}<br>
+            <strong>Ciudad / Departamento:</strong> ${order.customer.ciudad}, ${order.customer.departamento}<br>
+            <strong>Teléfono:</strong> ${order.customer.telefono}<br>
+            <strong>Método de Pago:</strong> ${paymentLabel}
+          </div>
+        </div>
+
+        <div class="email-footer-notice">
+          Si tienes alguna pregunta sobre tu pedido, contáctanos a soporte@nativa.com.co o a través de nuestra línea de WhatsApp 300 542 7742.<br>
+          Nativa Cosmética & Alimentos Naturales &copy; 2026. Todos los derechos reservados.
+        </div>
+      `;
+
+      emailModal.classList.add('active');
+    }
+
+    function closeEmailModal() {
+      const emailModal = document.getElementById('email-modal-overlay');
+      if (emailModal) emailModal.classList.remove('active');
+    }
+
+    function trackFromEmail(orderId) {
+      closeEmailModal();
+      window.location.href = `perfil.html?order=${encodeURIComponent(orderId)}`;
+    }
+
+    function renderTrackingSection(orderOrId) {
+      let order = null;
+      if (typeof orderOrId === 'string') {
+        const orders = getSavedOrders();
+        order = orders.find(o => o.id.toLowerCase() === orderOrId.toLowerCase() || o.guide.toLowerCase() === orderOrId.toLowerCase());
+      } else {
+        order = orderOrId;
+      }
+
+      if (!order) {
+        const orders = getSavedOrders();
+        if (orders.length > 0) {
+          order = orders[0];
+        } else {
+          // Si no hay órdenes creadas aún, crear una muestra rica por defecto
+          order = {
+            id: 'NAT-EJEMPLO-839210',
+            guide: 'SE-74829104CO',
+            carrier: 'Servientrega Express',
+            dateDisplay: 'Hoy',
+            estimatedDelivery: 'Llega entre el Jueves 18 y Sábado 20 de Septiembre',
+            method: 'efectivo',
+            paymentStatus: 'esperando_pago',
+            currentStep: 1,
+            total: 33400,
+            totalFormatted: '$33.400 COP',
+            customer: {
+              nombre: 'Carlos',
+              apellido: 'Gómez',
+              telefono: '300 123 4567',
+              email: 'carlos.gomez@ejemplo.com',
+              departamento: 'Antioquia',
+              ciudad: 'Medellín',
+              direccion: 'Calle 123 # 45 - 67, Apto 402'
+            },
+            items: [
+              { name: 'Granola Nativa Artesanal (400g)', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' },
+              { name: 'Infusión Relax y Calma (100g)', price: 14900, qty: 1, img: 'img/productos/Infusión_relax.png' }
+            ]
+          };
+        }
+      }
+
+      currentTrackingOrder = order;
+
+      // Actualizar campos en el HTML de la sección de rastreo
+      const elId = document.getElementById('track-display-id');
+      const elStatus = document.getElementById('track-display-status');
+      const elDate = document.getElementById('track-display-estimated-date');
+      const elLoc = document.getElementById('track-display-location-dest');
+      const elCarrier = document.getElementById('track-display-carrier');
+      const elGuide = document.getElementById('track-display-guide');
+      const elName = document.getElementById('track-info-name');
+      const elAddress = document.getElementById('track-info-address');
+      const elCity = document.getElementById('track-info-city');
+      const elPhone = document.getElementById('track-info-phone');
+      const elEmail = document.getElementById('track-info-email');
+      const elPayment = document.getElementById('track-info-payment');
+      const elPaymentStatus = document.getElementById('track-info-payment-status');
+      const elItems = document.getElementById('track-items-container');
+      const elTotal = document.getElementById('track-info-total');
+      const elSelectStep = document.getElementById('simulate-step-select');
+
+      if (elId) elId.textContent = '#' + order.id;
+      if (elDate) elDate.textContent = order.estimatedDelivery || 'Entrega en 2 a 4 días hábiles';
+      if (elLoc) elLoc.textContent = `Destino: ${order.customer.ciudad}, ${order.customer.departamento} • Envío Prioritario`;
+      if (elCarrier) elCarrier.textContent = order.carrier || 'Servientrega Express';
+      if (elGuide) elGuide.textContent = `Guía: ${order.guide || 'SE-74829104CO'}`;
+
+      if (elName) elName.textContent = `${order.customer.nombre} ${order.customer.apellido}`;
+      if (elAddress) elAddress.textContent = order.customer.direccion;
+      if (elCity) elCity.textContent = `${order.customer.ciudad}, ${order.customer.departamento}`;
+      if (elPhone) elPhone.textContent = order.customer.telefono;
+      if (elEmail) elEmail.textContent = order.customer.email;
+      if (elPayment) elPayment.textContent = getPaymentMethodLabel(order.method);
+
+      if (elPaymentStatus) {
+        if (order.paymentStatus === 'esperando_pago') {
+          elPaymentStatus.textContent = 'Pendiente de Pago (Plazo 24h)';
+          elPaymentStatus.style.color = '#b45309';
+        } else {
+          elPaymentStatus.textContent = 'Pago Confirmado y Aprobado';
+          elPaymentStatus.style.color = '#15803d';
+        }
+      }
+
+      if (elTotal) elTotal.textContent = order.totalFormatted || formatPrice(order.total);
+
+      // Renderizar items en el paquete
+      if (elItems) {
+        elItems.innerHTML = (order.items || []).map(item => `
+          <div class="tracking-item-single">
+            <img src="${item.img || 'img/productos/Granola_Nativa.png'}" alt="${item.name}">
+            <div class="tracking-item-meta">
+              <div class="name">${item.name}</div>
+              <div class="qty">Cantidad: ${item.qty} &bull; ${formatPrice(item.price)} c/u</div>
+            </div>
+            <div class="price">${formatPrice(item.price * item.qty)}</div>
+          </div>
+        `).join('');
+      }
+
+      // Actualizar Timeline
+      updateTrackingTimelineUI(order.currentStep || 1, order.paymentStatus, order.method);
+
+      if (elSelectStep) {
+        elSelectStep.value = String(order.currentStep || 1);
+      }
+    }
+
+    function updateTrackingTimelineUI(currentStep, paymentStatus, method) {
+      const step = parseInt(currentStep, 10) || 1;
+      const progressFill = document.getElementById('tracking-progress-fill');
+      const statusPill = document.getElementById('track-display-status');
+
+      // Calcular porcentaje de progreso visual
+      // 5 pasos: 1 -> 10%, 2 -> 35%, 3 -> 60%, 4 -> 85%, 5 -> 100%
+      const percentages = { 1: '10%', 2: '35%', 3: '60%', 4: '85%', 5: '100%' };
+      if (progressFill) {
+        progressFill.style.width = percentages[step] || '20%';
+      }
+
+      for (let i = 1; i <= 5; i++) {
+        const stepEl = document.getElementById(`step-track-${i}`);
+        if (!stepEl) continue;
+
+        stepEl.classList.remove('completed', 'active');
+        if (i < step) {
+          stepEl.classList.add('completed');
+        } else if (i === step) {
+          stepEl.classList.add('active');
+        }
+      }
+
+      // Configurar Status Pill
+      if (statusPill) {
+        statusPill.className = 'tracking-status-pill';
+        if (step === 1) {
+          if (paymentStatus === 'esperando_pago') {
+            statusPill.classList.add('status-pill-waiting');
+            statusPill.innerHTML = '<i class="fas fa-hourglass-half"></i> Esperando Confirmación de Pago';
+          } else {
+            statusPill.classList.add('status-pill-confirmed');
+            statusPill.innerHTML = '<i class="fas fa-check-circle"></i> Pedido Confirmado';
+          }
+        } else if (step === 2) {
+          statusPill.classList.add('status-pill-preparing');
+          statusPill.innerHTML = '<i class="fas fa-boxes"></i> En Empaque y Bodega';
+        } else if (step === 3) {
+          statusPill.classList.add('status-pill-shipping');
+          statusPill.innerHTML = '<i class="fas fa-truck"></i> En Tránsito con Transportadora';
+        } else if (step === 4) {
+          statusPill.classList.add('status-pill-delivering');
+          statusPill.innerHTML = '<i class="fas fa-motorcycle"></i> En Reparto a Domicilio';
+        } else if (step === 5) {
+          statusPill.classList.add('status-pill-delivered');
+          statusPill.innerHTML = '<i class="fas fa-check-double"></i> Entregado con Éxito';
+        }
+      }
+    }
+
+    function simulateTrackingStepChange(stepVal) {
+      const step = parseInt(stepVal, 10);
+      if (currentTrackingOrder) {
+        currentTrackingOrder.currentStep = step;
+        if (step >= 2) {
+          currentTrackingOrder.paymentStatus = 'aprobado';
+        }
+        saveOrder(currentTrackingOrder);
+        updateTrackingTimelineUI(step, currentTrackingOrder.paymentStatus, currentTrackingOrder.method);
+
+        const elPaymentStatus = document.getElementById('track-info-payment-status');
+        if (elPaymentStatus) {
+          if (currentTrackingOrder.paymentStatus === 'aprobado') {
+            elPaymentStatus.textContent = 'Pago Confirmado y Aprobado';
+            elPaymentStatus.style.color = '#15803d';
+          }
+        }
+
+        showToast(`Estado del pedido simulado al paso ${step}.`);
+      }
+    }
+
+    function handleSearchOrderTracking() {
+      const input = document.getElementById('tracking-input-id');
+      const query = input ? input.value.trim() : '';
+
+      if (!query) {
+        showToast('Por favor escribe un número de orden o guía para rastrear.');
+        return;
+      }
+
+      const orders = getSavedOrders();
+      const found = orders.find(o => 
+        o.id.toLowerCase().includes(query.toLowerCase()) || 
+        o.guide.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (found) {
+        renderTrackingSection(found);
+        showToast(`Orden #${found.id} cargada exitosamente.`);
+      } else {
+        // Si el usuario inventó un ID o está buscando uno nuevo, creamos la vista para esa guía
+        const simulatedOrder = {
+          id: query.toUpperCase(),
+          guide: 'SE-' + Math.floor(10000000 + Math.random() * 90000000) + 'CO',
+          carrier: 'Servientrega Express',
+          dateDisplay: 'Hoy',
+          estimatedDelivery: 'Llega en 2 a 3 días hábiles',
+          method: 'tarjetas',
+          paymentStatus: 'aprobado',
+          currentStep: 3,
+          total: 45000,
+          totalFormatted: '$45.000 COP',
+          customer: {
+            nombre: 'Cliente',
+            apellido: 'Nativa',
+            telefono: '300 000 0000',
+            email: 'cliente@ejemplo.com',
+            departamento: 'Cundinamarca',
+            ciudad: 'Bogotá D.C.',
+            direccion: 'Cra 15 # 85 - 20'
+          },
+          items: [
+            { name: 'Miel de Montaña Pura (500g)', price: 22000, qty: 1, img: 'img/productos/Miel_de_Montaña.png' },
+            { name: 'Granola Nativa Artesanal (400g)', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' }
+          ]
+        };
+        saveOrder(simulatedOrder);
+        renderTrackingSection(simulatedOrder);
+        showToast(`Rastreando orden #${simulatedOrder.id}`);
+      }
+    }
+
+    function finishCheckoutAndClose() {
+      cart = [];
+      saveCart();
+      closeCheckoutModal();
+      showToast('¡Gracias por tu compra en Nativa! Tu pedido ha sido procesado.');
+    }
+
+    // Inicializar la sección de rastreo en carga inicial
+    renderTrackingSection(null);
+
+    function openCheckoutModal() {
+      if (!cart || cart.length === 0) {
+        showToast('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
+        return;
+      }
+      closeCart();
+
+      initDepartments();
+
+      // Autocompletar correo y datos registrados
+      const registeredEmail = localStorage.getItem('nativa_user_email');
+      const emailInput = document.getElementById('checkout-email');
+      const emailBadge = document.getElementById('email-autofill-badge');
+      if (registeredEmail && emailInput) {
+        emailInput.value = registeredEmail;
+        if (emailBadge) emailBadge.style.display = 'inline-flex';
+      }
+
+      const registeredName = localStorage.getItem('nativa_user_name');
+      const nameInput = document.getElementById('checkout-nombre');
+      if (registeredName && nameInput && !nameInput.value) {
+        nameInput.value = registeredName;
+      }
+
+      const registeredLastname = localStorage.getItem('nativa_user_lastname');
+      const lastnameInput = document.getElementById('checkout-apellido');
+      if (registeredLastname && lastnameInput && !lastnameInput.value) {
+        lastnameInput.value = registeredLastname;
+      }
+
+      const registeredPhone = localStorage.getItem('nativa_user_phone');
+      const phoneInput = document.getElementById('checkout-telefono');
+      if (registeredPhone && phoneInput && !phoneInput.value) {
+        phoneInput.value = registeredPhone;
+      }
+
+      // Actualizar resumen de orden
+      const total = cart.reduce((acc, item) => acc + (item.price * item.qty), 0);
+      const totalQty = cart.reduce((acc, item) => acc + item.qty, 0);
+
+      const itemsSummary = document.getElementById('checkout-items-summary');
+      if (itemsSummary) {
+        itemsSummary.textContent = `${totalQty} producto${totalQty > 1 ? 's' : ''} en tu orden`;
+      }
+      const totalPrice = document.getElementById('checkout-total-price');
+      if (totalPrice) {
+        totalPrice.textContent = formatPrice(total);
+      }
+
+      goToCheckoutStep1();
+      if (checkoutModal) checkoutModal.classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+      if (checkoutModal) checkoutModal.classList.remove('active');
+    }
+
+    if (btnFinalizarCompra) btnFinalizarCompra.addEventListener('click', openCheckoutModal);
+    if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', closeCheckoutModal);
+    if (checkoutModal) {
+      checkoutModal.addEventListener('click', (e) => {
+        if (e.target === checkoutModal) closeCheckoutModal();
+      });
+    }
+
+    // Redirección al apartado de Perfil y Pedidos
+    function openProfileModal(tab = 'pedidos') {
+      window.location.href = 'perfil.html';
+    }
+
+    function showProfileApartado(tab = 'pedidos') {
+      window.location.href = 'perfil.html';
+    }
+
+    // =========================================================================
+    // LÓGICA DEL MODAL DE RASTREO DE PEDIDO (Solo emergente cuando se solicita)
+    // =========================================================================
+    function openTrackingModal(orderOrId) {
+      const id = typeof orderOrId === 'string' ? orderOrId : (orderOrId?.id || '');
+      window.location.href = `perfil.html?order=${encodeURIComponent(id)}`;
+    }
+
+    function closeTrackingModal() {
+      const trackingOverlay = document.getElementById('tracking-modal-overlay');
+      if (trackingOverlay) {
+        trackingOverlay.classList.remove('active');
+      }
+    }
+
+    const trackingOverlay = document.getElementById('tracking-modal-overlay');
+    if (trackingOverlay) {
+      trackingOverlay.addEventListener('click', (e) => {
+        if (e.target === trackingOverlay) closeTrackingModal();
+      });
+    }
+
     // Inicializar vista de carrito
     renderCart();
+
+    // Soporte para abrir checkout o carrito directamente desde URL
+    const indexUrlParams = new URLSearchParams(window.location.search);
+    if (indexUrlParams.get('checkout') === 'true') {
+      setTimeout(() => openCheckoutModal(), 200);
+    } else if (indexUrlParams.get('cart') === 'open') {
+      setTimeout(() => openCart(), 200);
+    }
   </script>
 </body>
 </html>

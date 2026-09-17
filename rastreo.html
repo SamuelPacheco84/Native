@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tipografía Oficial: Montserrat y Lora -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/mobile.css">
+  <title>NATIVA | Rastrear Pedido en Tiempo Real</title>
+  <script>
+    // El rastreo de pedidos está centralizado en el Perfil del Usuario
+    const _urlParams = new URLSearchParams(window.location.search);
+    const _orderId = _urlParams.get('order') || _urlParams.get('track');
+    window.location.replace('perfil.html' + (_orderId ? '?order=' + encodeURIComponent(_orderId) : ''));
+  </script>
+  <style>
+    /* Estilos de la página dedicada de Rastreo de Pedido */
+    .tracking-page-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px 80px 20px;
+    }
+
+    .tracking-nav-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .tracking-breadcrumbs {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .tracking-breadcrumbs a {
+      color: var(--verde-bosque);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .tracking-breadcrumbs a:hover {
+      color: var(--verde-natural);
+    }
+
+    .tracking-crumb-sep {
+      color: #94a3b8;
+    }
+
+    .tracking-crumb-current {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .tracking-action-links {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .btn-outline-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1.5px solid #cfe0cb;
+      background: #ffffff;
+      color: var(--verde-bosque);
+      font-size: 13px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline-back:hover {
+      background: #e8f4e5;
+      border-color: var(--verde-natural);
+    }
+
+    /* Buscador rápido de pedido */
+    .tracking-search-card {
+      background: #ffffff;
+      border: 1px solid #dbe7d9;
+      border-radius: 14px;
+      padding: 18px 22px;
+      margin-bottom: 26px;
+      box-shadow: 0 2px 10px rgba(31, 54, 26, 0.04);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .tracking-search-form {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .tracking-search-input-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .tracking-search-input-wrap i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #718096;
+      font-size: 14px;
+    }
+
+    .tracking-search-input {
+      width: 100%;
+      padding: 11px 14px 11px 38px;
+      border-radius: 25px;
+      border: 1.5px solid #d5ded2;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .tracking-search-input:focus {
+      border-color: var(--verde-natural);
+      box-shadow: 0 0 0 3px rgba(74, 124, 61, 0.15);
+    }
+
+    .btn-search-track {
+      background: var(--verde-bosque);
+      color: #ffffff;
+      border: none;
+      padding: 11px 24px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s ease, transform 0.1s ease;
+      white-space: nowrap;
+    }
+
+    .btn-search-track:hover {
+      background: var(--verde-natural);
+      transform: translateY(-1px);
+    }
+
+    .tracking-quick-chips {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      font-size: 12.5px;
+      color: #64748b;
+    }
+
+    .tracking-chip-btn {
+      background: #f1f6ef;
+      border: 1px solid #d5e5d2;
+      color: var(--verde-bosque);
+      padding: 4px 12px;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tracking-chip-btn:hover {
+      background: #e1efe0;
+      border-color: var(--verde-natural);
+    }
+
+    /* Tarjeta Principal de Rastreo */
+    .tracking-hero-card {
+      background: #ffffff;
+      border: 1px solid #dbe7d9;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 4px 16px rgba(31, 54, 26, 0.05);
+      margin-bottom: 24px;
+    }
+
+    .tracking-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf2ec;
+      padding-bottom: 18px;
+      margin-bottom: 22px;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+
+    .tracking-order-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .tracking-order-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--verde-natural);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .tracking-order-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--verde-bosque);
+      margin: 0;
+      font-family: monospace, sans-serif;
+    }
+
+    .tracking-carrier-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f1f8ee;
+      border: 1px solid #cfe0cb;
+      color: var(--verde-bosque);
+      padding: 5px 12px;
+      border-radius: 20px;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+
+    .tracking-carrier-badge button {
+      background: none;
+      border: none;
+      color: var(--verde-natural);
+      cursor: pointer;
+      padding: 0 2px;
+      font-size: 12px;
+    }
+
+    .tracking-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .tracking-status-pill.status-waiting {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fde68a;
+    }
+
+    .tracking-status-pill.status-preparing {
+      background: #e0f2fe;
+      color: #0369a1;
+      border: 1px solid #bae6fd;
+    }
+
+    .tracking-status-pill.status-transit {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+
+    .tracking-status-pill.status-delivering {
+      background: #fef9c3;
+      color: #a16207;
+      border: 1px solid #fef08a;
+    }
+
+    .tracking-status-pill.status-delivered {
+      background: #dcfce7;
+      color: #15803d;
+      border: 1px solid #bbf7d0;
+    }
+
+    .tracking-eta-box {
+      background: #f8faf7;
+      border: 1px solid #e2ece0;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .tracking-eta-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #e8f4e5;
+      color: var(--verde-bosque);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .tracking-eta-text strong {
+      display: block;
+      color: var(--verde-bosque);
+      font-size: 15px;
+      margin-bottom: 2px;
+    }
+
+    .tracking-eta-text span {
+      font-size: 13px;
+      color: #526052;
+    }
+
+    /* Barra de Progreso de 5 Etapas */
+    .tracking-stepper-container {
+      margin: 30px 0 24px 0;
+      padding: 0 10px;
+    }
+
+    .tracking-steps-bar {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .tracking-steps-bar::before {
+      content: '';
+      position: absolute;
+      top: 22px;
+      left: 30px;
+      right: 30px;
+      height: 4px;
+      background: #e2e8df;
+      z-index: 1;
+    }
+
+    .tracking-progress-fill {
+      position: absolute;
+      top: 22px;
+      left: 30px;
+      height: 4px;
+      background: var(--verde-natural);
+      z-index: 2;
+      transition: width 0.4s ease;
+    }
+
+    .tracking-step-item {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 18%;
+    }
+
+    .tracking-step-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: #94a3b8;
+      transition: all 0.3s ease;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .tracking-step-item.completed .tracking-step-circle {
+      background: var(--verde-bosque);
+      border-color: var(--verde-bosque);
+      color: #ffffff;
+    }
+
+    .tracking-step-item.active .tracking-step-circle {
+      background: #ffffff;
+      border-color: var(--verde-natural);
+      color: var(--verde-natural);
+      box-shadow: 0 0 0 4px rgba(74, 124, 61, 0.2);
+      animation: pulseStep 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseStep {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .tracking-step-name {
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #64748b;
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .tracking-step-item.completed .tracking-step-name,
+    .tracking-step-item.active .tracking-step-name {
+      color: var(--verde-bosque);
+    }
+
+    .tracking-step-time {
+      font-size: 11px;
+      color: #94a3b8;
+    }
+
+    /* Cuadrícula de 2 columnas con Detalles y Cronología */
+    .tracking-grid-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 24px;
+    }
+
+    @media (max-width: 860px) {
+      .tracking-grid-layout {
+        grid-template-columns: 1fr;
+      }
+      .tracking-step-name {
+        font-size: 11px;
+      }
+      .tracking-steps-bar::before,
+      .tracking-progress-fill {
+        left: 20px;
+        right: 20px;
+      }
+    }
+
+    .tracking-panel {
+      background: #ffffff;
+      border: 1px solid #dbe7d9;
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(31, 54, 26, 0.04);
+    }
+
+    .tracking-panel-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      margin: 0 0 16px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 1px solid #f1f5f1;
+      padding-bottom: 10px;
+    }
+
+    /* Cronología Timeline */
+    .tracking-timeline {
+      position: relative;
+      padding-left: 26px;
+    }
+
+    .tracking-timeline::before {
+      content: '';
+      position: absolute;
+      left: 9px;
+      top: 6px;
+      bottom: 6px;
+      width: 2px;
+      background: #dbe7d9;
+    }
+
+    .timeline-entry {
+      position: relative;
+      margin-bottom: 20px;
+    }
+
+    .timeline-entry:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline-dot {
+      position: absolute;
+      left: -26px;
+      top: 4px;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: #cbd5e1;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 2px #dbe7d9;
+    }
+
+    .timeline-entry.latest .timeline-dot {
+      background: var(--verde-natural);
+      box-shadow: 0 0 0 3px rgba(74, 124, 61, 0.3);
+    }
+
+    .timeline-time {
+      font-size: 12px;
+      color: #64748b;
+      font-weight: 600;
+    }
+
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+      margin: 2px 0;
+    }
+
+    .timeline-location {
+      font-size: 12.5px;
+      color: #526052;
+    }
+
+    /* Lista de Productos en la orden */
+    .tracking-items-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .tracking-item-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px dashed #edf2ec;
+    }
+
+    .tracking-item-row:last-child {
+      border-bottom: none;
+    }
+
+    .tracking-item-img {
+      width: 54px;
+      height: 54px;
+      border-radius: 10px;
+      border: 1px solid #dbe7d9;
+      background: #ffffff;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .tracking-item-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .tracking-item-info {
+      flex: 1;
+    }
+
+    .tracking-item-name {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #1f2937;
+      display: block;
+    }
+
+    .tracking-item-sub {
+      font-size: 12px;
+      color: #64748b;
+    }
+
+    .tracking-item-price {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      text-align: right;
+    }
+
+    .tracking-total-box {
+      background: #f8faf7;
+      border: 1px solid #e2ece0;
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .tracking-total-box strong {
+      font-size: 16px;
+      color: var(--verde-bosque);
+    }
+
+    .tracking-shipping-info {
+      font-size: 13px;
+      line-height: 1.65;
+      color: #4b5563;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid #f1f5f1;
+    }
+
+    /* Botones de acción al final */
+    .tracking-actions-bar {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      margin-top: 32px;
+      flex-wrap: wrap;
+    }
+
+    .btn-action-main {
+      background: var(--verde-bosque);
+      color: #ffffff;
+      padding: 12px 28px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(31, 54, 26, 0.15);
+    }
+
+    .btn-action-main:hover {
+      background: var(--verde-natural);
+      transform: translateY(-1px);
+    }
+
+    .btn-action-secondary {
+      background: #ffffff;
+      border: 1.5px solid #cfe0cb;
+      color: var(--verde-bosque);
+      padding: 11px 24px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action-secondary:hover {
+      background: #f1f8ee;
+      border-color: var(--verde-natural);
+    }
+
+    .btn-action-whatsapp {
+      background: #25d366;
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 25px;
+      font-weight: 700;
+      font-size: 14px;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.25);
+    }
+
+    .btn-action-whatsapp:hover {
+      background: #20ba59;
+      transform: translateY(-1px);
+    }
+
+    /* Estado de no encontrado */
+    .tracking-not-found {
+      text-align: center;
+      padding: 48px 20px;
+      background: #ffffff;
+      border: 1.5px dashed #cfe0cb;
+      border-radius: 16px;
+      margin-top: 20px;
+    }
+
+    .tracking-not-found-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #f1f8ee;
+      color: var(--verde-bosque);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      margin-bottom: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Barra superior de anuncios de envío -->
+  <div class="top-announcement-bar" style="background: var(--verde-bosque); color: #ffffff; text-align: center; padding: 7px 15px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.5px;">
+    <i class="fas fa-truck-moving" style="margin-right: 6px; color: #a7f3d0;"></i> Rastreo Satelital en Tiempo Real | Envíos 100% asegurados a toda Colombia
+  </div>
+
+  <!-- Header con Navegación Global -->
+  <header id="header-home">
+    <nav id="main-nav-bar">
+      <div class="container">
+        <div class="nav-container">
+          <h1 class="logo">
+            <a href="index.html" aria-label="Nativa Inicio">
+              <img src="img/logo.png" alt="Nativa" class="brand-logo">
+            </a>
+          </h1>
+
+          <ul id="main-nav" class="txt-btn">
+            <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <li>
+              <a href="perfil.html" class="nav-action-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                <i class="fas fa-user-circle"></i> <span>Mi Perfil</span>
+              </a>
+            </li>
+            <li>
+              <a href="rastreo.html" class="nav-action-btn current" aria-label="Rastrear Pedido" title="Rastreo de Envíos">
+                <i class="fas fa-truck-moving"></i> <span>Rastreo</span>
+              </a>
+            </li>
+            <li>
+              <a href="index.html#portfolio" class="nav-action-btn">
+                <i class="fas fa-store"></i> <span>Tienda</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenedor Principal de Rastreo -->
+  <main class="tracking-page-container">
+    
+    <!-- Barra de navegación y miga de pan -->
+    <div class="tracking-nav-bar">
+      <nav class="tracking-breadcrumbs" aria-label="Miga de pan">
+        <a href="index.html"><i class="fas fa-home"></i> Inicio</a>
+        <span class="tracking-crumb-sep">/</span>
+        <a href="perfil.html"><i class="fas fa-user"></i> Mi Perfil</a>
+        <span class="tracking-crumb-sep">/</span>
+        <span class="tracking-crumb-current"><i class="fas fa-satellite-dish"></i> Rastrear Pedido</span>
+      </nav>
+
+      <div class="tracking-action-links">
+        <a href="perfil.html" class="btn-outline-back">
+          <i class="fas fa-arrow-left"></i> Volver a Mis Pedidos
+        </a>
+        <a href="index.html#portfolio" class="btn-outline-back">
+          <i class="fas fa-store"></i> Catálogo
+        </a>
+      </div>
+    </div>
+
+    <!-- Buscador Rápido de Orden o Guía -->
+    <section class="tracking-search-card" aria-label="Buscar pedido">
+      <form class="tracking-search-form" id="tracking-search-form" onsubmit="handleSearchTracking(event)">
+        <div class="tracking-search-input-wrap">
+          <i class="fas fa-search"></i>
+          <input 
+            type="text" 
+            id="tracking-search-input" 
+            class="tracking-search-input" 
+            placeholder="Ingresa tu ID de Pedido (ej: NAT-TC-389423) o tu Guía de Envío..."
+            autocomplete="off"
+            required
+          >
+        </div>
+        <button type="submit" class="btn-search-track">
+          <i class="fas fa-search-location"></i> Rastrear Pedido
+        </button>
+      </form>
+
+      <!-- Accesos directos a órdenes del usuario guardadas en el navegador -->
+      <div class="tracking-quick-chips" id="tracking-quick-chips">
+        <span><i class="fas fa-history"></i> Pedidos Recientes:</span>
+        <div id="quick-chips-list" style="display:inline-flex; gap:6px; flex-wrap:wrap;"></div>
+      </div>
+    </section>
+
+    <!-- Contenedor dinámico del Rastreo -->
+    <section id="tracking-result-area">
+      <!-- Se inyecta dinámicamente con JavaScript -->
+    </section>
+
+  </main>
+
+  <!-- Pie de Página -->
+  <footer id="main-footer" style="background: #1f361a; color: #ffffff; padding: 40px 20px 24px 20px; margin-top: 60px;">
+    <div class="container" style="max-width: 1080px; margin: 0 auto; text-align: center;">
+      <img src="img/logo.png" alt="Nativa" style="height: 48px; filter: brightness(0) invert(1); margin-bottom: 16px;">
+      <p style="color: #a7f3d0; font-size: 14px; margin: 0 0 12px 0;">Alimentos & Cosmética Natural Consciente</p>
+      <p style="color: #94a3b8; font-size: 13px; max-width: 520px; margin: 0 auto 20px auto; line-height: 1.6;">
+        Envíos nacionales coordinados con Servientrega, Coordinadora y Envía con seguimiento satelital paso a paso.
+      </p>
+      <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; font-size: 12px; color: #94a3b8;">
+        Nativa &copy; 2026. Todos los derechos reservados. Soporte al cliente: WhatsApp +57 300 542 7742.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // =========================================================================
+    // LÓGICA DE LA PÁGINA INDEPENDIENTE DE RASTREO (rastreo.html)
+    // =========================================================================
+
+    // Cargar órdenes guardadas de localStorage
+    function getStoredOrders() {
+      try {
+        const raw = localStorage.getItem('nativa_orders');
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) {
+        console.error('Error al leer pedidos de localStorage:', e);
+      }
+
+      // Orden predeterminada de muestra rica si es la primera vez
+      return [{
+        id: 'NAT-TC-389423',
+        date: new Date().toISOString(),
+        dateDisplay: 'Hoy',
+        currentStep: 2, // En Preparación en Bodega
+        method: 'tarjeta',
+        paymentStatus: 'aprobado',
+        guide: 'SE-74829104CO',
+        carrier: 'Servientrega Express',
+        carrierPhone: '01 8000 515151',
+        originCity: 'Medellín, Antioquia',
+        estimatedDelivery: 'Llega entre el Jueves 18 y Sábado 20 de Septiembre',
+        customer: {
+          nombre: 'Samuel',
+          apellido: 'De Paula',
+          telefono: '+57 300 542 7742',
+          email: 'samueldpp12@gmail.com',
+          departamento: 'Huila',
+          ciudad: 'Garzón',
+          direccion: 'Calle 7 # 12-45 Barrio Las Delicias',
+          notas: 'Dejar en portería o recepción'
+        },
+        items: [{
+          id: 'granola-artesanal',
+          name: 'Granola Nativa Artesanal',
+          price: 36900,
+          qty: 1,
+          img: 'img/productos/Granola_Nativa.png'
+        }],
+        total: 36900,
+        totalFormatted: '$36.900 COP'
+      }];
+    }
+
+    // Obtener parámetros de la URL
+    function getUrlParameter(name) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(name);
+    }
+
+    // Formatear montos a pesos colombianos
+    function formatCOP(num) {
+      return Number(num).toLocaleString('es-CO', {
+        style: 'currency',
+        currency: 'COP',
+        maximumFractionDigits: 0
+      });
+    }
+
+    // Metadatos y etiquetas por etapa
+    function getStepDetails(stepNum, paymentStatus) {
+      const step = parseInt(stepNum, 10) || 1;
+      switch (step) {
+        case 1:
+          if (paymentStatus === 'esperando_pago') {
+            return {
+              step: 1,
+              name: 'Esperando Pago',
+              class: 'status-waiting',
+              icon: 'fa-hourglass-half',
+              badge: 'Esperando Pago',
+              desc: 'Esperando confirmación o pago bancario/efectivo del cliente.'
+            };
+          }
+          return {
+            step: 1,
+            name: 'Confirmación & Pago Aprobado',
+            class: 'status-preparing',
+            icon: 'fa-check-circle',
+            badge: 'Pago Confirmado',
+            desc: 'Tu compra ha sido verificada y el pago está 100% procesado.'
+          };
+        case 2:
+          return {
+            step: 2,
+            name: 'En Preparación en Bodega',
+            class: 'status-preparing',
+            icon: 'fa-boxes',
+            badge: 'En Preparación',
+            desc: 'Tu pedido está siendo cuidadosamente empacado en nuestro centro ecológico.'
+          };
+        case 3:
+          return {
+            step: 3,
+            name: 'Envío en Tránsito Nacional',
+            class: 'status-transit',
+            icon: 'fa-truck-moving',
+            badge: 'En Tránsito',
+            desc: 'El paquete se encuentra en traslado en la red nacional de transporte.'
+          };
+        case 4:
+          return {
+            step: 4,
+            name: 'En Reparto Local',
+            class: 'status-delivering',
+            icon: 'fa-motorcycle',
+            badge: 'En Reparto',
+            desc: 'El mensajero asignado tiene tu paquete y está en camino a tu dirección.'
+          };
+        case 5:
+          return {
+            step: 5,
+            name: 'Entregado con Éxito',
+            class: 'status-delivered',
+            icon: 'fa-check-double',
+            badge: 'Entregado',
+            desc: 'Tu pedido ha sido recibido a conformidad en la dirección registrada.'
+          };
+        default:
+          return {
+            step: 1,
+            name: 'En Proceso',
+            class: 'status-preparing',
+            icon: 'fa-box',
+            badge: 'En Proceso',
+            desc: 'Procesando los detalles del pedido.'
+          };
+      }
+    }
+
+    // Construir la cronología de eventos
+    function generateTimelineEvents(order) {
+      const step = parseInt(order.currentStep, 10) || 1;
+      const events = [];
+
+      const todayStr = order.dateDisplay || 'Hoy';
+
+      if (step >= 1) {
+        events.push({
+          time: `${todayStr} • 09:15 AM`,
+          title: 'Pedido Registrado y Pago Confirmado',
+          location: 'Plataforma Nativa Online',
+          desc: 'Transacción aprobada. Orden asignada a bodega para preparación prioritaria.',
+          isDone: true
+        });
+      }
+
+      if (step >= 2) {
+        events.push({
+          time: `${todayStr} • 11:40 AM`,
+          title: 'Empacado y Generación de Guía de Transporte',
+          location: `Centro de Distribución Nativa (${order.originCity || 'Medellín'})`,
+          desc: `Paquete embalado bajo estándares eco-amigables con guía ${order.guide || 'SE-74829104CO'}.`,
+          isDone: true
+        });
+      }
+
+      if (step >= 3) {
+        events.push({
+          time: `${todayStr} • 03:25 PM`,
+          title: 'Recibido por la Transportadora - En Tránsito',
+          location: `${order.carrier || 'Servientrega Express'} • Terminal Principal`,
+          desc: 'Envío en movimiento hacia el centro logístico regional.',
+          isDone: true
+        });
+      }
+
+      if (step >= 4) {
+        events.push({
+          time: `${todayStr} • 07:10 AM`,
+          title: 'En Ruta de Entrega Domiciliaria',
+          location: `${order.customer?.ciudad || 'Destino'}, ${order.customer?.departamento || ''}`,
+          desc: `Asignado a mensajero local para entrega en: ${order.customer?.direccion || 'Domicilio'}.`,
+          isDone: true
+        });
+      }
+
+      if (step >= 5) {
+        events.push({
+          time: `${todayStr} • 01:45 PM`,
+          title: 'Entrega Exitosa a Conformidad',
+          location: `${order.customer?.direccion || 'Dirección de Entrega'}`,
+          desc: `Recibido por ${order.customer?.nombre || 'Cliente'} ${order.customer?.apellido || ''}. ¡Gracias por elegir Nativa!`,
+          isDone: true
+        });
+      }
+
+      return events.reverse(); // El más reciente arriba
+    }
+
+    // Renderizar la vista completa de rastreo
+    function renderTracking(order) {
+      const container = document.getElementById('tracking-result-area');
+      if (!container) return;
+
+      if (!order) {
+        container.innerHTML = `
+          <div class="tracking-not-found">
+            <div class="tracking-not-found-icon">
+              <i class="fas fa-search-minus"></i>
+            </div>
+            <h3 style="color:var(--verde-bosque); margin:0 0 8px 0; font-size:20px;">No encontramos un pedido con ese identificador</h3>
+            <p style="color:#64748b; font-size:14px; max-width:480px; margin:0 auto 20px auto; line-height:1.6;">
+              Verifica el número de orden o guía ingresado. También puedes revisar todos tus pedidos registrados en tu perfil.
+            </p>
+            <a href="perfil.html" class="btn-action-main">
+              <i class="fas fa-user-circle"></i> Ir a Mis Pedidos en el Perfil
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      const stepDetails = getStepDetails(order.currentStep || 1, order.paymentStatus);
+      const timelineEvents = generateTimelineEvents(order);
+      const currentStepNum = parseInt(order.currentStep, 10) || 1;
+
+      // Calcular porcentaje de progreso para la barra
+      const progressPercent = Math.min(100, Math.max(0, ((currentStepNum - 1) / 4) * 100));
+
+      // Pasos visuales
+      const steps = [
+        { num: 1, name: 'Confirmación', icon: 'fa-file-invoice-dollar' },
+        { num: 2, name: 'Preparación', icon: 'fa-boxes' },
+        { num: 3, name: 'En Tránsito', icon: 'fa-truck-moving' },
+        { num: 4, name: 'En Reparto', icon: 'fa-motorcycle' },
+        { num: 5, name: 'Entregado', icon: 'fa-check-double' }
+      ];
+
+      const stepsHtml = steps.map(s => {
+        let stateClass = '';
+        if (s.num < currentStepNum) {
+          stateClass = 'completed';
+        } else if (s.num === currentStepNum) {
+          stateClass = 'active';
+        }
+        return `
+          <div class="tracking-step-item ${stateClass}">
+            <div class="tracking-step-circle">
+              <i class="fas ${s.num < currentStepNum ? 'fa-check' : s.icon}"></i>
+            </div>
+            <span class="tracking-step-name">${s.name}</span>
+          </div>
+        `;
+      }).join('');
+
+      // Items de la orden
+      const itemsHtml = (order.items || []).map(item => `
+        <div class="tracking-item-row">
+          <div class="tracking-item-img">
+            <img src="${item.img || 'img/productos/Granola_Nativa.png'}" alt="${item.name}" onerror="this.onerror=null; this.src='img/productos/Granola_Nativa.png';">
+          </div>
+          <div class="tracking-item-info">
+            <span class="tracking-item-name">${item.name}</span>
+            <span class="tracking-item-sub">Cantidad: <strong>${item.qty || 1} ud(s)</strong> • Unitario: ${formatCOP(item.price || 0)}</span>
+          </div>
+          <div class="tracking-item-price">
+            ${formatCOP((item.price || 0) * (item.qty || 1))}
+          </div>
+        </div>
+      `).join('');
+
+      // Eventos de cronología
+      const timelineHtml = timelineEvents.map((evt, idx) => `
+        <div class="timeline-entry ${idx === 0 ? 'latest' : ''}">
+          <div class="timeline-dot"></div>
+          <div class="timeline-time"><i class="far fa-clock"></i> ${evt.time}</div>
+          <div class="timeline-title">${evt.title}</div>
+          <div class="timeline-location"><i class="fas fa-map-marker-alt" style="color:#15803d;"></i> ${evt.location}</div>
+          <div style="font-size:12px; color:#6b7280; margin-top:3px;">${evt.desc}</div>
+        </div>
+      `).join('');
+
+      const totalDisplay = order.totalFormatted || formatCOP(order.total || 0);
+
+      // Mensaje de WhatsApp dinámico
+      const waText = encodeURIComponent(`Hola Nativa, requiero información sobre el estado de mi pedido #${order.id} (Guía: ${order.guide || 'Pendiente'}).`);
+
+      container.innerHTML = `
+        <div class="tracking-hero-card">
+          
+          <div class="tracking-header-top">
+            <div class="tracking-order-meta">
+              <span class="tracking-order-label"><i class="fas fa-barcode"></i> NÚMERO DE PEDIDO</span>
+              <h2 class="tracking-order-title">#${order.id}</h2>
+              <div class="tracking-carrier-badge">
+                <i class="fas fa-shipping-fast" style="color:var(--verde-natural);"></i>
+                <span>${order.carrier || 'Servientrega Express'} • Guía: <strong>${order.guide || 'SE-74829104CO'}</strong></span>
+                <button type="button" title="Copiar Guía" onclick="copyGuideToClipboard('${order.guide || 'SE-74829104CO'}')">
+                  <i class="far fa-copy"></i>
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <span class="tracking-status-pill ${stepDetails.class}">
+                <i class="fas ${stepDetails.icon}"></i> ${stepDetails.badge}
+              </span>
+            </div>
+          </div>
+
+          <!-- Estimado de entrega -->
+          <div class="tracking-eta-box">
+            <div class="tracking-eta-icon">
+              <i class="fas fa-calendar-check"></i>
+            </div>
+            <div class="tracking-eta-text">
+              <strong>${order.estimatedDelivery || 'Entrega estimada en 2 a 4 días hábiles'}</strong>
+              <span>${stepDetails.desc}</span>
+            </div>
+          </div>
+
+          <!-- Barra de Pasos de Rastreo -->
+          <div class="tracking-stepper-container">
+            <div class="tracking-steps-bar">
+              <div class="tracking-progress-fill" style="width: ${progressPercent}%;"></div>
+              ${stepsHtml}
+            </div>
+          </div>
+
+          <!-- Cuadrícula de 2 Columnas -->
+          <div class="tracking-grid-layout">
+            
+            <!-- Columna 1: Cronología en Vivo -->
+            <div class="tracking-panel">
+              <h4 class="tracking-panel-title">
+                <i class="fas fa-stream" style="color:var(--verde-natural);"></i> Historial de Movimientos en Vivo
+              </h4>
+              <div class="tracking-timeline">
+                ${timelineHtml}
+              </div>
+            </div>
+
+            <!-- Columna 2: Detalles de Envío y Productos -->
+            <div class="tracking-panel">
+              <h4 class="tracking-panel-title">
+                <i class="fas fa-box-open" style="color:var(--verde-natural);"></i> Resumen de Productos (${(order.items || []).length})
+              </h4>
+              <div class="tracking-items-list">
+                ${itemsHtml}
+              </div>
+
+              <div class="tracking-total-box">
+                <span>Total Pagado:</span>
+                <strong>${totalDisplay}</strong>
+              </div>
+
+              <div class="tracking-shipping-info">
+                <strong style="color:var(--verde-bosque); display:block; margin-bottom:4px;">
+                  <i class="fas fa-map-marked-alt"></i> Datos de Entrega:
+                </strong>
+                <div><strong>Destinatario:</strong> ${order.customer?.nombre || ''} ${order.customer?.apellido || ''}</div>
+                <div><strong>Dirección:</strong> ${order.customer?.direccion || ''}</div>
+                <div><strong>Ciudad / Dpto:</strong> ${order.customer?.ciudad || ''}, ${order.customer?.departamento || ''}</div>
+                <div><strong>Teléfono:</strong> ${order.customer?.telefono || ''}</div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Acciones -->
+          <div class="tracking-actions-bar">
+            <a href="perfil.html" class="btn-action-main">
+              <i class="fas fa-user-circle"></i> Ver Todos Mis Pedidos
+            </a>
+            <a href="index.html#portfolio" class="btn-action-secondary">
+              <i class="fas fa-store"></i> Seguir Comprando
+            </a>
+            <a href="https://wa.me/573005427742?text=${waText}" target="_blank" rel="noopener noreferrer" class="btn-action-whatsapp">
+              <i class="fab fa-whatsapp"></i> Soporte de Pedido por WhatsApp
+            </a>
+          </div>
+
+        </div>
+      `;
+    }
+
+    // Copiar guía al portapapeles
+    function copyGuideToClipboard(text) {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText(text).then(() => {
+          alert('Guía copiada al portapapeles: ' + text);
+        }).catch(() => {});
+      } else {
+        alert('Número de guía: ' + text);
+      }
+    }
+
+    // Búsqueda manual de orden
+    function handleSearchTracking(e) {
+      if (e && e.preventDefault) e.preventDefault();
+      const input = document.getElementById('tracking-search-input');
+      if (!input) return;
+      const query = input.value.trim();
+      if (!query) return;
+
+      const orders = getStoredOrders();
+      const found = orders.find(o => 
+        (o.id && o.id.toLowerCase() === query.toLowerCase()) || 
+        (o.guide && o.guide.toLowerCase() === query.toLowerCase())
+      );
+
+      // Actualizar URL sin recargar
+      const newUrl = `${window.location.pathname}?order=${encodeURIComponent(query)}`;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
+
+      renderTracking(found || null);
+    }
+
+    // Inicializar página
+    function initTrackingPage() {
+      const orders = getStoredOrders();
+
+      // Renderizar accesos directos rápidos (chips)
+      const chipsList = document.getElementById('quick-chips-list');
+      if (chipsList && orders.length > 0) {
+        chipsList.innerHTML = orders.slice(0, 4).map(o => `
+          <button type="button" class="tracking-chip-btn" onclick="selectOrderChip('${o.id}')">
+            #${o.id}
+          </button>
+        `).join('');
+      }
+
+      // Detectar si hay parámetro de orden en la URL
+      const orderParam = getUrlParameter('order') || getUrlParameter('id') || getUrlParameter('guia');
+      const searchInput = document.getElementById('tracking-search-input');
+
+      let targetOrder = null;
+      if (orderParam) {
+        if (searchInput) searchInput.value = orderParam;
+        targetOrder = orders.find(o => 
+          (o.id && o.id.toLowerCase() === orderParam.toLowerCase()) || 
+          (o.guide && o.guide.toLowerCase() === orderParam.toLowerCase())
+        );
+      } else if (orders.length > 0) {
+        targetOrder = orders[0];
+        if (searchInput) searchInput.value = targetOrder.id;
+      }
+
+      renderTracking(targetOrder);
+    }
+
+    function selectOrderChip(orderId) {
+      const searchInput = document.getElementById('tracking-search-input');
+      if (searchInput) searchInput.value = orderId;
+      const orders = getStoredOrders();
+      const found = orders.find(o => o.id === orderId);
+      const newUrl = `${window.location.pathname}?order=${encodeURIComponent(orderId)}`;
+      window.history.replaceState({ path: newUrl }, '', newUrl);
+      renderTracking(found || null);
+    }
+
+    // Ejecutar al cargar la página
+    document.addEventListener('DOMContentLoaded', initTrackingPage);
+  </script>
+</body>
+</html>

@@ -1,332 +1,4 @@
-const fs = require('fs');
-
-const products = [
-  {
-    id: 1,
-    key: "prod-1",
-    file: "portfolio-1.html",
-    title: "Granola Nativa Artesanal",
-    category: "Despensa Natural",
-    badge: "Tostado Lento",
-    price: 18500,
-    priceFormatted: "$18.500 COP",
-    subtitle: "Tostado lento con miel pura de abejas y semillas seleccionadas",
-    img: "img/productos/Granola_Nativa.png",
-    paras: [
-      "Nuestra granola insignia es elaborada artesanalmente en pequeñas tandas para garantizar su máxima frescura y textura crujiente. Horneamos avena integral de grano entero con miel pura de abejas silvestres, aceite de coco virgen y una generosa mezcla de almendras, semillas de calabaza, chía y arándanos deshidratados.",
-      "Sin azúcares añadidos, sin jarabes de maíz ni conservantes artificiales. Una fuente natural de energía duradera para tus desayunos, meriendas y batidos saludables."
-    ],
-    benefits: "Rica en fibra soluble, grasas saludables monoinsaturadas y minerales esenciales como hierro y magnesio. Proporciona saciedad prolongada y vitalidad limpia sin provocar picos bruscos de glucosa.",
-    usage: "Disfrútala con leche vegetal o yogur griego al desayuno, espolvoreada sobre bowls de frutas frescas o como snack crujiente y nutritivo durante tus horas de actividad física o trabajo.",
-    specs: [
-      { icon: "fas fa-leaf", label: "Ingredientes", value: "Avena integral, miel de montaña, semillas de chía, girasol y almendras" },
-      { icon: "fas fa-award", label: "Certificación", value: "100% Artesanal y Libre de Conservantes" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "400g en empaque biodegradable resellable" },
-      { icon: "fas fa-box", label: "Conservación", value: "Guardar en lugar fresco, seco y protegido de la luz solar" }
-    ],
-    prev: null,
-    next: { file: "portfolio-2.html", title: "Miel de Montaña Pura" }
-  },
-  {
-    id: 2,
-    key: "prod-2",
-    file: "portfolio-2.html",
-    title: "Miel de Montaña Pura",
-    category: "Miel & Dulces",
-    badge: "100% Pura y Cruda",
-    price: 22000,
-    priceFormatted: "$22.000 COP",
-    subtitle: "Cruda, sin pasteurizar y recolectada en bosques altoandinos",
-    img: "img/productos/Miel_de_Montaña.png",
-    paras: [
-      "Nuestra miel de montaña proviene de colmenas ubicadas en zonas silvestres libres de pesticidas y agroquímicos. Es extraída por centrifugación en frío y envasada directamente sin someterse a procesos térmicos de pasteurización, garantizando que conserve todas sus propiedades antibacterianas, polen vivo y enzimas originales.",
-      "Posee una tonalidad ámbar oscura con notas florales complejas y una cristalización suave y natural que certifica su pureza total y nula adulteración."
-    ],
-    benefits: "Excelente endulzante natural, aliada comprobada para reforzar el sistema inmunológico, suavizar las vías respiratorias y apoyar la digestión gracias a sus enzimas bioactivas vivas.",
-    usage: "Consumir una cucharadita pura en ayunas, o para endulzar infusiones tibias (evitar hervir para proteger sus enzimas sensibles) y recetas gastronómicas conscientes.",
-    specs: [
-      { icon: "fas fa-map-marker-alt", label: "Origen", value: "Bosques nativos protegidos de alta montaña" },
-      { icon: "fas fa-award", label: "Pureza", value: "100% miel cruda de abeja sin aditivos" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Frasco de vidrio reutilizable de 500g" },
-      { icon: "fas fa-box", label: "Conservación", value: "Temperatura ambiente, no refrigerar para evitar endurecimiento" }
-    ],
-    prev: { file: "portfolio-1.html", title: "Granola Nativa Artesanal" },
-    next: { file: "portfolio-3.html", title: "Infusión Relax y Calma" }
-  },
-  {
-    id: 3,
-    key: "prod-3",
-    file: "portfolio-3.html",
-    title: "Infusión Relax y Calma",
-    category: "Tés & Infusiones",
-    badge: "Blend Botánico",
-    price: 14900,
-    priceFormatted: "$14.900 COP",
-    subtitle: "Mezcla botánica reconfortante para el descanso y la serenidad",
-    img: "img/productos/Infusión_relax.png",
-    paras: [
-      "Un blend de botánica medicinal diseñado para relajar los sentidos al final del día. Combinamos flores enteras de manzanilla silvestre, hojas de toronjil, melisa andina y botones aromáticos de lavanda cultivada sin pesticidas.",
-      "Sin cafeína ni teína, ideal para disfrutar antes de dormir o en momentos que requieran pausa y calma interior. Su aroma suave y floral transporta a la serenidad de los campos andinos."
-    ],
-    benefits: "Ayuda a reducir la sobrecarga de estrés acumulado, relaja la musculatura tensa, favorece la digestión nocturna y promueve un ciclo de descanso profundo y reparador.",
-    usage: "Agregar 1 cucharadita por taza de agua caliente a 90°C. Dejar reposar tapado durante 5 a 7 minutos para liberar todos sus aceites esenciales antes de colar.",
-    specs: [
-      { icon: "fas fa-leaf", label: "Composición", value: "Manzanilla, toronjil, melisa, lavanda y menta piperita" },
-      { icon: "fas fa-coffee", label: "Rendimiento", value: "Aprox. 40 tazas reconstituyentes" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Bolsa hermética kraft de 100g" },
-      { icon: "fas fa-heartbeat", label: "Cafeína", value: "0% libre de cafeína / teína" }
-    ],
-    prev: { file: "portfolio-2.html", title: "Miel de Montaña Pura" },
-    next: { file: "portfolio-4.html", title: "Mermelada Frutos Silvestres" }
-  },
-  {
-    id: 4,
-    key: "prod-4",
-    file: "portfolio-4.html",
-    title: "Mermelada Frutos Silvestres",
-    category: "Miel & Dulces",
-    badge: "Sin Conservantes",
-    price: 16800,
-    priceFormatted: "$16.800 COP",
-    subtitle: "Cocción lenta en paila tradicional con trozos enteros de fruta",
-    img: "img/productos/MERMELADA ARTESANAL DE FRUTOS SILVESTRES.png",
-    paras: [
-      "Elaborada a base de mora silvestre, agraz andino, arándanos y frambuesas frescas. Se cocina a fuego lento conservando la textura viva de las bayas y una acidez equilibrada con panela pulverizada orgánica.",
-      "Sin pectinas artificiales, sin colorantes ni conservantes químicos. Ideal para acompañar panes artesanales, quesos madurados, panqueques o yogur griego."
-    ],
-    benefits: "Concentrado natural de antioxidantes, antocianinas y vitamina C que protegen contra el estrés oxidativo y refuerzan las defensas celulares con pura fruta real.",
-    usage: "Perfecta para untar sobre hogazas de masa madre, complementar tablas de quesos semicurados o verter sobre avenas trasnochadas y postres naturales.",
-    specs: [
-      { icon: "fas fa-apple-alt", label: "Fruta Real", value: "Más del 80% de fruta entera por porción" },
-      { icon: "fas fa-seedling", label: "Endulzante", value: "Panela orgánica de cultivo limpio" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Tarro de vidrio de 320g" },
-      { icon: "fas fa-temperature-low", label: "Conservación", value: "Refrigerar después de abrir y consumir en 30 días" }
-    ],
-    prev: { file: "portfolio-3.html", title: "Infusión Relax y Calma" },
-    next: { file: "portfolio-5.html", title: "Aceite de Coco Extravirgen" }
-  },
-  {
-    id: 5,
-    key: "prod-5",
-    file: "portfolio-5.html",
-    title: "Aceite de Coco Extravirgen",
-    category: "Despensa Natural",
-    badge: "Prensado en Frío",
-    price: 24500,
-    priceFormatted: "$24.500 COP",
-    subtitle: "Prensado en frío de pulpa de coco fresca, sin refinar ni desodorizar",
-    img: "img/productos/ACEITE  DECOCO EXTRAVIRGEN.png.png",
-    paras: [
-      "Extraído mecánicamente a baja temperatura exclusivamente de cocos frescos madurados al sol en costas sostenibles. Conserva su aroma natural delicado y sabor auténtico.",
-      "Libre de blanqueamiento, hidrogenación o solventes químicos. Altamente estable al calor para cocinar a altas temperaturas, preparar café keto o usar como hidratante capilar y corporal puro."
-    ],
-    benefits: "Rico en triglicéridos de cadena media (MCT) que proporcionan energía limpia inmediata al cerebro y ácido láurico con propiedades antimicrobianas naturales.",
-    usage: "Ideal para saltear a temperaturas medias-altas, preparar café bulletproof, hornear panes o aplicar directamente sobre la piel y puntas del cabello seco.",
-    specs: [
-      { icon: "fas fa-cog", label: "Método", value: "Primera prensada en frío sin calor artificial" },
-      { icon: "fas fa-utensils", label: "Usos", value: "Culinario, repostería saludable y cosmética natural" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Frasco de vidrio de 450ml" },
-      { icon: "fas fa-sun", label: "Estado físico", value: "Sólido por debajo de 24°C, líquido en clima cálido" }
-    ],
-    prev: { file: "portfolio-4.html", title: "Mermelada Frutos Silvestres" },
-    next: { file: "portfolio-6.html", title: "Vinagre de Manzana Artesanal" }
-  },
-  {
-    id: 6,
-    key: "prod-6",
-    file: "portfolio-6.html",
-    title: "Vinagre de Manzana Artesanal",
-    category: "Despensa Natural",
-    badge: "Con Madre Viva",
-    price: 15600,
-    priceFormatted: "$15.600 COP",
-    subtitle: "Crudo, sin filtrar y con la madre viva llena de enzimas y probióticos",
-    img: "img/productos/VINAGRE DE MANZANA ARTESANAL.png",
-    paras: [
-      "Obtenido mediante la fermentación espontánea de manzanas criollas cultivadas en huertos limpios de altura. Nunca es calentado ni filtrado, lo que mantiene viva la 'madre' del vinagre: un complejo cultivo biológico de bacterias benéficas y aminoácidos esenciales.",
-      "De acidez suave, aroma afrutado y turbidez natural que atestigua su carácter vivo y artesanal."
-    ],
-    benefits: "Favorece el equilibrio del microbioma intestinal, estimula la secreción de jugos digestivos y contribuye a regular las curvas de glucosa después de comer.",
-    usage: "Diluir 1 cucharada sopera en un vaso con agua tibia 15 minutos antes de la comida principal, o emulsionar con aceite de oliva para vinagretas vivas.",
-    specs: [
-      { icon: "fas fa-apple-alt", label: "Origen", value: "Manzanas enteras sin concentrados ni agua añadida" },
-      { icon: "fas fa-dna", label: "Propiedades", value: "Con la 'madre' viva probiótica activa" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Botella de vidrio oscuro de 500ml" },
-      { icon: "fas fa-vial", label: "Filtrado", value: "Sin filtrar, crudo y no pasteurizado" }
-    ],
-    prev: { file: "portfolio-5.html", title: "Aceite de Coco Extravirgen" },
-    next: { file: "portfolio-7.html", title: "Jarabe de Arce Puro" }
-  },
-  {
-    id: 7,
-    key: "prod-7",
-    file: "portfolio-7.html",
-    title: "Jarabe de Arce Puro",
-    category: "Miel & Dulces",
-    badge: "Grado A Puro",
-    price: 28000,
-    priceFormatted: "$28.000 COP",
-    subtitle: "Savia 100% natural recolectada en bosques de arce certificados",
-    img: "img/productos/JARABE DE ARCE  PURO.png",
-    paras: [
-      "Elaborado mediante la evaporación lenta de la savia pura del arce azucarero. No contiene jarabes de glucosa, saborizantes de imitación ni aditivos sintéticos: es el elixir auténtico de los árboles centenarios.",
-      "De color ámbar profundo, aroma cálido y dulzura noble con notas a vainilla, nuez y madera. Ideal para panqueques, waffles, glaseados gourmet y aderezos agridulces."
-    ],
-    benefits: "Aporta minerales clave como manganeso, zinc y calcio, combinados con antioxidantes bioactivos naturales que lo distinguen de azúcares procesados.",
-    usage: "Baña tus hot cakes de avena, crepes, granola horneada o utilízalo para caramelizar vegetales asados y elaborar salsas agridulces de alta cocina.",
-    specs: [
-      { icon: "fas fa-star", label: "Grado", value: "Grado A Color Ámbar y Sabor Rico" },
-      { icon: "fas fa-tint", label: "Pureza", value: "100% Savia de Arce Concentrada sin aditivos" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Botella de vidrio con asa tradicional de 250ml" },
-      { icon: "fas fa-temperature-low", label: "Conservación", value: "Refrigerar tras la apertura" }
-    ],
-    prev: { file: "portfolio-6.html", title: "Vinagre de Manzana Artesanal" },
-    next: { file: "portfolio-8.html", title: "Azúcar Mascabado Orgánico" }
-  },
-  {
-    id: 8,
-    key: "prod-8",
-    file: "portfolio-8.html",
-    title: "Azúcar Mascabado Orgánico",
-    category: "Despensa Natural",
-    badge: "No Refinado",
-    price: 11200,
-    priceFormatted: "$11.200 COP",
-    subtitle: "Integral, no refinado y con toda su melaza natural viva",
-    img: "img/productos/AZUCAR MASCABADO ORGÁNICO.png",
-    paras: [
-      "Producido por evaporación y cristalización directa del jugo de caña recién extraído de trapiches comunitarios sostenibles. No pasa por procesos de centrifugación forzada ni blanqueamiento químico con sulfitos.",
-      "Mantiene su textura húmeda característica, aroma a caramelo y notas especiadas que realzan recetas de panadería, café de especialidad e infusiones herbales."
-    ],
-    benefits: "Preserva los micronutrientes nativos de la caña de azúcar, incluidos potasio, magnesio, hierro vegetal y complejo vitamínico natural.",
-    usage: "Reemplaza el azúcar blanco 1:1 en recetas de repostería rústica, panes integrales, café filtrado o macerados de fruta de temporada.",
-    specs: [
-      { icon: "fas fa-seedling", label: "Cultivo", value: "Caña de azúcar orgánica sin pesticidas" },
-      { icon: "fas fa-fire", label: "Proceso", value: "Evaporación tradicional limpia en paila" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Bolsa ecológica de 500g con cierre zip" },
-      { icon: "fas fa-box", label: "Textura", value: "Húmeda, grano fino con melaza viva" }
-    ],
-    prev: { file: "portfolio-7.html", title: "Jarabe de Arce Puro" },
-    next: { file: "portfolio-9.html", title: "Nueces Mariposa Naturales" }
-  },
-  {
-    id: 9,
-    key: "prod-9",
-    file: "portfolio-9.html",
-    title: "Nueces Mariposa Naturales",
-    category: "Frutos Secos",
-    badge: "Selección Extra",
-    price: 19800,
-    priceFormatted: "$19.800 COP",
-    subtitle: "Mitades enteras extra seleccionadas, ricas en ácidos grasos Omega-3",
-    img: "img/productos/NUECES MARIPOSA NATURALES.png",
-    paras: [
-      "Nuestras nueces mariposa son cosechadas en temporada óptima y partidas a mano para preservar su forma entera y evitar la rotura del fruto. Son empacadas frescas al natural, sin aceites añadidos, sin sal y sin sulfitos blanqueadores.",
-      "Textura crocante inconfundible y sabor suave con un retrogusto ligeramente dulce. Perfectas para picoteo inteligente, ensaladas de huerto, yogures y granolas caseras."
-    ],
-    benefits: "El fruto seco por excelencia para la salud cardiovascular y la función cognitiva gracias a su riqueza en ácido alfa-linolénico (Omega-3), polifenoles y vitamina E.",
-    usage: "Consume un puñado diario (4-6 mitades) como colación nutritiva, añádelas a ensaladas verdes con queso de cabra o tritúralas en pestos caseros.",
-    specs: [
-      { icon: "fas fa-brain", label: "Beneficio", value: "Alto contenido en Omega-3 vegetal y magnesio" },
-      { icon: "fas fa-check-circle", label: "Calidad", value: "Calibre Extra Light 100% natural sin tostar" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Bolsa sellada al vacío de 250g" },
-      { icon: "fas fa-shield-alt", label: "Frescura", value: "Envasado en atmósfera protectora" }
-    ],
-    prev: { file: "portfolio-8.html", title: "Azúcar Mascabado Orgánico" },
-    next: { file: "portfolio-10.html", title: "Avellanas Enteras Tostadas" }
-  },
-  {
-    id: 10,
-    key: "prod-10",
-    file: "portfolio-10.html",
-    title: "Avellanas Enteras Tostadas",
-    category: "Frutos Secos",
-    badge: "Tueste Lento",
-    price: 21500,
-    priceFormatted: "$21.500 COP",
-    subtitle: "Tostadas artesanalmente con calor seco, sin aceites añadidos y ricas en vitamina E",
-    img: "img/productos/AVELLANAS ENTERAS TOSTADAS.png",
-    paras: [
-      "Nuestras avellanas europeas seleccionadas son sometidas a un tueste lento y homogéneo en tambor con aire caliente seco, sin añadir aceites refinados ni sal. Este proceso despierta sus aceites esenciales naturales, logrando un aroma tostado irresistible y una textura crujiente insuperable.",
-      "Empacadas en fresco para conservar toda su potencia antioxidante y sabor original. Ideales para disfrutar solas como colación consciente, preparar cremas de avellana caseras o enriquecer tus recetas de repostería y granolas."
-    ],
-    benefits: "Excepcional fuente de vitamina E (potente protector celular), grasas monoinsaturadas cardiosaludables, ácido fólico y magnesio que favorecen la salud del corazón y la vitalidad de la piel.",
-    usage: "Consúmelas como snack energético a media tarde, tritúralas para elaborar mantequilla vegetal de avellana o añádelas troceadas a ensaladas frescas, yogures y postres naturales.",
-    specs: [
-      { icon: "fas fa-fire", label: "Tueste", value: "Tostado seco lento sin aceite ni sal" },
-      { icon: "fas fa-heart", label: "Beneficio", value: "Rica en vitamina E y antioxidantes naturales" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Bolsa resellable kraft de 250g" },
-      { icon: "fas fa-shield-alt", label: "Frescura", value: "Envasado hermético para máxima crocancia" }
-    ],
-    prev: { file: "portfolio-9.html", title: "Nueces Mariposa Naturales" },
-    next: { file: "portfolio-11.html", title: "Galletas de Avena y Miel" }
-  },
-  {
-    id: 11,
-    key: "prod-11",
-    file: "portfolio-11.html",
-    title: "Galletas de Avena y Miel",
-    category: "Despensa Natural",
-    badge: "Horneado Diario",
-    price: 12500,
-    priceFormatted: "$12.500 COP",
-    subtitle: "Horneadas artesanalmente con copos enteros de avena, miel pura de abejas y canela",
-    img: "img/productos/GALLETAS DE AVENA Y MIEL.png",
-    paras: [
-      "Elaboradas según la receta tradicional familiar, nuestras galletas combinan copos de avena integral recién molida con nuestra miel de montaña pura y un toque aromático de canela de Ceilán. Horneadas a baja temperatura para lograr un dorado perfecto con borde crujiente y centro tierno.",
-      "100% libres de harinas refinadas, sin azúcares procesados, grasas hidrogenadas ni conservantes químicos. La merienda limpia y reconfortante que tu cuerpo merece."
-    ],
-    benefits: "Aporte sostenido de energía gracias a la fibra soluble beta-glucano de la avena y los nutrientes vivos de la miel pura. Ayudan a mantener la saciedad y la digestión ligera sin generar pesadez.",
-    usage: "Disfrútalas al desayuno con una taza de té verde o leche vegetal, llévalas como refrigerio saludable a tus jornadas de estudio o trabajo, o como premio nutritivo tras el entrenamiento.",
-    specs: [
-      { icon: "fas fa-cookie-bite", label: "Horneado", value: "Artesanal en pequeños lotes frescos" },
-      { icon: "fas fa-leaf", label: "Ingredientes", value: "Avena integral, miel pura, canela y aceite de coco" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Paquete biodegradable con 8 unidades (200g)" },
-      { icon: "fas fa-ban", label: "Libre de", value: "Sin azúcar refinada ni conservantes artificiales" }
-    ],
-    prev: { file: "portfolio-10.html", title: "Avellanas Enteras Tostadas" },
-    next: { file: "portfolio-12.html", title: "Té Vital Blend Energético" }
-  },
-  {
-    id: 12,
-    key: "prod-12",
-    file: "portfolio-12.html",
-    title: "Té Vital Blend Energético",
-    category: "Tés & Infusiones",
-    badge: "Blend Exclusivo",
-    price: 16500,
-    priceFormatted: "$16.500 COP",
-    subtitle: "Té verde premium con jengibre fresco, cáscaras de naranja y hierbas tonificantes",
-    img: "img/Té Vital_ Energía Natural y Bienestar.png",
-    paras: [
-      "Nuestra fórmula insignia 'Té Vital' fue creada para activar tu mente y cuerpo de manera limpia y sostenida. Combina hojas seleccionadas de té verde de alta montaña con trocitos de jengibre deshidratado al sol, cáscara de naranja dulce y hierbabuena andina.",
-      "Proporciona una estimulación suave y balanceada sin generar nerviosismo ni bajones de energía. Su sabor cítrico y especiado reconforta el espíritu y llena tus mañanas de frescura botánica viva."
-    ],
-    benefits: "Alto contenido de catequinas antioxidantes (EGCG), estimula el metabolismo de forma natural, fortalece las defensas celulares y proporciona agudeza mental clara.",
-    usage: "Infundir 1 cucharadita en agua a 80°C durante 3 a 4 minutos. Ideal por las mañanas o antes de actividades que requieran enfoque, vitalidad y creatividad.",
-    specs: [
-      { icon: "fas fa-leaf", label: "Composición", value: "Té verde sencha, jengibre, cáscara de naranja y hierbabuena" },
-      { icon: "fas fa-bolt", label: "Efecto", value: "Energía limpia, vitalidad y enfoque prolongado" },
-      { icon: "fas fa-weight-hanging", label: "Presentación", value: "Bolsa hermética kraft con cierre zip de 100g" },
-      { icon: "fas fa-coffee", label: "Rendimiento", value: "Rinde aprox. 45 tazas reconfortantes" }
-    ],
-    prev: { file: "portfolio-11.html", title: "Galletas de Avena y Miel" },
-    next: null
-  }
-];
-
-function generateHtml(p) {
-  const whatsappBuyUrl = `https://wa.me/573005427742?text=${encodeURIComponent(`Hola NATIVA, quiero hacer un pedido de ${p.title} (${p.priceFormatted}). ¿Tienen disponibilidad para envío?`)}`;
-  
-  const prevBtn = p.prev 
-    ? `<a href="${p.prev.file}" class="btn-nav-prod"><i class="fas fa-arrow-left"></i> <span>${p.prev.title}</span></a>`
-    : `<span style="flex:1;"></span>`;
-
-  const nextBtn = p.next
-    ? `<a href="${p.next.file}" class="btn-nav-prod"><span>${p.next.title}</span> <i class="fas fa-arrow-right"></i></a>`
-    : `<span style="flex:1;"></span>`;
-
-  return `<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -337,7 +9,7 @@ function generateHtml(p) {
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/mobile.css">
-  <title>${p.title} | NATIVA Productos Naturales</title>
+  <title>Té Vital Blend Energético | NATIVA Productos Naturales</title>
 </head>
 <body>
 
@@ -381,9 +53,9 @@ function generateHtml(p) {
         <span class="crumb-sep">/</span>
         <a href="index.html#portfolio">Catálogo</a>
         <span class="crumb-sep">/</span>
-        <a href="index.html#portfolio">${p.category}</a>
+        <a href="index.html#portfolio">Tés & Infusiones</a>
         <span class="crumb-sep">/</span>
-        <span class="crumb-current">${p.title}</span>
+        <span class="crumb-current">Té Vital Blend Energético</span>
       </nav>
     </div>
   </div>
@@ -398,9 +70,9 @@ function generateHtml(p) {
         <!-- Columna Izquierda: Galería y Garantías -->
         <div class="product-gallery-side">
           <div class="product-gallery-card">
-            <span class="product-gallery-badge"><i class="fas fa-check"></i> ${p.badge}</span>
+            <span class="product-gallery-badge"><i class="fas fa-check"></i> Blend Exclusivo</span>
             <div class="product-gallery-image-wrap">
-              <img src="${p.img}" alt="${p.title}">
+              <img src="img/Té Vital_ Energía Natural y Bienestar.png" alt="Té Vital Blend Energético">
             </div>
           </div>
 
@@ -423,9 +95,9 @@ function generateHtml(p) {
 
         <!-- Columna Derecha: Información y Compra -->
         <div class="product-info-column">
-          <span class="product-cat-tag"><i class="fas fa-tag"></i> ${p.category}</span>
-          <h1 class="product-main-title">${p.title}</h1>
-          <p class="product-subtitle">${p.subtitle}</p>
+          <span class="product-cat-tag"><i class="fas fa-tag"></i> Tés & Infusiones</span>
+          <h1 class="product-main-title">Té Vital Blend Energético</h1>
+          <p class="product-subtitle">Té verde premium con jengibre fresco, cáscaras de naranja y hierbas tonificantes</p>
 
           <!-- Valoración -->
           <div class="product-rating-row">
@@ -442,7 +114,7 @@ function generateHtml(p) {
           <!-- Caja de Precio y Disponibilidad -->
           <div class="product-price-box">
             <div>
-              <span class="product-price-amount">${p.priceFormatted}</span>
+              <span class="product-price-amount">$16.500 COP</span>
               <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">IVA incluido &bull; Venta artesanal</div>
             </div>
             <span class="product-stock-tag">En Stock Inmediato</span>
@@ -462,7 +134,7 @@ function generateHtml(p) {
               </button>
             </div>
 
-            <a href="${whatsappBuyUrl}" class="btn-whatsapp-detail" target="_blank" rel="noopener noreferrer">
+            <a href="https://wa.me/573005427742?text=Hola%20NATIVA%2C%20quiero%20hacer%20un%20pedido%20de%20T%C3%A9%20Vital%20Blend%20Energ%C3%A9tico%20(%2416.500%20COP).%20%C2%BFTienen%20disponibilidad%20para%20env%C3%ADo%3F" class="btn-whatsapp-detail" target="_blank" rel="noopener noreferrer">
               <i class="fab fa-whatsapp"></i> Pedir Directo por WhatsApp
             </a>
           </div>
@@ -470,7 +142,10 @@ function generateHtml(p) {
           <!-- Especificaciones Resumidas -->
           <div class="product-specs-card">
             <ul class="specs-list">
-              ${p.specs.map(s => `<li><i class="${s.icon}"></i> <strong>${s.label}:</strong> <span>${s.value}</span></li>`).join('\n              ')}
+              <li><i class="fas fa-leaf"></i> <strong>Composición:</strong> <span>Té verde sencha, jengibre, cáscara de naranja y hierbabuena</span></li>
+              <li><i class="fas fa-bolt"></i> <strong>Efecto:</strong> <span>Energía limpia, vitalidad y enfoque prolongado</span></li>
+              <li><i class="fas fa-weight-hanging"></i> <strong>Presentación:</strong> <span>Bolsa hermética kraft con cierre zip de 100g</span></li>
+              <li><i class="fas fa-coffee"></i> <strong>Rendimiento:</strong> <span>Rinde aprox. 45 tazas reconfortantes</span></li>
             </ul>
           </div>
         </div>
@@ -483,25 +158,26 @@ function generateHtml(p) {
         <!-- Tarjeta de Descripción -->
         <div class="extended-card">
           <h3><i class="fas fa-book-open"></i> Descripción del Producto</h3>
-          ${p.paras.map(para => `<p class="lora-text">${para}</p>`).join('\n          ')}
+          <p class="lora-text">Nuestra fórmula insignia 'Té Vital' fue creada para activar tu mente y cuerpo de manera limpia y sostenida. Combina hojas seleccionadas de té verde de alta montaña con trocitos de jengibre deshidratado al sol, cáscara de naranja dulce y hierbabuena andina.</p>
+          <p class="lora-text">Proporciona una estimulación suave y balanceada sin generar nerviosismo ni bajones de energía. Su sabor cítrico y especiado reconforta el espíritu y llena tus mañanas de frescura botánica viva.</p>
         </div>
 
         <!-- Tarjeta de Beneficios y Consumo -->
         <div class="extended-card">
           <h3><i class="fas fa-heart"></i> Beneficios para tu Bienestar</h3>
-          <p class="lora-text">${p.benefits}</p>
+          <p class="lora-text">Alto contenido de catequinas antioxidantes (EGCG), estimula el metabolismo de forma natural, fortalece las defensas celulares y proporciona agudeza mental clara.</p>
           
           <h3 style="margin-top: 24px;"><i class="fas fa-utensils"></i> Recomendación de Consumo</h3>
-          <p class="lora-text">${p.usage}</p>
+          <p class="lora-text">Infundir 1 cucharadita en agua a 80°C durante 3 a 4 minutos. Ideal por las mañanas o antes de actividades que requieran enfoque, vitalidad y creatividad.</p>
         </div>
 
       </div>
 
       <!-- Barra de Navegación entre Productos -->
       <div class="product-nav-strip">
-        ${prevBtn}
+        <a href="portfolio-11.html" class="btn-nav-prod"><i class="fas fa-arrow-left"></i> <span>Galletas de Avena y Miel</span></a>
         <a href="index.html#portfolio" class="btn-nav-prod btn-catalog"><i class="fas fa-th-large"></i> Ver Todo el Catálogo</a>
-        ${nextBtn}
+        <span style="flex:1;"></span>
       </div>
 
     </div>
@@ -526,7 +202,7 @@ function generateHtml(p) {
   </footer>
 
   <!-- Botón Flotante de WhatsApp -->
-  <a href="${whatsappBuyUrl}" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chatea con nosotros por WhatsApp">
+  <a href="https://wa.me/573005427742?text=Hola%20NATIVA%2C%20quiero%20hacer%20un%20pedido%20de%20T%C3%A9%20Vital%20Blend%20Energ%C3%A9tico%20(%2416.500%20COP).%20%C2%BFTienen%20disponibilidad%20para%20env%C3%ADo%3F" class="whatsapp-float" target="_blank" rel="noopener noreferrer" aria-label="Chatea con nosotros por WhatsApp">
     <svg class="whatsapp-icon" viewBox="0 0 448 512" width="32" height="32" fill="currentColor" aria-hidden="true">
       <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32c-122.4 0-222 99.6-222 222 0 39.1 10.2 77.3 29.6 111L0 480l117.7-30.9c32.4 17.7 68.9 27 106.1 27h.1c122.3 0 224.1-99.6 224.1-222 0-59.3-25.2-115-67.1-157zm-157 341.6c-33.2 0-65.7-8.9-94-25.7l-6.7-4-69.8 18.3L72 359.2l-4.4-7c-18.5-29.4-28.2-63.3-28.2-98.2 0-101.7 82.8-184.5 184.6-184.5 49.3 0 95.6 19.2 130.4 54.1 34.8 34.9 56.2 81.2 56.1 130.5 0 101.8-84.9 184.6-186.6 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8-3.7 5.6-14.3 18-17.6 21.8-3.2 3.7-6.5 4.2-12 1.4-32.6-16.3-54-29.1-75.5-66-5.7-9.8 5.7-9.1 16.3-30.3 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2-3.7 0-9.7 1.4-14.8 6.9-5.1 5.6-19.4 19-19.4 46.3 0 27.3 19.9 53.7 22.6 57.4 2.8 3.7 39.1 59.7 94.8 83.8 35.2 15.2 49 16.5 66.6 13.9 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.3-2.5-5-3.9-10.5-6.6z"/>
     </svg>
@@ -869,10 +545,10 @@ function generateHtml(p) {
   <script>
     // Datos del producto actual
     const currentProduct = {
-      id: "${p.key}",
-      name: "${p.title}",
-      price: ${p.price},
-      img: "${p.img}"
+      id: "prod-12",
+      name: "Té Vital Blend Energético",
+      price: 16500,
+      img: "img/Té Vital_ Energía Natural y Bienestar.png"
     };
 
     // Contador de cantidad para la página
@@ -971,23 +647,23 @@ function generateHtml(p) {
         const itemQty = item.qty || item.quantity || 1;
         const itemTotal = item.price * itemQty;
         total += itemTotal;
-        return \`
+        return `
           <div class="cart-item">
-            <img src="\${item.img}" alt="\${item.name}" class="cart-item-img">
+            <img src="${item.img}" alt="${item.name}" class="cart-item-img">
             <div class="cart-item-info">
-              <div class="cart-item-name">\${item.name}</div>
-              <div class="cart-item-price">\${formatPrice(itemTotal)}</div>
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatPrice(itemTotal)}</div>
               <div class="cart-item-qty">
-                <button type="button" class="qty-btn" onclick="changeQty(\${index}, -1)" aria-label="Disminuir">-</button>
-                <span style="min-width: 18px; text-align: center; font-size: 13px; font-weight: 700;">\${itemQty}</span>
-                <button type="button" class="qty-btn" onclick="changeQty(\${index}, 1)" aria-label="Aumentar">+</button>
-                <button type="button" class="remove-item-btn" onclick="removeItem(\${index})" aria-label="Eliminar producto" title="Eliminar">
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" aria-label="Disminuir">-</button>
+                <span style="min-width: 18px; text-align: center; font-size: 13px; font-weight: 700;">${itemQty}</span>
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)" aria-label="Aumentar">+</button>
+                <button type="button" class="remove-item-btn" onclick="removeItem(${index})" aria-label="Eliminar producto" title="Eliminar">
                   <i class="fas fa-trash-alt"></i>
                 </button>
               </div>
             </div>
           </div>
-        \`;
+        `;
       }).join('');
 
       const subtotalEl = document.getElementById('cart-subtotal');
@@ -995,13 +671,13 @@ function generateHtml(p) {
 
       const checkoutBtn = document.getElementById('checkout-whatsapp-btn');
       if (checkoutBtn) {
-        let msg = "¡Hola NATIVA! Deseo confirmar el siguiente pedido de productos naturales:\\n\\n";
+        let msg = "¡Hola NATIVA! Deseo confirmar el siguiente pedido de productos naturales:\n\n";
         cart.forEach(item => {
           const q = item.qty || item.quantity || 1;
-          msg += \`• \${q}x \${item.name} (\${formatPrice(item.price * q)})\\n\`;
+          msg += `• ${q}x ${item.name} (${formatPrice(item.price * q)})\n`;
         });
-        msg += \`\\nTotal: \${formatPrice(total)}\\n¿Cuáles son los métodos de pago disponibles?\`;
-        checkoutBtn.href = \`https://wa.me/573005427742?text=\${encodeURIComponent(msg)}\`;
+        msg += `\nTotal: ${formatPrice(total)}\n¿Cuáles son los métodos de pago disponibles?`;
+        checkoutBtn.href = `https://wa.me/573005427742?text=${encodeURIComponent(msg)}`;
       }
     }
 
@@ -1023,7 +699,7 @@ function generateHtml(p) {
       const removedName = cart[index].name;
       cart.splice(index, 1);
       saveCart();
-      showToast(\`Se eliminó "\${removedName}" del carrito\`);
+      showToast(`Se eliminó "${removedName}" del carrito`);
     };
 
     // Apertura y Cierre del Drawer del Carrito
@@ -1082,7 +758,7 @@ function generateHtml(p) {
           });
         }
         saveCart();
-        showToast(\`¡\${itemQuantity}x \${currentProduct.name} añadido al carrito!\`);
+        showToast(`¡${itemQuantity}x ${currentProduct.name} añadido al carrito!`);
         openCart();
       });
     }
@@ -1149,7 +825,7 @@ function generateHtml(p) {
       if (!deptSelect) return;
       const currentVal = deptSelect.value;
       deptSelect.innerHTML = '<option value="">Selecciona tu departamento...</option>' + 
-        Object.keys(colombiaData).sort().map(d => \`<option value="\${d}">\${d}</option>\`).join('');
+        Object.keys(colombiaData).sort().map(d => `<option value="${d}">${d}</option>`).join('');
       if (currentVal) deptSelect.value = currentVal;
     }
 
@@ -1166,13 +842,13 @@ function generateHtml(p) {
 
       const cities = colombiaData[selectedDept];
       ciudadSelect.innerHTML = '<option value="">Selecciona tu ciudad...</option>' + 
-        cities.map(c => \`<option value="\${c}">\${c}</option>\`).join('');
+        cities.map(c => `<option value="${c}">${c}</option>`).join('');
     }
 
     function setStep(stepNum) {
       [1, 2, 3].forEach(num => {
-        const tab = document.getElementById(\`step-tab-\${num}\`);
-        const view = document.getElementById(\`checkout-step-\${num}\`);
+        const tab = document.getElementById(`step-tab-${num}`);
+        const view = document.getElementById(`checkout-step-${num}`);
         if (tab) {
           tab.classList.remove('active', 'completed');
           if (num < stepNum) tab.classList.add('completed');
@@ -1229,7 +905,7 @@ function generateHtml(p) {
 
       const step2Dest = document.getElementById('checkout-step2-destinatario');
       if (step2Dest) {
-        step2Dest.textContent = \`Destino: \${ciudad}, \${departamento} (\${nombre} \${apellido})\`;
+        step2Dest.textContent = `Destino: ${ciudad}, ${departamento} (${nombre} ${apellido})`;
       }
       const step2Total = document.getElementById('checkout-step2-total');
       if (step2Total) {
@@ -1242,8 +918,8 @@ function generateHtml(p) {
     function selectPaymentMethod(method) {
       checkoutData.metodoPago = method;
       ['efectivo', 'nequi', 'bancos', 'tarjetas'].forEach(m => {
-        const card = document.getElementById(\`card-method-\${m}\`);
-        const radio = document.getElementById(\`pay-\${m}\`);
+        const card = document.getElementById(`card-method-${m}`);
+        const radio = document.getElementById(`pay-${m}`);
         if (card) {
           if (m === method) {
             card.classList.add('selected');
@@ -1258,7 +934,7 @@ function generateHtml(p) {
 
     function generateUniqueId(prefix) {
       const rand = Math.floor(100000 + Math.random() * 900000);
-      return \`\${prefix}-\${rand}\`;
+      return `${prefix}-${rand}`;
     }
 
     function submitFinalCheckout() {
@@ -1267,26 +943,26 @@ function generateHtml(p) {
       if (!container) return;
 
       const totalFormatted = formatPrice(checkoutData.total);
-      const itemsList = cart.map(item => \`
+      const itemsList = cart.map(item => `
         <div class="confirmation-summary-row">
-          <span>\${item.name} (x\${item.qty || 1})</span>
-          <strong>\${formatPrice(item.price * (item.qty || 1))}</strong>
+          <span>${item.name} (x${item.qty || 1})</span>
+          <strong>${formatPrice(item.price * (item.qty || 1))}</strong>
         </div>
-      \`).join('');
+      `).join('');
 
       if (method === 'nequi' || method === 'bancos') {
         const entidad = method === 'nequi' ? 'Nequi' : (document.getElementById('banco-select')?.value || 'tu banco');
         const phoneNequi = document.getElementById('nequi-celular')?.value.trim() || checkoutData.telefono;
         const refId = generateUniqueId('NAT-PSE');
 
-        container.innerHTML = \`
+        container.innerHTML = `
           <div class="confirmation-status-box status-bank">
             <div class="confirmation-icon">
               <i class="fas fa-bell"></i>
             </div>
             <div class="confirmation-title">¡Notificación enviada a tu banco!</div>
             <div class="confirmation-message">
-              Se le envió una notificación a tu entidad bancaria (<strong>\${entidad}</strong>)\${method === 'nequi' ? \` asociada a tu línea <strong>\${phoneNequi}</strong>\` : ''}.<br><br>
+              Se le envió una notificación a tu entidad bancaria (<strong>${entidad}</strong>)${method === 'nequi' ? ` asociada a tu línea <strong>${phoneNequi}</strong>` : ''}.<br><br>
               <strong>Debes de esperar que se realice el pago:</strong> por favor ingresa a tu aplicación o banca virtual para autorizar la solicitud y confirmar la transacción.
             </div>
             <div style="display:inline-flex; align-items:center; gap:8px; background:#dcfce7; color:#166534; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:700;">
@@ -1295,37 +971,37 @@ function generateHtml(p) {
           </div>
 
           <div class="confirmation-summary-card">
-            <h5><i class="fas fa-receipt"></i> Resumen de la Orden (Ref: \${refId})</h5>
+            <h5><i class="fas fa-receipt"></i> Resumen de la Orden (Ref: ${refId})</h5>
             <div class="confirmation-summary-row">
               <span>Cliente:</span>
-              <strong>\${checkoutData.nombre} \${checkoutData.apellido}</strong>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Correo:</span>
-              <strong>\${checkoutData.email}</strong>
+              <strong>${checkoutData.email}</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Envío a:</span>
-              <strong>\${checkoutData.direccion}, \${checkoutData.ciudad} (\${checkoutData.departamento})</strong>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Método:</span>
-              <strong>\${method === 'nequi' ? 'Nequi' : 'PSE / Débito Bancario (' + entidad + ')'}</strong>
+              <strong>${method === 'nequi' ? 'Nequi' : 'PSE / Débito Bancario (' + entidad + ')'}</strong>
             </div>
             <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
-              \${itemsList}
+              ${itemsList}
             </div>
             <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
               <span>Total a Pagar:</span>
-              <strong style="font-size:1.15rem;">\${totalFormatted}</strong>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
             </div>
           </div>
-        \`;
+        `;
       } else if (method === 'efectivo') {
         const uniqueId = generateUniqueId('NAT-EF');
         checkoutData.orderId = uniqueId;
 
-        container.innerHTML = \`
+        container.innerHTML = `
           <div class="confirmation-status-box status-cash">
             <div class="confirmation-icon">
               <i class="fas fa-receipt"></i>
@@ -1335,7 +1011,7 @@ function generateHtml(p) {
             <div style="margin: 12px 0;">
               <div class="unique-id-display">
                 <span>Tu ID Único de Pago:</span>
-                <span class="unique-id-value">\${uniqueId}</span>
+                <span class="unique-id-value">${uniqueId}</span>
               </div>
             </div>
 
@@ -1344,7 +1020,7 @@ function generateHtml(p) {
             </div>
 
             <div class="confirmation-message">
-              Acércate a cualquier sucursal de <strong>Efecty, Baloto, Paga Todo o Su Red</strong> con tu <strong>ID único de pago (\${uniqueId})</strong> y el código de convenio Nativa <strong>#98412</strong>.<br><br>
+              Acércate a cualquier sucursal de <strong>Efecty, Baloto, Paga Todo o Su Red</strong> con tu <strong>ID único de pago (${uniqueId})</strong> y el código de convenio Nativa <strong>#98412</strong>.<br><br>
               <strong style="color:#b91c1c;">⚠️ Se tiene un tiempo límite de 24 horas para pagar.</strong> Al transcurrir las 24h sin realizarse el pago, el pedido y la referencia caducarán automáticamente.
             </div>
           </div>
@@ -1357,35 +1033,35 @@ function generateHtml(p) {
             </div>
             <div class="confirmation-summary-row">
               <span>ID Único / Referencia:</span>
-              <strong style="color:#92400e; font-family:monospace; font-size:15px;">\${uniqueId}</strong>
+              <strong style="color:#92400e; font-family:monospace; font-size:15px;">${uniqueId}</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Valor Exacto en Caja:</span>
-              <strong style="font-size:1.15rem; color:var(--verde-bosque);">${'\\${totalFormatted}'}</strong>
+              <strong style="font-size:1.15rem; color:var(--verde-bosque);">\${totalFormatted}</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Destinatario:</span>
-              <strong>\${checkoutData.nombre} \${checkoutData.apellido} (\${checkoutData.ciudad})</strong>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido} (${checkoutData.ciudad})</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Dirección de Entrega:</span>
-              <strong>\${checkoutData.direccion}</strong>
+              <strong>${checkoutData.direccion}</strong>
             </div>
             <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
-              \${itemsList}
+              ${itemsList}
             </div>
           </div>
-        \`;
+        `;
       } else {
         const refId = generateUniqueId('NAT-TC');
-        container.innerHTML = \`
+        container.innerHTML = `
           <div class="confirmation-status-box status-bank">
             <div class="confirmation-icon" style="background:var(--verde-natural);">
               <i class="fas fa-check"></i>
             </div>
             <div class="confirmation-title">¡Transacción Registrada con Éxito!</div>
             <div class="confirmation-message">
-              Hemos recibido tu solicitud de pago con tarjeta por un monto total de <strong>\${totalFormatted}</strong>. La referencia generada es <strong>\${refId}</strong> y se ha enviado el comprobante a <strong>\${checkoutData.email}</strong>.
+              Hemos recibido tu solicitud de pago con tarjeta por un monto total de <strong>${totalFormatted}</strong>. La referencia generada es <strong>${refId}</strong> y se ha enviado el comprobante a <strong>${checkoutData.email}</strong>.
             </div>
           </div>
 
@@ -1393,21 +1069,21 @@ function generateHtml(p) {
             <h5><i class="fas fa-receipt"></i> Resumen del Pedido</h5>
             <div class="confirmation-summary-row">
               <span>Cliente:</span>
-              <strong>\${checkoutData.nombre} \${checkoutData.apellido}</strong>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
             </div>
             <div class="confirmation-summary-row">
               <span>Entrega:</span>
-              <strong>\${checkoutData.direccion}, \${checkoutData.ciudad} (\${checkoutData.departamento})</strong>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
             </div>
             <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
-              \${itemsList}
+              ${itemsList}
             </div>
             <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
               <span>Total Pagado:</span>
-              <strong style="font-size:1.15rem;">\${totalFormatted}</strong>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
             </div>
           </div>
-        \`;
+        `;
       }
 
       setStep(3);
@@ -1477,7 +1153,7 @@ function generateHtml(p) {
 
       const itemsSummary = document.getElementById('checkout-items-summary');
       if (itemsSummary) {
-        itemsSummary.textContent = \`\${totalQty} producto\${totalQty > 1 ? 's' : ''} en tu orden\`;
+        itemsSummary.textContent = `${totalQty} producto${totalQty > 1 ? 's' : ''} en tu orden`;
       }
       const totalPrice = document.getElementById('checkout-total-price');
       if (totalPrice) {
@@ -1505,11 +1181,3 @@ function generateHtml(p) {
   </script>
 </body>
 </html>
-`;
-}
-
-products.forEach(p => {
-  const html = generateHtml(p);
-  fs.writeFileSync(p.file, html, 'utf8');
-  console.log(`Successfully generated aesthetic page for ${p.file}`);
-});

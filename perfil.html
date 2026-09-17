@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Tipografía Oficial: Montserrat y Lora -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400;1,600&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" media="screen and (max-width: 768px)" href="css/mobile.css">
+  <title>NATIVA | Mi Perfil y Pedidos Realizados</title>
+  <style>
+    /* Estilos específicos de la página independiente de Perfil */
+    .perfil-page-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px 80px 20px;
+    }
+
+    .perfil-hero-header {
+      margin-bottom: 24px;
+    }
+
+    .perfil-back-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .perfil-back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .perfil-back-link:hover {
+      color: var(--verde-natural);
+    }
+
+    .perfil-crumb-sep {
+      color: #94a3b8;
+      margin: 0 4px;
+    }
+
+    .perfil-crumb-active {
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .btn-perfil-store {
+      background: #ffffff;
+      color: var(--verde-bosque);
+      border: 1.5px solid var(--verde-bosque);
+      padding: 8px 18px;
+      border-radius: 25px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    .btn-perfil-store:hover {
+      background: var(--verde-bosque);
+      color: #ffffff;
+      transform: translateY(-1px);
+    }
+
+    /* Vista de Rastreo Integrada (Sin Modal) */
+    .tracking-view-box {
+      background: #ffffff;
+      border: 1px solid #d9e6d6;
+      border-radius: 16px;
+      padding: 26px 28px;
+      box-shadow: 0 4px 20px rgba(31, 54, 26, 0.05);
+      margin-bottom: 30px;
+    }
+
+    .tracking-view-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #edf4eb;
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .btn-back-to-orders {
+      background: #f1f5f9;
+      color: #334155;
+      border: 1px solid #cbd5e1;
+      padding: 7px 15px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-back-to-orders:hover {
+      background: #e2e8f0;
+      color: #0f172a;
+    }
+
+    /* Estilos del Rastreador Integrado en Perfil */
+    .tracking-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+    .tracking-meta-card {
+      background: #f8faf7;
+      border: 1px solid #e2ece0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .tracking-meta-card i {
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: #e8f4e5;
+      color: var(--verde-bosque);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .tracking-meta-card small {
+      display: block;
+      font-size: 11.5px;
+      color: #64748b;
+      margin-bottom: 2px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .tracking-meta-card strong {
+      font-size: 14px;
+      color: #1f2937;
+    }
+    .tracking-stepper-card {
+      background: #ffffff;
+      border: 1px solid #e2ece0;
+      border-radius: 14px;
+      padding: 22px 20px;
+      margin-bottom: 24px;
+    }
+    .tracking-stepper-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      margin: 0 0 20px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tracking-steps-bar {
+      display: flex;
+      justify-content: space-between;
+      position: relative;
+    }
+    .tracking-steps-bar::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      right: 24px;
+      height: 4px;
+      background: #e2e8df;
+      z-index: 1;
+    }
+    .tracking-steps-fill {
+      position: absolute;
+      top: 20px;
+      left: 24px;
+      height: 4px;
+      background: #2e7d32;
+      z-index: 1;
+      transition: width 0.4s ease;
+    }
+    .track-step-node {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      flex: 1;
+    }
+    .step-circle {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      background: #ffffff;
+      border: 3px solid #cbd5e1;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 15px;
+      margin-bottom: 8px;
+      transition: all 0.3s ease;
+    }
+    .track-step-node.completed .step-circle {
+      background: #2e7d32;
+      border-color: #2e7d32;
+      color: #ffffff;
+    }
+    .track-step-node.active .step-circle {
+      background: #ffffff;
+      border-color: #2e7d32;
+      color: #2e7d32;
+      box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.2);
+    }
+    .step-title-text {
+      font-size: 13px;
+      font-weight: 700;
+      color: #475569;
+      margin-bottom: 2px;
+    }
+    .track-step-node.active .step-title-text,
+    .track-step-node.completed .step-title-text {
+      color: var(--verde-bosque);
+    }
+    .step-sub-text {
+      font-size: 11px;
+      color: #94a3b8;
+      max-width: 110px;
+      line-height: 1.3;
+    }
+    .tracking-grid-2col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    @media (max-width: 768px) {
+      .tracking-grid-2col {
+        grid-template-columns: 1fr;
+      }
+      .tracking-steps-bar {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .tracking-steps-bar::before, .tracking-steps-fill {
+        display: none;
+      }
+      .track-step-node {
+        flex-direction: row;
+        text-align: left;
+        gap: 12px;
+      }
+      .step-circle {
+        margin-bottom: 0;
+      }
+    }
+    .tracking-card-box {
+      background: #ffffff;
+      border: 1px solid #e2ece0;
+      border-radius: 12px;
+      padding: 18px 20px;
+    }
+    .tracking-card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      margin: 0 0 14px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tracking-timeline-list {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding-left: 20px;
+    }
+    .tracking-timeline-list::before {
+      content: '';
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      left: 5px;
+      width: 2px;
+      background: #e2ece0;
+    }
+    .timeline-log-item {
+      position: relative;
+      padding-bottom: 16px;
+    }
+    .timeline-log-item:last-child {
+      padding-bottom: 0;
+    }
+    .timeline-log-dot {
+      position: absolute;
+      left: -19px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #94a3b8;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 0 2px #cbd5e1;
+    }
+    .timeline-log-item.active .timeline-log-dot {
+      background: #2e7d32;
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.3);
+    }
+    .timeline-log-time {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+    }
+    .timeline-log-desc {
+      font-size: 13px;
+      font-weight: 700;
+      color: #1e293b;
+      margin: 2px 0;
+    }
+    .timeline-log-loc {
+      font-size: 12px;
+      color: #64748b;
+    }
+    .tracking-items-mini-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .tracking-item-row-mini {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed #edf2ec;
+    }
+    .tracking-item-row-mini:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    .tracking-item-row-mini img {
+      width: 44px;
+      height: 44px;
+      border-radius: 8px;
+      border: 1px solid #e2ece0;
+      object-fit: contain;
+      background: #ffffff;
+      padding: 2px;
+    }
+    .tracking-item-info-mini {
+      flex: 1;
+    }
+    .tracking-item-info-mini strong {
+      display: block;
+      font-size: 13px;
+      color: #1e293b;
+    }
+    .tracking-item-info-mini small {
+      font-size: 11.5px;
+      color: #64748b;
+    }
+    .tracking-item-price-mini {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+    }
+    .tracking-action-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+      padding-top: 14px;
+      border-top: 1px solid #edf4eb;
+    }
+
+    /* Miniaturas e imágenes de productos en el historial de pedidos */
+    .order-thumbs-row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .order-item-thumb-box {
+      position: relative;
+      width: 64px;
+      height: 64px;
+      border-radius: 12px;
+      border: 1.5px solid #dbe7d9;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 6px;
+      box-shadow: 0 2px 8px rgba(31, 54, 26, 0.05);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      overflow: visible;
+      flex-shrink: 0;
+    }
+
+    .order-item-thumb-box:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(31, 54, 26, 0.12);
+      border-color: var(--verde-natural);
+    }
+
+    .order-item-thumb-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 6px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
+    }
+
+    .order-item-thumb-qty {
+      position: absolute;
+      top: -7px;
+      right: -7px;
+      background: var(--verde-bosque);
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 12px;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      line-height: 1.1;
+      z-index: 2;
+    }
+
+    .order-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      border-top: 1px solid #f1f5f1;
+      margin-top: 14px;
+      padding-top: 12px;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Encabezado / Barra de Navegación -->
+  <header>
+    <nav id="navbar">
+      <div class="container">
+        <div class="nav-wrapper">
+          <h1 class="logo">
+            <a href="index.html" aria-label="Nativa Inicio">
+              <img src="img/logo.png" alt="Nativa" class="brand-logo">
+            </a>
+          </h1>
+
+          <!-- Navegación y Botones de Acción -->
+          <ul id="main-nav" class="txt-btn">
+            <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
+            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <li>
+              <a href="perfil.html" class="nav-action-btn current" id="open-login-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                <i class="fas fa-user-circle"></i> <span id="nav-user-label">Mi Perfil</span>
+              </a>
+            </li>
+            <li>
+              <button type="button" class="nav-action-btn cart-btn-wrap" id="open-cart-btn" aria-label="Ver Carrito de Compras">
+                <i class="fas fa-shopping-cart"></i> <span>Carrito</span>
+                <span class="cart-counter" id="cart-counter-badge">0</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Contenedor Principal de la Página de Perfil -->
+  <main class="perfil-page-container">
+
+    <!-- Barra de Navegación y Retorno -->
+    <div class="perfil-back-nav">
+      <div>
+        <a href="index.html#portfolio" class="perfil-back-link">
+          <i class="fas fa-arrow-left"></i> Volver a la Tienda
+        </a>
+        <span class="perfil-crumb-sep">/</span>
+        <span class="perfil-crumb-active">Mi Perfil y Pedidos</span>
+      </div>
+      <a href="index.html#portfolio" class="btn-perfil-store">
+        <i class="fas fa-shopping-bag"></i> Seguir Comprando
+      </a>
+    </div>
+
+    <!-- Tarjeta Principal de Bienvenida del Usuario -->
+    <div class="apartado-user-card">
+      <div class="apartado-user-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="apartado-user-info">
+        <div class="user-name-row">
+          <h3 id="perfil-card-name">Samuel De Paula</h3>
+          <span class="badge-cliente-verde"><i class="fas fa-leaf"></i> Cliente Nativa</span>
+        </div>
+        <div class="user-meta-row">
+          <span id="perfil-card-email"><i class="fas fa-envelope"></i> samueldpp12@gmail.com</span>
+          <span id="perfil-card-phone"><i class="fas fa-phone"></i> +57 300 542 7742</span>
+        </div>
+      </div>
+      <div class="apartado-user-actions">
+        <button type="button" class="btn-logout-apartado" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
+      </div>
+    </div>
+
+    <!-- Vista de Rastreo en Vivo (Directamente en la página, sin ventana emergente) -->
+    <div id="perfil-tracking-view" class="tracking-view-box" style="display: none;">
+      <div class="tracking-view-header">
+        <div>
+          <h3 style="margin: 0 0 4px 0; color: var(--verde-bosque); font-size: 18px; font-weight: 700;">
+            <i class="fas fa-truck-moving"></i> Rastreo de Pedido en Vivo
+          </h3>
+          <p style="margin: 0; font-size: 13px; color: #64748b;" id="tracking-view-subtitle">Guía de transporte y progreso de entrega en tiempo real</p>
+        </div>
+        <button type="button" class="btn-back-to-orders" onclick="hideTrackingView()">
+          <i class="fas fa-arrow-left"></i> Volver a Mis Pedidos
+        </button>
+      </div>
+
+      <!-- Contenedor del Rastreador Integrado -->
+      <div id="tracking-view-content">
+        <!-- Renderizado dinámico -->
+      </div>
+    </div>
+
+    <!-- Pestañas de Navegación del Perfil: Pedidos y Datos -->
+    <div class="apartado-tabs-row" id="perfil-tabs-nav">
+      <button type="button" class="apartado-tab-btn active" id="tab-pedidos-btn" onclick="switchPerfilTab('pedidos')">
+        <i class="fas fa-box"></i> Pedidos (<span id="perfil-orders-count">0</span>)
+      </button>
+      <button type="button" class="apartado-tab-btn" id="tab-datos-btn" onclick="switchPerfilTab('datos')">
+        <i class="fas fa-address-card"></i> Mis Datos
+      </button>
+    </div>
+
+    <!-- Contenido Pestaña 1: Historial de Pedidos Realizados -->
+    <div id="perfil-tab-pedidos" class="apartado-tab-content">
+      <div class="apartado-pedidos-header">
+        <h4><i class="fas fa-clipboard-list"></i> Historial de Pedidos Realizados</h4>
+        <p class="apartado-pedidos-desc">Consulta tus compras recientes, el estado de tu pedido (confirmación, preparación, envío, entregado) y accede al rastreo de tus paquetes en camino.</p>
+      </div>
+
+      <div id="perfil-orders-list-container">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+
+    <!-- Contenido Pestaña 2: Mis Datos -->
+    <div id="perfil-tab-datos" class="apartado-tab-content" style="display: none;">
+      <div class="apartado-datos-card">
+        <h4><i class="fas fa-user-edit"></i> Actualizar Información Personal</h4>
+        <p class="apartado-pedidos-desc">Tus datos se usan para la entrega de tus paquetes y el envío de recibos.</p>
+        <form id="perfil-datos-form" onsubmit="event.preventDefault(); savePerfilData();">
+          <div class="form-grid-2">
+            <div class="single-form">
+              <label>Nombre</label>
+              <input type="text" id="perfil-input-name" placeholder="Tu nombre" required>
+            </div>
+            <div class="single-form">
+              <label>Apellido</label>
+              <input type="text" id="perfil-input-lastname" placeholder="Tu apellido" required>
+            </div>
+          </div>
+          <div class="form-grid-2">
+            <div class="single-form">
+              <label>Correo Electrónico</label>
+              <input type="email" id="perfil-input-email" placeholder="tu@email.com" required>
+            </div>
+            <div class="single-form">
+              <label>Teléfono de Contacto</label>
+              <input type="tel" id="perfil-input-phone" placeholder="+57 300 000 0000" required>
+            </div>
+          </div>
+          <div style="margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save"></i> Guardar Datos
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="switchPerfilTab('pedidos')">
+              Ver Mis Pedidos
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Drawer Lateral del Carrito de Compras -->
+  <div class="cart-overlay" id="cart-overlay"></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Carrito de Compras">
+    <div class="cart-drawer-header">
+      <h3><i class="fas fa-shopping-cart"></i> Tu Carrito (<span id="drawer-cart-count">0</span>)</h3>
+      <button type="button" class="close-cart close-cart-btn" id="close-cart-btn" aria-label="Cerrar Carrito">&times;</button>
+    </div>
+
+    <div class="cart-drawer-body" id="cart-items-container">
+      <div class="cart-empty-state" id="cart-empty-msg">
+        <i class="fas fa-shopping-basket"></i>
+        <h4>Tu carrito está vacío</h4>
+        <p class="lora-text">Descubre nuestros productos naturales y agrega tus favoritos.</p>
+        <a href="index.html#portfolio" class="btn btn-primary" style="margin-top: 14px; display: inline-flex;">Explorar Tienda</a>
+      </div>
+      <div id="cart-list"></div>
+    </div>
+
+    <div class="cart-drawer-footer" id="cart-drawer-footer" style="display: none;">
+      <div class="cart-subtotal-row">
+        <span>Subtotal:</span>
+        <span id="cart-subtotal" style="font-weight: 700;">$0 COP</span>
+      </div>
+      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px; display: flex; align-items: center; gap: 6px;">
+        <i class="fas fa-truck" style="color: var(--verde-natural);"></i> Envíos calculados en el proceso de compra
+      </div>
+      <button type="button" class="btn btn-primary" id="btn-finalizar-compra" style="width: 100%; justify-content: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+        <i class="fas fa-lock"></i> FINALIZAR COMPRA
+      </button>
+      <a href="#" class="btn btn-whatsapp-cart" id="checkout-whatsapp-btn" target="_blank" rel="noopener noreferrer" style="width: 100%; text-align: center; justify-content: center; margin-bottom: 6px;">
+        <i class="fab fa-whatsapp"></i> pedir por WhatsApp
+      </a>
+      <button type="button" class="btn btn-light" id="continue-shopping-btn" style="width: 100%; justify-content: center;">
+        Continuar Comprando
+      </button>
+    </div>
+  </aside>
+
+  <!-- Modal de Simulación de Correo / Recibo Oficial -->
+  <div class="modal-overlay" id="email-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="email-modal-title">
+    <div class="modal-dialog modal-dialog-email">
+      <div class="email-inbox-header">
+        <div class="email-sender-avatar"><i class="fas fa-leaf"></i></div>
+        <div class="email-sender-meta">
+          <strong id="email-modal-title">Nativa Productos Naturales &lt;pedidos@nativanatural.com&gt;</strong>
+          <span id="email-recipient-view">Para: samueldpp12@gmail.com</span>
+        </div>
+        <button type="button" class="close-modal-btn" id="close-email-btn" onclick="closeEmailPreview()" aria-label="Cerrar Correo">&times;</button>
+      </div>
+      <div class="email-inbox-body" id="email-content-rendered">
+        <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast de Notificaciones -->
+  <div class="toast-notification" id="toast"></div>
+
+  <!-- Footer Oficial -->
+  <footer id="main-footer">
+    <div class="container">
+      <div class="footer-wrap">
+        <div class="footer-brand">
+          <img src="img/logo.png" alt="Nativa" class="footer-logo">
+          <p class="small">NATIVA &copy; 2026. Alimentos naturales y conscientes. Todos los derechos reservados.</p>
+        </div>
+        <ul>
+          <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
+          <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
+          <li><a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a></li>
+          <li><a href="#" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script de la Página de Perfil y Pedidos -->
+  <script>
+    // Catálogo maestro para referencias de nombres, precios e imágenes
+    const PRODUCTS_MAP = {
+      1: { id: 1, name: "Granola Nativa Artesanal", price: 18500, img: "img/productos/Granola_Nativa.png", url: "portfolio-1.html" },
+      2: { id: 2, name: "Miel de Montaña Pura", price: 24000, img: "img/productos/Miel_de_Montaña.png", url: "portfolio-2.html" },
+      3: { id: 3, name: "Infusión Relax y Calma", price: 14500, img: "img/productos/Infusión_relax.png", url: "portfolio-3.html" },
+      4: { id: 4, name: "Mermelada Frutos Silvestres", price: 16000, img: "img/productos/MERMELADA ARTESANAL DE FRUTOS SILVESTRES.png", url: "portfolio-4.html" },
+      5: { id: 5, name: "Aceite de Coco Extravirgen", price: 29000, img: "img/productos/ACEITE  DECOCO EXTRAVIRGEN.png.png", url: "portfolio-5.html" },
+      6: { id: 6, name: "Vinagre de Manzana Artesanal", price: 19500, img: "img/productos/VINAGRE DE MANZANA ARTESANAL.png", url: "portfolio-6.html" },
+      7: { id: 7, name: "Jarabe de Arce Puro", price: 34000, img: "img/productos/JARABE DE ARCE  PURO.png", url: "portfolio-7.html" },
+      8: { id: 8, name: "Azúcar Mascabado Orgánico", price: 11000, img: "img/productos/AZUCAR MASCABADO ORGÁNICO.png", url: "portfolio-8.html" },
+      9: { id: 9, name: "Nueces Mariposa Naturales", price: 22000, img: "img/productos/NUECES MARIPOSA NATURALES.png", url: "portfolio-9.html" },
+      10: { id: 10, name: "Avellanas Enteras Tostadas", price: 21500, img: "img/productos/AVELLANAS ENTERAS TOSTADAS.png", url: "portfolio-10.html" },
+      11: { id: 11, name: "Galletas de Avena y Miel", price: 12500, img: "img/productos/GALLETAS DE AVENA Y MIEL.png", url: "portfolio-11.html" },
+      12: { id: 12, name: "Té Vital Blend Energético", price: 16500, img: "img/Té Vital_ Energía Natural y Bienestar.png", url: "portfolio-12.html" }
+    };
+
+    function formatCOP(num) {
+      return '$' + Number(num).toLocaleString('es-CO');
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      if (!toast) return;
+      toast.textContent = message;
+      toast.className = 'toast-notification show';
+      setTimeout(() => {
+        toast.className = 'toast-notification';
+      }, 3500);
+    }
+
+    // Inicialización al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      loadPerfilUserData();
+      renderPerfilOrders();
+      updateCartBadge();
+
+      // Revisar si viene un parámetro para rastrear directamente
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackId = urlParams.get('track') || urlParams.get('order');
+      if (trackId) {
+        setTimeout(() => showTrackingView(trackId), 150);
+      }
+    });
+
+    // Cargar información del usuario
+    function loadPerfilUserData() {
+      const email = localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com';
+      const nombre = localStorage.getItem('nativa_user_name') || 'Samuel';
+      const apellido = localStorage.getItem('nativa_user_lastname') || 'De Paula';
+      const telefono = localStorage.getItem('nativa_user_phone') || '+57 300 542 7742';
+
+      const cardName = document.getElementById('perfil-card-name');
+      const cardEmail = document.getElementById('perfil-card-email');
+      const cardPhone = document.getElementById('perfil-card-phone');
+
+      if (cardName) cardName.textContent = `${nombre} ${apellido}`;
+      if (cardEmail) cardEmail.innerHTML = `<i class="fas fa-envelope"></i> ${email}`;
+      if (cardPhone) cardPhone.innerHTML = `<i class="fas fa-phone"></i> ${telefono}`;
+
+      const inpName = document.getElementById('perfil-input-name');
+      const inpLast = document.getElementById('perfil-input-lastname');
+      const inpEmail = document.getElementById('perfil-input-email');
+      const inpPhone = document.getElementById('perfil-input-phone');
+
+      if (inpName) inpName.value = nombre;
+      if (inpLast) inpLast.value = apellido;
+      if (inpEmail) inpEmail.value = email;
+      if (inpPhone) inpPhone.value = telefono;
+    }
+
+    function savePerfilData() {
+      const inpName = document.getElementById('perfil-input-name');
+      const inpLast = document.getElementById('perfil-input-lastname');
+      const inpEmail = document.getElementById('perfil-input-email');
+      const inpPhone = document.getElementById('perfil-input-phone');
+
+      if (inpName) localStorage.setItem('nativa_user_name', inpName.value.trim());
+      if (inpLast) localStorage.setItem('nativa_user_lastname', inpLast.value.trim());
+      if (inpEmail) localStorage.setItem('nativa_user_email', inpEmail.value.trim());
+      if (inpPhone) localStorage.setItem('nativa_user_phone', inpPhone.value.trim());
+
+      loadPerfilUserData();
+      switchPerfilTab('pedidos');
+      showToast('Información de perfil actualizada con éxito.');
+    }
+
+    function handleLogout() {
+      if (confirm('¿Deseas cerrar tu sesión actual?')) {
+        showToast('Sesión cerrada correctamente.');
+        setTimeout(() => {
+          window.location.href = 'index.html';
+        }, 800);
+      }
+    }
+
+    function switchPerfilTab(tabName) {
+      const tabPedidosBtn = document.getElementById('tab-pedidos-btn');
+      const tabDatosBtn = document.getElementById('tab-datos-btn');
+      const secPedidos = document.getElementById('perfil-tab-pedidos');
+      const secDatos = document.getElementById('perfil-tab-datos');
+
+      hideTrackingView();
+
+      if (tabName === 'pedidos') {
+        if (tabPedidosBtn) tabPedidosBtn.classList.add('active');
+        if (tabDatosBtn) tabDatosBtn.classList.remove('active');
+        if (secPedidos) secPedidos.style.display = 'block';
+        if (secDatos) secDatos.style.display = 'none';
+        renderPerfilOrders();
+      } else {
+        if (tabDatosBtn) tabDatosBtn.classList.add('active');
+        if (tabPedidosBtn) tabPedidosBtn.classList.remove('active');
+        if (secPedidos) secPedidos.style.display = 'none';
+        if (secDatos) secDatos.style.display = 'block';
+      }
+    }
+
+    // Obtener pedidos guardados
+    function getOrdersList() {
+      const stored = localStorage.getItem('nativa_orders');
+      if (stored) {
+        try {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        } catch (e) {
+          console.error(e);
+        }
+      }
+
+      // Pedido demo con fecha de hoy para nuevo usuario
+      const defaultOrder = {
+        id: 'NAT-TC-389423',
+        date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
+        timestamp: Date.now(),
+        items: [
+          { id: 1, name: 'Granola Nativa Artesanal', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' },
+          { id: 3, name: 'Infusión Relax y Calma', price: 14500, qty: 1, img: 'img/productos/Infusión_relax.png' }
+        ],
+        shippingCost: 3900,
+        total: 36900,
+        status: 'En Preparación', // 'Confirmación', 'En Preparación', 'Envío en Tránsito', 'En Reparto', 'Entregado'
+        paymentMethod: 'Tarjeta de Crédito / Débito',
+        carrier: 'Envía Express Colombia',
+        trackingNumber: 'ENV-COL-948271',
+        shippingAddress: {
+          fullName: 'Samuel De Paula',
+          phone: '+57 300 542 7742',
+          email: 'samueldpp12@gmail.com',
+          address: 'Calle 7 # 12-45',
+          city: 'Garzón',
+          department: 'Huila'
+        }
+      };
+
+      const initialList = [defaultOrder];
+      localStorage.setItem('nativa_orders', JSON.stringify(initialList));
+      return initialList;
+    }
+
+    async function syncOrdersWithServer() {
+      try {
+        const res = await fetch('/api/orders');
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+          const stored = localStorage.getItem('nativa_orders');
+          let localOrders = [];
+          if (stored) {
+            try { localOrders = JSON.parse(stored); } catch (e) {}
+          }
+          let changed = false;
+          data.orders.forEach(serverOrder => {
+            const index = localOrders.findIndex(lo => String(lo.id).toLowerCase() === String(serverOrder.id).toLowerCase());
+            if (index === -1) {
+              localOrders.unshift(serverOrder);
+              changed = true;
+            } else {
+              // merge updates if server has more recent data
+              localOrders[index] = { ...localOrders[index], ...serverOrder };
+            }
+          });
+          if (changed) {
+            localStorage.setItem('nativa_orders', JSON.stringify(localOrders));
+            renderPerfilOrders(false);
+          }
+        }
+      } catch (err) {
+        console.warn('Sync orders with server note:', err.message);
+      }
+    }
+
+    // Renderizar la lista de pedidos en la página
+    function renderPerfilOrders(triggerSync = true) {
+      if (triggerSync) syncOrdersWithServer();
+      const container = document.getElementById('perfil-orders-list-container');
+      const countSpan = document.getElementById('perfil-orders-count');
+      if (!container) return;
+
+      const orders = getOrdersList();
+      if (countSpan) countSpan.textContent = orders.length;
+
+      if (!orders || orders.length === 0) {
+        container.innerHTML = `
+          <div style="text-align:center; padding:40px 16px; background:#ffffff; border:1px dashed #cfe0cb; border-radius:14px;">
+            <div style="width:58px; height:58px; border-radius:50%; background:#e8f4e5; display:inline-flex; align-items:center; justify-content:center; color:var(--verde-bosque); font-size:26px; margin-bottom:12px;">
+              <i class="fas fa-box-open"></i>
+            </div>
+            <h5 style="margin:0 0 6px 0; color:var(--verde-bosque); font-size:18px; font-weight:700;">Aún no tienes pedidos registrados</h5>
+            <p style="font-size:13.5px; color:var(--text-muted); margin:0 0 18px 0; max-width:440px; margin-left:auto; margin-right:auto;">Explora nuestro catálogo de productos conscientes y realiza tu primera compra.</p>
+            <a href="index.html#portfolio" class="btn btn-primary" style="text-decoration:none; display:inline-flex;">
+              <i class="fas fa-store"></i> Ver Catálogo de Productos
+            </a>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = orders.map(order => {
+        const isDelivered = (order.status || '').toLowerCase().includes('entreg');
+        const statusClass = getStatusClass(order.status);
+        const city = order.shippingAddress ? `${order.shippingAddress.city}, ${order.shippingAddress.department || ''}` : 'Garzón, Huila';
+        const totalItems = (order.items || []).reduce((acc, item) => acc + (item.qty || 1), 0);
+
+        const thumbsHtml = (order.items || []).map(item => {
+          const imgSrc = item.img || 'img/productos/Granola_Nativa.png';
+          return `
+            <div class="order-item-thumb-box" title="${item.name} (${item.qty || 1} uds)">
+              <img src="${imgSrc}" alt="${item.name}" loading="lazy" onerror="this.onerror=null; this.src='img/productos/Granola_Nativa.png';">
+              <span class="order-item-thumb-qty">x${item.qty || 1}</span>
+            </div>
+          `;
+        }).join('');
+
+        const trackButtonHtml = !isDelivered
+          ? `<button type="button" class="btn-order-track" onclick="showTrackingView('${order.id}')">
+              <i class="fas fa-truck-moving"></i> Rastrear Pedido
+            </button>`
+          : `<span class="delivered-badge-label"><i class="fas fa-check-circle"></i> Entrega Completada</span>`;
+
+        return `
+          <div class="profile-order-card" id="order-card-${order.id}">
+            <div class="order-card-header">
+              <div class="order-card-id-block">
+                <span class="order-label-mini">PEDIDO</span>
+                <span class="order-id-code">#${order.id}</span>
+                <span class="order-date-text"><i class="far fa-calendar-alt"></i> ${order.date || 'Reciente'}</span>
+              </div>
+              <div class="order-card-status-block">
+                <span class="badge-order-status ${statusClass}">
+                  <i class="${getStatusIcon(order.status)}"></i> ${order.status || 'En Proceso'}
+                </span>
+              </div>
+            </div>
+
+            <div class="order-card-body">
+              <div class="order-card-items-preview">
+                <div class="order-thumbs-row">
+                  ${thumbsHtml}
+                </div>
+                <div class="order-items-summary-text">
+                  <strong>${totalItems} ${totalItems === 1 ? 'producto' : 'productos'}</strong>
+                  <div style="font-size:12px; color:#6b7280;"><i class="fas fa-map-marker-alt"></i> ${city}</div>
+                </div>
+              </div>
+
+              <div class="order-total-price-block">
+                <span class="lbl-total">Total Pagado:</span>
+                <span class="order-total-highlight">${order.totalFormatted || formatCOP(order.total || 0)}</span>
+              </div>
+            </div>
+
+            <div class="order-card-footer">
+              ${trackButtonHtml}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function getStatusClass(status = '') {
+      const s = status.toLowerCase();
+      if (s.includes('entreg')) return 'status-entregado';
+      if (s.includes('tránsito') || s.includes('transito') || s.includes('camino') || s.includes('reparto')) return 'status-transito';
+      if (s.includes('prepar')) return 'status-preparacion';
+      return 'status-confirmado';
+    }
+
+    function getStatusIcon(status = '') {
+      const s = status.toLowerCase();
+      if (s.includes('entreg')) return 'fas fa-check-double';
+      if (s.includes('tránsito') || s.includes('transito') || s.includes('camino') || s.includes('reparto')) return 'fas fa-shipping-fast';
+      if (s.includes('prepar')) return 'fas fa-boxes';
+      return 'fas fa-check-circle';
+    }
+
+    // =========================================================================
+    // VISTA DE RASTREO INTEGRADA EN EL PERFIL DE USUARIO (Sin ventanas emergentes)
+    // =========================================================================
+    function showTrackingView(orderId) {
+      const trackingContainer = document.getElementById('perfil-tracking-view');
+      const content = document.getElementById('tracking-view-content');
+      if (!trackingContainer || !content) return;
+
+      const orders = getOrdersList();
+      let order = orders.find(o => String(o.id).toLowerCase() === String(orderId).toLowerCase() || String(o.guide || '').toLowerCase() === String(orderId).toLowerCase());
+
+      if (!order) {
+        order = {
+          id: orderId,
+          guide: 'SE-' + Math.floor(10000000 + Math.random() * 90000000) + 'CO',
+          carrier: 'Servientrega Express',
+          status: 'En tránsito',
+          currentStep: 3,
+          date: 'Hoy',
+          estimatedDelivery: 'Llega en 2 a 4 días hábiles',
+          total: 45000,
+          totalFormatted: '$45.000 COP',
+          shippingAddress: {
+            nombre: localStorage.getItem('nativa_user_name') || 'Samuel',
+            apellido: localStorage.getItem('nativa_user_lastname') || 'De Paula',
+            ciudad: 'Bogotá D.C.',
+            departamento: 'Cundinamarca',
+            direccion: 'Dirección Registrada',
+            telefono: localStorage.getItem('nativa_user_phone') || '+57 300 542 7742',
+            email: localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com'
+          },
+          items: [
+            { name: 'Granola Nativa Artesanal (400g)', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' }
+          ]
+        };
+      }
+
+      // Determinar fase del pedido (1 a 5)
+      let step = order.currentStep || 2;
+      const s = (order.status || '').toLowerCase();
+      if (s.includes('entreg')) step = 5;
+      else if (s.includes('reparto')) step = 4;
+      else if (s.includes('tránsito') || s.includes('transito') || s.includes('camino')) step = 3;
+      else if (s.includes('prepar')) step = 2;
+      else if (s.includes('confirm')) step = 1;
+
+      const fillPercent = step === 1 ? 15 : step === 2 ? 38 : step === 3 ? 62 : step === 4 ? 85 : 100;
+
+      const addr = order.shippingAddress || {};
+      const fullName = `${addr.nombre || ''} ${addr.apellido || ''}`.trim() || 'Cliente Nativa';
+      const cityDest = (addr.ciudad ? `${addr.ciudad}, ${addr.departamento || ''}` : 'Colombia').trim();
+
+      const itemsHtml = (order.items || []).map(item => `
+        <div class="tracking-item-row-mini">
+          <img src="${item.img || 'img/productos/Granola_Nativa.png'}" alt="${item.name}" onerror="this.onerror=null; this.src='img/productos/Granola_Nativa.png';">
+          <div class="tracking-item-info-mini">
+            <strong>${item.name}</strong>
+            <small>Cantidad: ${item.qty || 1} | Unit: ${formatCOP(item.price || 0)}</small>
+          </div>
+          <div class="tracking-item-price-mini">
+            ${formatCOP((item.price || 0) * (item.qty || 1))}
+          </div>
+        </div>
+      `).join('');
+
+      content.innerHTML = `
+        <!-- Metadatos del envío -->
+        <div class="tracking-meta-grid">
+          <div class="tracking-meta-card">
+            <i class="fas fa-barcode"></i>
+            <div>
+              <small>Número de Guía</small>
+              <strong>${order.guide || 'SE-98341029CO'}</strong>
+            </div>
+          </div>
+          <div class="tracking-meta-card">
+            <i class="fas fa-shipping-fast"></i>
+            <div>
+              <small>Transportadora</small>
+              <strong>${order.carrier || 'Servientrega Express'}</strong>
+            </div>
+          </div>
+          <div class="tracking-meta-card">
+            <i class="fas fa-calendar-check"></i>
+            <div>
+              <small>Entrega Estimada</small>
+              <strong>${order.estimatedDelivery || 'Llega en 2 a 4 días hábiles'}</strong>
+            </div>
+          </div>
+          <div class="tracking-meta-card">
+            <i class="fas fa-map-marker-alt"></i>
+            <div>
+              <small>Destino Nacional</small>
+              <strong>${cityDest}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stepper Gráfico de Progreso -->
+        <div class="tracking-stepper-card">
+          <div class="tracking-stepper-title">
+            <i class="fas fa-route"></i> Línea de Tiempo del Envío — Orden #${order.id}
+          </div>
+
+          <div class="tracking-steps-bar">
+            <div class="tracking-steps-fill" style="width: ${fillPercent}%;"></div>
+
+            <div class="track-step-node ${step >= 1 ? (step === 1 ? 'active' : 'completed') : ''}">
+              <div class="step-circle"><i class="fas fa-file-invoice-dollar"></i></div>
+              <div class="step-title-text">Confirmado</div>
+              <div class="step-sub-text">Pago validado</div>
+            </div>
+
+            <div class="track-step-node ${step >= 2 ? (step === 2 ? 'active' : 'completed') : ''}">
+              <div class="step-circle"><i class="fas fa-boxes"></i></div>
+              <div class="step-title-text">En Preparación</div>
+              <div class="step-sub-text">Empaque en bodega</div>
+            </div>
+
+            <div class="track-step-node ${step >= 3 ? (step === 3 ? 'active' : 'completed') : ''}">
+              <div class="step-circle"><i class="fas fa-truck-moving"></i></div>
+              <div class="step-title-text">En Tránsito</div>
+              <div class="step-sub-text">Ruta nacional</div>
+            </div>
+
+            <div class="track-step-node ${step >= 4 ? (step === 4 ? 'active' : 'completed') : ''}">
+              <div class="step-circle"><i class="fas fa-motorcycle"></i></div>
+              <div class="step-title-text">En Reparto</div>
+              <div class="step-sub-text">Hacia tu puerta</div>
+            </div>
+
+            <div class="track-step-node ${step >= 5 ? 'completed' : ''}">
+              <div class="step-circle"><i class="fas fa-home"></i></div>
+              <div class="step-title-text">Entregado</div>
+              <div class="step-sub-text">Recibido con éxito</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bitácora y Productos -->
+        <div class="tracking-grid-2col">
+          <div class="tracking-card-box">
+            <div class="tracking-card-title">
+              <i class="fas fa-history"></i> Bitácora de Movimientos del Paquete
+            </div>
+            <div class="tracking-timeline-list">
+              <div class="timeline-log-item active">
+                <div class="timeline-log-dot"></div>
+                <div class="timeline-log-time">Hoy - En curso</div>
+                <div class="timeline-log-desc">${step >= 4 ? 'En vehículo de reparto urbano hacia dirección final' : step >= 3 ? 'En tránsito hacia el centro logístico regional' : 'Paquete clasificado y sellado con cinta ecológica'}</div>
+                <div class="timeline-log-loc"><i class="fas fa-map-pin"></i> ${cityDest}</div>
+              </div>
+              <div class="timeline-log-item">
+                <div class="timeline-log-dot"></div>
+                <div class="timeline-log-time">Ayer - 16:30</div>
+                <div class="timeline-log-desc">Ingreso a plataforma logística principal de distribución</div>
+                <div class="timeline-log-loc"><i class="fas fa-warehouse"></i> Centro Logístico Bogotá D.C.</div>
+              </div>
+              <div class="timeline-log-item">
+                <div class="timeline-log-dot"></div>
+                <div class="timeline-log-time">${order.date || 'Días anteriores'} - 10:15</div>
+                <div class="timeline-log-desc">Pedido generado y confirmado por el cliente</div>
+                <div class="timeline-log-loc"><i class="fas fa-leaf"></i> Tienda Online Nativa</div>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #f1f5f1; font-size: 12.5px; color: #64748b;">
+              <div><strong>Destinatario:</strong> ${fullName}</div>
+              <div><strong>Dirección:</strong> ${addr.direccion || 'Dirección registrada'}</div>
+              <div><strong>Teléfono:</strong> ${addr.telefono || '+57 300 000 0000'}</div>
+            </div>
+          </div>
+
+          <div class="tracking-card-box">
+            <div class="tracking-card-title">
+              <i class="fas fa-box-open"></i> Productos en este Paquete
+            </div>
+            <div class="tracking-items-mini-list">
+              ${itemsHtml}
+            </div>
+            <div style="background: #f8faf7; border: 1px solid #e2ece0; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; font-size: 13.5px;">
+              <span style="color: #64748b; font-weight: 600;">Total Pagado:</span>
+              <strong style="color: var(--verde-bosque); font-size: 15px;">${order.totalFormatted || formatCOP(order.total || 0)}</strong>
+            </div>
+
+            <div class="tracking-action-buttons">
+              <button type="button" class="btn btn-secondary" onclick="viewOrderEmail('${order.id}')" style="font-size: 12.5px; padding: 8px 14px;">
+                <i class="fas fa-envelope-open-text"></i> Ver Correo
+              </button>
+              <a href="https://wa.me/573005427742?text=Hola%20Nativa%2C%20quisiera%20consultar%20el%20estado%20de%20mi%20pedido%20${encodeURIComponent(order.id)}" target="_blank" class="btn btn-primary" style="font-size: 12.5px; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
+                <i class="fab fa-whatsapp"></i> Soporte WhatsApp
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+
+      trackingContainer.style.display = 'block';
+      trackingContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function hideTrackingView() {
+      const trackingContainer = document.getElementById('perfil-tracking-view');
+      if (trackingContainer) trackingContainer.style.display = 'none';
+    }
+
+    // Ver Recibo / Correo
+    function viewOrderEmail(orderId) {
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(orderId));
+      if (!order) return;
+
+      const overlay = document.getElementById('email-preview-overlay');
+      const content = document.getElementById('email-content-rendered');
+      const recipientView = document.getElementById('email-recipient-view');
+
+      const email = (order.shippingAddress && order.shippingAddress.email) || localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com';
+      if (recipientView) recipientView.textContent = `Para: ${email}`;
+
+      const itemsHtml = (order.items || []).map(item => `
+        <tr style="border-bottom: 1px solid #eef2eb;">
+          <td style="padding: 10px 0;"><strong>${item.name}</strong></td>
+          <td style="padding: 10px 0; text-align: center;">x${item.qty || 1}</td>
+          <td style="padding: 10px 0; text-align: right;">${formatCOP((item.price || 0) * (item.qty || 1))}</td>
+        </tr>
+      `).join('');
+
+      content.innerHTML = `
+        <div style="background: #fbfdfa; border: 1px solid #e2ede0; border-radius: 12px; padding: 24px; font-family: 'Montserrat', sans-serif;">
+          <div style="text-align: center; margin-bottom: 20px;">
+            <img src="img/logo.png" alt="Nativa" style="height: 44px; margin-bottom: 8px;">
+            <h3 style="margin: 0; color: var(--verde-bosque); font-size: 20px;">¡Gracias por tu compra consciente!</h3>
+            <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Confirmación de Pedido <strong>#${order.id}</strong></p>
+          </div>
+
+          <table style="width: 100%; border-collapse: collapse; font-size: 13.5px; margin-bottom: 18px;">
+            <thead>
+              <tr style="border-bottom: 2px solid var(--verde-bosque); color: var(--verde-bosque); text-align: left;">
+                <th style="padding-bottom: 8px;">Producto</th>
+                <th style="padding-bottom: 8px; text-align: center;">Cant.</th>
+                <th style="padding-bottom: 8px; text-align: right;">Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${itemsHtml}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td colspan="2" style="padding-top: 10px; text-align: right; color: #64748b;">Envío:</td>
+                <td style="padding-top: 10px; text-align: right; font-weight: 600;">${formatCOP(order.shippingCost || 3900)}</td>
+              </tr>
+              <tr style="font-size: 16px;">
+                <td colspan="2" style="padding-top: 6px; text-align: right; font-weight: 700; color: var(--verde-bosque);">Total Pagado:</td>
+                <td style="padding-top: 6px; text-align: right; font-weight: 800; color: var(--verde-bosque);">${formatCOP(order.total || 0)}</td>
+              </tr>
+            </tfoot>
+          </table>
+
+          <div style="text-align: center; margin-top: 20px;">
+            <button type="button" class="btn btn-primary" onclick="closeEmailPreview(); showTrackingView('${order.id}');" style="font-size: 13px; padding: 9px 20px;">
+              <i class="fas fa-truck-moving"></i> Rastrear Mi Pedido en Vivo
+            </button>
+          </div>
+        </div>
+      `;
+
+      if (overlay) overlay.classList.add('active');
+    }
+
+    function closeEmailPreview() {
+      const overlay = document.getElementById('email-preview-overlay');
+      if (overlay) overlay.classList.remove('active');
+    }
+
+    // =========================================================================
+    // LÓGICA DEL CARRITO DE COMPRAS EN EL PERFIL
+    // =========================================================================
+    let cart = [];
+
+    function getCart() {
+      try {
+        return JSON.parse(localStorage.getItem('nativa_cart') || '[]');
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveCart() {
+      localStorage.setItem('nativa_cart', JSON.stringify(cart));
+      updateCartBadge();
+      renderCart();
+    }
+
+    function updateCartBadge() {
+      cart = getCart();
+      const count = cart.reduce((acc, item) => acc + (item.qty || item.quantity || 1), 0);
+      const badge = document.getElementById('cart-counter-badge');
+      const drawerCount = document.getElementById('drawer-cart-count');
+      if (badge) badge.textContent = count;
+      if (drawerCount) drawerCount.textContent = count;
+    }
+
+    function renderCart() {
+      cart = getCart();
+      const totalCount = cart.reduce((sum, item) => sum + (item.qty || item.quantity || 1), 0);
+      const badgeEl = document.getElementById('cart-counter-badge');
+      const drawerCountEl = document.getElementById('drawer-cart-count');
+      if (badgeEl) badgeEl.textContent = totalCount;
+      if (drawerCountEl) drawerCountEl.textContent = totalCount;
+
+      const cartList = document.getElementById('cart-list');
+      const emptyMsg = document.getElementById('cart-empty-msg');
+      const footer = document.getElementById('cart-drawer-footer');
+      if (!cartList) return;
+
+      if (cart.length === 0) {
+        if (emptyMsg) emptyMsg.style.display = 'block';
+        if (footer) footer.style.display = 'none';
+        cartList.innerHTML = '';
+        return;
+      }
+
+      if (emptyMsg) emptyMsg.style.display = 'none';
+      if (footer) footer.style.display = 'block';
+
+      let total = 0;
+      cartList.innerHTML = cart.map((item, index) => {
+        const itemQty = item.qty || item.quantity || 1;
+        const priceNum = Number(item.price) || 0;
+        const itemTotal = priceNum * itemQty;
+        total += itemTotal;
+        const itemImg = item.img || 'img/productos/Granola_Nativa.png';
+        return `
+          <div class="cart-item">
+            <img src="${itemImg}" alt="${item.name}" class="cart-item-img" onerror="this.onerror=null; this.src='img/productos/Granola_Nativa.png';">
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">${formatCOP(itemTotal)}</div>
+              <div class="cart-item-qty">
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" aria-label="Disminuir">-</button>
+                <span style="min-width: 18px; text-align: center; font-size: 13px; font-weight: 700;">${itemQty}</span>
+                <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)" aria-label="Aumentar">+</button>
+                <button type="button" class="remove-item-btn" onclick="removeItem(${index})" aria-label="Eliminar producto" title="Eliminar">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      const subtotalEl = document.getElementById('cart-subtotal');
+      if (subtotalEl) subtotalEl.textContent = formatCOP(total);
+
+      const checkoutWhatsappBtn = document.getElementById('checkout-whatsapp-btn');
+      if (checkoutWhatsappBtn) {
+        let msg = "¡Hola NATIVA! Deseo confirmar el siguiente pedido de productos naturales:\n\n";
+        cart.forEach(item => {
+          const q = item.qty || item.quantity || 1;
+          const p = Number(item.price) || 0;
+          msg += `• ${q}x ${item.name} (${formatCOP(p * q)})\n`;
+        });
+        msg += `\nTotal: ${formatCOP(total)}\n¿Cuáles son los métodos de pago disponibles?`;
+        checkoutWhatsappBtn.href = `https://wa.me/573005427742?text=${encodeURIComponent(msg)}`;
+      }
+    }
+
+    window.changeQty = function(index, delta) {
+      if (!cart[index]) return;
+      const current = cart[index].qty || cart[index].quantity || 1;
+      const newQty = current + delta;
+      if (newQty <= 0) {
+        cart.splice(index, 1);
+      } else {
+        cart[index].qty = newQty;
+        cart[index].quantity = newQty;
+      }
+      saveCart();
+    };
+
+    window.removeItem = function(index) {
+      if (!cart[index]) return;
+      const removedName = cart[index].name;
+      cart.splice(index, 1);
+      saveCart();
+      showToast(`Se eliminó "${removedName}" del carrito`);
+    };
+
+    const openCartBtn = document.getElementById('open-cart-btn');
+    const closeCartBtn = document.getElementById('close-cart-btn');
+    const continueShoppingBtn = document.getElementById('continue-shopping-btn');
+    const cartDrawer = document.getElementById('cart-drawer');
+    const cartOverlay = document.getElementById('cart-overlay');
+    const btnFinalizarCompra = document.getElementById('btn-finalizar-compra');
+
+    function openCart() {
+      if (cartDrawer) {
+        cartDrawer.classList.add('open');
+        cartDrawer.classList.add('active');
+      }
+      if (cartOverlay) {
+        cartOverlay.classList.add('show');
+        cartOverlay.classList.add('active');
+      }
+      renderCart();
+    }
+
+    function closeCart() {
+      if (cartDrawer) {
+        cartDrawer.classList.remove('open');
+        cartDrawer.classList.remove('active');
+      }
+      if (cartOverlay) {
+        cartOverlay.classList.remove('show');
+        cartOverlay.classList.remove('active');
+      }
+    }
+
+    if (openCartBtn) openCartBtn.addEventListener('click', openCart);
+    if (closeCartBtn) closeCartBtn.addEventListener('click', closeCart);
+    if (continueShoppingBtn) continueShoppingBtn.addEventListener('click', closeCart);
+    if (cartOverlay) cartOverlay.addEventListener('click', closeCart);
+
+    if (btnFinalizarCompra) {
+      btnFinalizarCompra.addEventListener('click', () => {
+        if (!cart || cart.length === 0) {
+          showToast('Tu carrito está vacío. Agrega productos antes de finalizar.');
+          return;
+        }
+        window.location.href = 'index.html?checkout=true';
+      });
+    }
+
+    // Inicializar datos al cargar la página
+    updateCartBadge();
+  </script>
+</body>
+</html>

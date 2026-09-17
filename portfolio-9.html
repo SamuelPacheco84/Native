@@ -28,6 +28,11 @@
             <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
             <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
             <li>
+              <a href="perfil.html" class="nav-action-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                <i class="fas fa-user-circle"></i> <span>Perfil</span>
+              </a>
+            </li>
+            <li>
               <button type="button" class="nav-action-btn cart-btn-wrap" id="open-cart-btn" aria-label="Ver Carrito de Compras">
                 <i class="fas fa-shopping-cart"></i>
                 <span>Carrito</span>
@@ -172,7 +177,7 @@
       <div class="product-nav-strip">
         <a href="portfolio-8.html" class="btn-nav-prod"><i class="fas fa-arrow-left"></i> <span>Azúcar Mascabado Orgánico</span></a>
         <a href="index.html#portfolio" class="btn-nav-prod btn-catalog"><i class="fas fa-th-large"></i> Ver Todo el Catálogo</a>
-        <span style="flex:1;"></span>
+        <a href="portfolio-10.html" class="btn-nav-prod"><span>Avellanas Enteras Tostadas</span> <i class="fas fa-arrow-right"></i></a>
       </div>
 
     </div>
@@ -226,17 +231,312 @@
         <span>Subtotal:</span>
         <span id="cart-subtotal" style="font-weight: 700;">$0</span>
       </div>
-      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px; display: flex; align-items: center; gap: 6px;">
-        <i class="fas fa-truck" style="color: var(--verde-natural);"></i> Envíos a todo el país &bull; Pagas contraentrega
+      <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 8px; display: flex; align-items: center; gap: 6px;">
+        <i class="fas fa-truck" style="color: var(--verde-natural);"></i> Envíos a todo el país
       </div>
-      <a href="#" class="btn btn-primary" id="checkout-whatsapp-btn" target="_blank" rel="noopener noreferrer" style="width: 100%; text-align: center; justify-content: center;">
-        <i class="fab fa-whatsapp"></i> Finalizar Pedido por WhatsApp
+      <button type="button" class="btn btn-primary" id="btn-finalizar-compra" style="width: 100%; justify-content: center; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px;">
+        <i class="fas fa-lock"></i> FINALIZAR COMPRA
+      </button>
+      <a href="#" class="btn btn-whatsapp-cart" id="checkout-whatsapp-btn" target="_blank" rel="noopener noreferrer" style="width: 100%; text-align: center; justify-content: center; margin-bottom: 6px;">
+        <i class="fab fa-whatsapp"></i> O pedir por WhatsApp
       </a>
-      <button type="button" class="btn btn-light" id="continue-shopping-btn" style="width: 100%; justify-content: center; margin-top: 8px;">
+      <button type="button" class="btn btn-light" id="continue-shopping-btn" style="width: 100%; justify-content: center;">
         Continuar Comprando
       </button>
     </div>
   </aside>
+
+  <!-- Modal de Checkout / Finalizar Compra -->
+  <div class="modal-overlay" id="checkout-modal-overlay">
+    <div class="modal-dialog checkout-dialog" role="dialog" aria-modal="true" aria-labelledby="checkout-dialog-title">
+      <!-- Encabezado -->
+      <div class="checkout-header">
+        <h3 id="checkout-dialog-title"><i class="fas fa-shield-alt"></i> Finalizar Compra Segura</h3>
+        <button type="button" class="close-modal-btn" id="close-checkout-btn" aria-label="Cerrar ventana">&times;</button>
+      </div>
+
+      <!-- Barra de Pasos -->
+      <div class="checkout-steps-bar">
+        <div class="checkout-step-tab active" id="step-tab-1">
+          <span class="step-num">1</span>
+          <span>Datos de Envío</span>
+        </div>
+        <div class="checkout-step-tab" id="step-tab-2">
+          <span class="step-num">2</span>
+          <span>Método de Pago</span>
+        </div>
+        <div class="checkout-step-tab" id="step-tab-3">
+          <span class="step-num">3</span>
+          <span>Confirmación</span>
+        </div>
+      </div>
+
+      <div class="checkout-body">
+        <!-- Paso 1: Datos de Envío -->
+        <div class="checkout-step-view active" id="checkout-step-1">
+          <div class="checkout-order-summary-box">
+            <div>
+              <strong style="color: var(--verde-bosque);">Resumen de tu orden</strong>
+              <div class="items-count" id="checkout-items-summary">0 productos en tu carrito</div>
+            </div>
+            <div class="total-price" id="checkout-total-price">$0</div>
+          </div>
+
+          <form id="checkout-shipping-form" onsubmit="event.preventDefault(); goToCheckoutStep2();">
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-nombre">Nombre <span style="color:#e53e3e;">*</span></label>
+                <input type="text" id="checkout-nombre" placeholder="Ej. Carlos" required>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-apellido">Apellido <span style="color:#e53e3e;">*</span></label>
+                <input type="text" id="checkout-apellido" placeholder="Ej. Gómez" required>
+              </div>
+            </div>
+
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-telefono">Número de Teléfono <span style="color:#e53e3e;">*</span></label>
+                <input type="tel" id="checkout-telefono" placeholder="Ej. 300 123 4567" required>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-email">
+                  <span>Correo Electrónico <span style="color:#e53e3e;">*</span></span>
+                  <span class="badge-autofill" id="email-autofill-badge" style="display:none;"><i class="fas fa-check-circle"></i> Autocompletado</span>
+                </label>
+                <input type="email" id="checkout-email" placeholder="ejemplo@correo.com" required>
+              </div>
+            </div>
+
+            <div class="checkout-grid-2">
+              <div class="checkout-field">
+                <label for="checkout-departamento">Departamento <span style="color:#e53e3e;">*</span></label>
+                <select id="checkout-departamento" required onchange="handleDepartmentChange()">
+                  <option value="">Selecciona tu departamento...</option>
+                </select>
+              </div>
+              <div class="checkout-field">
+                <label for="checkout-ciudad">Ciudad <span style="color:#e53e3e;">*</span></label>
+                <select id="checkout-ciudad" required>
+                  <option value="">Primero selecciona departamento...</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkout-direccion">Dirección de Entrega <span style="color:#e53e3e;">*</span></label>
+              <input type="text" id="checkout-direccion" placeholder="Ej. Calle 123 # 45 - 67, Apto 402, Barrio Los Rosales" required>
+            </div>
+
+            <div class="checkout-field">
+              <label for="checkout-notas">Indicaciones de entrega (opcional)</label>
+              <input type="text" id="checkout-notas" placeholder="Ej. Dejar en portería o timbre 201">
+            </div>
+
+            <div id="checkout-step1-error" style="display:none; background:#fff2ee; color:#c9744e; border:1px solid #f2c7b5; padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:12px; font-weight:600;"></div>
+
+            <div class="checkout-actions-row" style="justify-content: flex-end;">
+              <button type="submit" class="btn-checkout-next">
+                Siguiente <i class="fas fa-arrow-right"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Paso 2: Método de Pago -->
+        <div class="checkout-step-view" id="checkout-step-2">
+          <div class="checkout-order-summary-box">
+            <div>
+              <strong style="color: var(--verde-bosque);">Total a Pagar</strong>
+              <div class="items-count" id="checkout-step2-destinatario">Envío a: -</div>
+            </div>
+            <div class="total-price" id="checkout-step2-total">$0</div>
+          </div>
+
+          <p style="font-size:13px; font-weight:600; color:var(--verde-bosque); margin-bottom:10px;">
+            Selecciona la forma en que deseas pagar:
+          </p>
+
+          <div class="payment-methods-list">
+            <!-- 1. Efectivo (Efecty, Baloto, etc.) -->
+            <label class="payment-method-card selected" id="card-method-efectivo" onclick="selectPaymentMethod('efectivo')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-efectivo" value="efectivo" checked>
+                <div class="payment-method-title">
+                  <i class="fas fa-money-bill-wave" style="color: #d97706; margin-right: 6px;"></i>
+                  Efectivo (Efecty, Baloto u otras sucursales)
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge">Efecty</span>
+                  <span class="payment-method-badge">Baloto</span>
+                  <span class="payment-method-badge">Su Red</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-efectivo">
+                <p style="margin:0 0 6px 0;">Generaremos un <strong>ID único de pago</strong> y un código de convenio exclusivo. Tendrás un <strong>tiempo límite de 24 horas</strong> para pagar en cualquier sucursal del país.</p>
+                <div style="background:#fef3c7; border:1px solid #fde68a; padding:8px 12px; border-radius:6px; font-size:12px; color:#92400e; display:flex; align-items:center; gap:8px;">
+                  <i class="fas fa-clock"></i> Plazo máximo de 24 horas para realizar el pago en ventanilla.
+                </div>
+              </div>
+            </label>
+
+            <!-- 2. Nequi -->
+            <label class="payment-method-card" id="card-method-nequi" onclick="selectPaymentMethod('nequi')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-nequi" value="nequi">
+                <div class="payment-method-title">
+                  <i class="fas fa-mobile-alt" style="color: #6366f1; margin-right: 6px;"></i>
+                  Nequi
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge" style="background:#f3e8ff; color:#7e22ce;">App Nequi</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-nequi">
+                <p style="margin:0 0 8px 0;">Ingresa tu número celular registrado en Nequi. Enviaremos una solicitud de cobro instantánea a tu aplicación para que apruebes el pago.</p>
+                <div class="checkout-field" style="margin-bottom:0; max-width:280px;">
+                  <label for="nequi-celular" style="font-size:12px;">Número celular Nequi</label>
+                  <input type="tel" id="nequi-celular" placeholder="300 000 0000">
+                </div>
+              </div>
+            </label>
+
+            <!-- 3. Bancos (PSE / Transferencia) -->
+            <label class="payment-method-card" id="card-method-bancos" onclick="selectPaymentMethod('bancos')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-bancos" value="bancos">
+                <div class="payment-method-title">
+                  <i class="fas fa-university" style="color: #0284c7; margin-right: 6px;"></i>
+                  Bancos (Transferencia Bancaria / PSE)
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge" style="background:#e0f2fe; color:#0369a1;">PSE</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-bancos">
+                <p style="margin:0 0 8px 0;">Se enviará una notificación a tu banco para debitar de tu cuenta de ahorros o corriente.</p>
+                <div class="checkout-grid-2">
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="banco-select" style="font-size:12px;">Selecciona tu Banco</label>
+                    <select id="banco-select">
+                      <option value="Bancolombia">Bancolombia</option>
+                      <option value="Banco de Bogotá">Banco de Bogotá</option>
+                      <option value="Davivienda">Davivienda</option>
+                      <option value="BBVA Colombia">BBVA Colombia</option>
+                      <option value="Banco de Occidente">Banco de Occidente</option>
+                      <option value="Banco Popular">Banco Popular</option>
+                      <option value="Scotiabank Colpatria">Scotiabank Colpatria</option>
+                      <option value="Banco Agrario">Banco Agrario</option>
+                      <option value="Banco Caja Social">Banco Caja Social</option>
+                      <option value="Daviplata">Daviplata</option>
+                      <option value="Dale">Dale</option>
+                      <option value="Nu Colombia">Nu Colombia</option>
+                    </select>
+                  </div>
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="tipo-cliente-select" style="font-size:12px;">Tipo de Persona</label>
+                    <select id="tipo-cliente-select">
+                      <option value="Natural">Persona Natural</option>
+                      <option value="Juridica">Persona Jurídica</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </label>
+
+            <!-- 4. Tarjetas de Crédito o Débito -->
+            <label class="payment-method-card" id="card-method-tarjetas" onclick="selectPaymentMethod('tarjetas')">
+              <div class="payment-method-header">
+                <input type="radio" name="payment_method" id="pay-tarjetas" value="tarjetas">
+                <div class="payment-method-title">
+                  <i class="fas fa-credit-card" style="color: var(--verde-bosque); margin-right: 6px;"></i>
+                  Tarjetas de Crédito o Débito
+                </div>
+                <div class="payment-method-badges">
+                  <span class="payment-method-badge">Visa</span>
+                  <span class="payment-method-badge">Mastercard</span>
+                  <span class="payment-method-badge">Amex</span>
+                </div>
+              </div>
+              <div class="payment-method-details" id="details-tarjetas">
+                <div class="checkout-field">
+                  <label for="card-num" style="font-size:12px;">Número de Tarjeta</label>
+                  <input type="text" id="card-num" placeholder="0000 0000 0000 0000" maxlength="19">
+                </div>
+                <div class="checkout-grid-2">
+                  <div class="checkout-field" style="margin-bottom:0;">
+                    <label for="card-holder" style="font-size:12px;">Titular de la Tarjeta</label>
+                    <input type="text" id="card-holder" placeholder="Nombre como figura en tarjeta">
+                  </div>
+                  <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px;">
+                    <div class="checkout-field" style="margin-bottom:0;">
+                      <label for="card-exp" style="font-size:12px;">Vence</label>
+                      <input type="text" id="card-exp" placeholder="MM/AA" maxlength="5">
+                    </div>
+                    <div class="checkout-field" style="margin-bottom:0;">
+                      <label for="card-cvv" style="font-size:12px;">CVV</label>
+                      <input type="password" id="card-cvv" placeholder="•••" maxlength="4">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </label>
+          </div>
+
+          <div class="checkout-actions-row">
+            <button type="button" class="btn-checkout-prev" onclick="goToCheckoutStep1()">
+              <i class="fas fa-arrow-left"></i> Anterior
+            </button>
+            <button type="button" class="btn-checkout-finish" onclick="submitFinalCheckout()">
+              <i class="fas fa-lock"></i> Finalizar Compra
+            </button>
+          </div>
+        </div>
+
+        <!-- Paso 3: Confirmación y Estado del Pago -->
+        <div class="checkout-step-view" id="checkout-step-3">
+          <!-- Contenido inyectado dinámicamente según el método de pago -->
+          <div id="confirmation-dynamic-content"></div>
+
+          <div class="checkout-actions-row" style="justify-content: center; gap: 12px; flex-wrap: wrap; margin-top: 20px;">
+            <button type="button" class="btn btn-primary" onclick="finishCheckoutAndClose()" style="padding: 11px 26px; font-weight: 600; border-radius: 8px;">
+              <i class="fas fa-shopping-bag"></i> Volver a la Tienda
+            </button>
+            <button type="button" class="btn-checkout-prev" onclick="window.print()" style="padding: 11px 20px; border-radius: 8px;">
+              <i class="fas fa-print"></i> Imprimir Resumen
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Correo Electrónico Recibido (Gmail / Inbox Style) -->
+  <div class="email-modal-overlay" id="email-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="email-subject-title">
+    <div class="email-modal-card">
+      <div class="email-client-header">
+        <h4 id="email-client-heading"><i class="fas fa-envelope"></i> Bandeja de Entrada - Correo Oficial de Nativa</h4>
+        <button type="button" class="email-client-close" onclick="closeEmailModal()" aria-label="Cerrar correo">&times;</button>
+      </div>
+      <div class="email-meta-box">
+        <div class="email-meta-row">
+          <span class="label">De:</span>
+          <span class="value"><strong>Nativa Alimentos Naturales</strong> &lt;pedidos@nativa.com.co&gt;</span>
+        </div>
+        <div class="email-meta-row">
+          <span class="label">Para:</span>
+          <span class="value" id="email-to-recipient">usuario@correo.com</span>
+        </div>
+        <div class="email-meta-row">
+          <span class="label">Asunto:</span>
+          <span class="value" id="email-subject-title">🌿 Confirmación de Pedido y Enlace de Rastreo</span>
+        </div>
+      </div>
+      <div class="email-body-scroll" id="email-body-content">
+        <!-- Contenido del Correo inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
 
   <!-- Notificaciones Toast -->
   <div class="toast-notice" id="cart-toast"><i class="fas fa-check-circle"></i> <span id="toast-message"></span></div>
@@ -460,6 +760,419 @@
         saveCart();
         showToast(`¡${itemQuantity}x ${currentProduct.name} añadido al carrito!`);
         openCart();
+      });
+    }
+
+    // ==========================================
+    // Checkout Multi-Paso para Páginas de Producto
+    // ==========================================
+    const colombiaData = {
+      "Amazonas": ["Leticia", "Puerto Nariño"],
+      "Antioquia": ["Medellín", "Bello", "Itagüí", "Envigado", "Rionegro", "Apartadó", "Turbo", "Caucasia", "Sabaneta", "La Ceja", "Marinilla"],
+      "Arauca": ["Arauca", "Saravena", "Tame", "Arauquita"],
+      "Atlántico": ["Barranquilla", "Soledad", "Malambo", "Sabanalarga", "Puerto Colombia", "Galapa", "Baranoa"],
+      "Bogotá D.C.": ["Bogotá D.C."],
+      "Bolívar": ["Cartagena", "Magangué", "Carmen de Bolívar", "Turbaco", "Arjona", "San Juan Nepomuceno"],
+      "Boyacá": ["Tunja", "Duitama", "Sogamoso", "Chiquinquirá", "Paipa", "Villa de Leyva", "Moniquirá", "Puerto Boyacá"],
+      "Caldas": ["Manizales", "La Dorada", "Chinchiná", "Villamaría", "Riosucio", "Anserma"],
+      "Caquetá": ["Florencia", "San Vicente del Caguán", "Cartagena del Chairá"],
+      "Casanare": ["Yopal", "Aguazul", "Villanueva", "Paz de Ariporo", "Tauramena"],
+      "Cauca": ["Popayán", "Santander de Quilichao", "Puerto Tejada", "Patía", "Piendamó"],
+      "Cesar": ["Valledupar", "Aguachica", "Agustín Codazzi", "Bosconia", "Curumaní"],
+      "Chocó": ["Quibdó", "Istmina", "Condoto", "Tadó"],
+      "Córdoba": ["Montería", "Cereté", "Lorica", "Sahagún", "Montelíbano", "Planeta Rica"],
+      "Cundinamarca": ["Soacha", "Facatativá", "Chía", "Zipaquirá", "Fusagasugá", "Madrid", "Funza", "Mosquera", "Girardot", "Cajicá", "Cota", "Sopó"],
+      "Guainía": ["Inírida"],
+      "Guaviare": ["San José del Guaviare", "Calamar"],
+      "Huila": ["Neiva", "Pitalito", "Garzón", "La Plata", "Campoalegre"],
+      "La Guajira": ["Riohacha", "Maicao", "Uribia", "San Juan del Cesar", "Fonseca"],
+      "Magdalena": ["Santa Marta", "Ciénaga", "Fundación", "El Banco", "Plato", "Aracataca"],
+      "Meta": ["Villavicencio", "Acacías", "Granada", "Puerto López", "San Martín"],
+      "Nariño": ["Pasto", "Tumaco", "Ipiales", "Túquerres", "La Unión"],
+      "Norte de Santander": ["Cúcuta", "Ocaña", "Villa del Rosario", "Los Patios", "Pamplona", "Tibú"],
+      "Putumayo": ["Mocoa", "Puerto Asís", "Orito", "Valle del Guamuez"],
+      "Quindío": ["Armenia", "Calarcá", "La Tebaida", "Montenegro", "Quimbaya", "Salento", "Circasia"],
+      "Risaralda": ["Pereira", "Dosquebradas", "Santa Rosa de Cabal", "La Virginia", "Belén de Umbría"],
+      "San Andrés y Providencia": ["San Andrés", "Providencia"],
+      "Santander": ["Bucaramanga", "Floridablanca", "Girón", "Piedecuesta", "Barrancabermeja", "San Gil", "Socorro", "Barbosa"],
+      "Sucre": ["Sincelejo", "Corozal", "San Marcos", "Tolú", "Sampués", "Coveñas"],
+      "Tolima": ["Ibagué", "Espinal", "Melgar", "Chaparral", "Mariquita", "Honda", "Líbano"],
+      "Valle del Cauca": ["Cali", "Buenaventura", "Palmira", "Tuluá", "Yumbo", "Cartago", "Buga", "Jamundí", "Candelaria", "Sevilla"],
+      "Vaupés": ["Mitú"],
+      "Vichada": ["Puerto Carreño", "Santa Rosalía"]
+    };
+
+    const checkoutModal = document.getElementById('checkout-modal-overlay');
+    const closeCheckoutBtn = document.getElementById('close-checkout-btn');
+    const btnFinalizarCompra = document.getElementById('btn-finalizar-compra');
+
+    let checkoutData = {
+      nombre: '',
+      apellido: '',
+      telefono: '',
+      email: '',
+      departamento: '',
+      ciudad: '',
+      direccion: '',
+      notas: '',
+      metodoPago: 'efectivo',
+      orderId: '',
+      total: 0
+    };
+
+    function initDepartments() {
+      const deptSelect = document.getElementById('checkout-departamento');
+      if (!deptSelect) return;
+      const currentVal = deptSelect.value;
+      deptSelect.innerHTML = '<option value="">Selecciona tu departamento...</option>' + 
+        Object.keys(colombiaData).sort().map(d => `<option value="${d}">${d}</option>`).join('');
+      if (currentVal) deptSelect.value = currentVal;
+    }
+
+    function handleDepartmentChange() {
+      const deptSelect = document.getElementById('checkout-departamento');
+      const ciudadSelect = document.getElementById('checkout-ciudad');
+      if (!deptSelect || !ciudadSelect) return;
+
+      const selectedDept = deptSelect.value;
+      if (!selectedDept || !colombiaData[selectedDept]) {
+        ciudadSelect.innerHTML = '<option value="">Primero selecciona departamento...</option>';
+        return;
+      }
+
+      const cities = colombiaData[selectedDept];
+      ciudadSelect.innerHTML = '<option value="">Selecciona tu ciudad...</option>' + 
+        cities.map(c => `<option value="${c}">${c}</option>`).join('');
+    }
+
+    function setStep(stepNum) {
+      [1, 2, 3].forEach(num => {
+        const tab = document.getElementById(`step-tab-${num}`);
+        const view = document.getElementById(`checkout-step-${num}`);
+        if (tab) {
+          tab.classList.remove('active', 'completed');
+          if (num < stepNum) tab.classList.add('completed');
+          if (num === stepNum) tab.classList.add('active');
+        }
+        if (view) {
+          if (num === stepNum) {
+            view.classList.add('active');
+          } else {
+            view.classList.remove('active');
+          }
+        }
+      });
+    }
+
+    function goToCheckoutStep1() {
+      setStep(1);
+    }
+
+    function goToCheckoutStep2() {
+      const nombre = document.getElementById('checkout-nombre').value.trim();
+      const apellido = document.getElementById('checkout-apellido').value.trim();
+      const telefono = document.getElementById('checkout-telefono').value.trim();
+      const email = document.getElementById('checkout-email').value.trim();
+      const departamento = document.getElementById('checkout-departamento').value;
+      const ciudad = document.getElementById('checkout-ciudad').value;
+      const direccion = document.getElementById('checkout-direccion').value.trim();
+      const notas = document.getElementById('checkout-notas') ? document.getElementById('checkout-notas').value.trim() : '';
+      const errBox = document.getElementById('checkout-step1-error');
+
+      if (!nombre || !apellido || !telefono || !email || !departamento || !ciudad || !direccion) {
+        if (errBox) {
+          errBox.textContent = 'Por favor completa todos los campos obligatorios (*) para continuar.';
+          errBox.style.display = 'block';
+        }
+        return;
+      }
+
+      if (errBox) errBox.style.display = 'none';
+
+      checkoutData.nombre = nombre;
+      checkoutData.apellido = apellido;
+      checkoutData.telefono = telefono;
+      checkoutData.email = email;
+      checkoutData.departamento = departamento;
+      checkoutData.ciudad = ciudad;
+      checkoutData.direccion = direccion;
+      checkoutData.notas = notas;
+
+      localStorage.setItem('nativa_user_email', email);
+
+      const total = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+      checkoutData.total = total;
+
+      const step2Dest = document.getElementById('checkout-step2-destinatario');
+      if (step2Dest) {
+        step2Dest.textContent = `Destino: ${ciudad}, ${departamento} (${nombre} ${apellido})`;
+      }
+      const step2Total = document.getElementById('checkout-step2-total');
+      if (step2Total) {
+        step2Total.textContent = formatPrice(total);
+      }
+
+      setStep(2);
+    }
+
+    function selectPaymentMethod(method) {
+      checkoutData.metodoPago = method;
+      ['efectivo', 'nequi', 'bancos', 'tarjetas'].forEach(m => {
+        const card = document.getElementById(`card-method-${m}`);
+        const radio = document.getElementById(`pay-${m}`);
+        if (card) {
+          if (m === method) {
+            card.classList.add('selected');
+            if (radio) radio.checked = true;
+          } else {
+            card.classList.remove('selected');
+            if (radio) radio.checked = false;
+          }
+        }
+      });
+    }
+
+    function generateUniqueId(prefix) {
+      const rand = Math.floor(100000 + Math.random() * 900000);
+      return `${prefix}-${rand}`;
+    }
+
+    function submitFinalCheckout() {
+      const method = checkoutData.metodoPago || 'efectivo';
+      const container = document.getElementById('confirmation-dynamic-content');
+      if (!container) return;
+
+      const totalFormatted = formatPrice(checkoutData.total);
+      const itemsList = cart.map(item => `
+        <div class="confirmation-summary-row">
+          <span>${item.name} (x${item.qty || 1})</span>
+          <strong>${formatPrice(item.price * (item.qty || 1))}</strong>
+        </div>
+      `).join('');
+
+      if (method === 'nequi' || method === 'bancos') {
+        const entidad = method === 'nequi' ? 'Nequi' : (document.getElementById('banco-select')?.value || 'tu banco');
+        const phoneNequi = document.getElementById('nequi-celular')?.value.trim() || checkoutData.telefono;
+        const refId = generateUniqueId('NAT-PSE');
+
+        container.innerHTML = `
+          <div class="confirmation-status-box status-bank">
+            <div class="confirmation-icon">
+              <i class="fas fa-bell"></i>
+            </div>
+            <div class="confirmation-title">¡Notificación enviada a tu banco!</div>
+            <div class="confirmation-message">
+              Se le envió una notificación a tu entidad bancaria (<strong>${entidad}</strong>)${method === 'nequi' ? ` asociada a tu línea <strong>${phoneNequi}</strong>` : ''}.<br><br>
+              <strong>Debes de esperar que se realice el pago:</strong> por favor ingresa a tu aplicación o banca virtual para autorizar la solicitud y confirmar la transacción.
+            </div>
+            <div style="display:inline-flex; align-items:center; gap:8px; background:#dcfce7; color:#166534; padding:7px 16px; border-radius:20px; font-size:13px; font-weight:700;">
+              <i class="fas fa-spinner fa-spin"></i> Esperando confirmación de la entidad bancaria...
+            </div>
+          </div>
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-receipt"></i> Resumen de la Orden (Ref: ${refId})</h5>
+            <div class="confirmation-summary-row">
+              <span>Cliente:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Correo:</span>
+              <strong>${checkoutData.email}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Envío a:</span>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Método:</span>
+              <strong>${method === 'nequi' ? 'Nequi' : 'PSE / Débito Bancario (' + entidad + ')'}</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+            <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
+              <span>Total a Pagar:</span>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
+            </div>
+          </div>
+        `;
+      } else if (method === 'efectivo') {
+        const uniqueId = generateUniqueId('NAT-EF');
+        checkoutData.orderId = uniqueId;
+
+        container.innerHTML = `
+          <div class="confirmation-status-box status-cash">
+            <div class="confirmation-icon">
+              <i class="fas fa-receipt"></i>
+            </div>
+            <div class="confirmation-title">¡Código de Pago en Efectivo Generado!</div>
+            
+            <div style="margin: 12px 0;">
+              <div class="unique-id-display">
+                <span>Tu ID Único de Pago:</span>
+                <span class="unique-id-value">${uniqueId}</span>
+              </div>
+            </div>
+
+            <div class="cash-timer-badge">
+              <i class="fas fa-hourglass-half"></i> Tiempo límite: 24 horas para pagar
+            </div>
+
+            <div class="confirmation-message">
+              Acércate a cualquier sucursal de <strong>Efecty, Baloto, Paga Todo o Su Red</strong> con tu <strong>ID único de pago (${uniqueId})</strong> y el código de convenio Nativa <strong>#98412</strong>.<br><br>
+              <strong style="color:#b91c1c;">⚠️ Se tiene un tiempo límite de 24 horas para pagar.</strong> Al transcurrir las 24h sin realizarse el pago, el pedido y la referencia caducarán automáticamente.
+            </div>
+          </div>
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-store"></i> Instrucciones de Pago en Sucursal</h5>
+            <div class="confirmation-summary-row">
+              <span>Convenio Nacional:</span>
+              <strong>Nativa Cosmética Natural (#98412)</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>ID Único / Referencia:</span>
+              <strong style="color:#92400e; font-family:monospace; font-size:15px;">${uniqueId}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Valor Exacto en Caja:</span>
+              <strong style="font-size:1.15rem; color:var(--verde-bosque);">\${totalFormatted}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Destinatario:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido} (${checkoutData.ciudad})</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Dirección de Entrega:</span>
+              <strong>${checkoutData.direccion}</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+          </div>
+        `;
+      } else {
+        const refId = generateUniqueId('NAT-TC');
+        container.innerHTML = `
+          <div class="confirmation-status-box status-bank">
+            <div class="confirmation-icon" style="background:var(--verde-natural);">
+              <i class="fas fa-check"></i>
+            </div>
+            <div class="confirmation-title">¡Transacción Registrada con Éxito!</div>
+            <div class="confirmation-message">
+              Hemos recibido tu solicitud de pago con tarjeta por un monto total de <strong>${totalFormatted}</strong>. La referencia generada es <strong>${refId}</strong> y se ha enviado el comprobante a <strong>${checkoutData.email}</strong>.
+            </div>
+          </div>
+
+          <div class="confirmation-summary-card">
+            <h5><i class="fas fa-receipt"></i> Resumen del Pedido</h5>
+            <div class="confirmation-summary-row">
+              <span>Cliente:</span>
+              <strong>${checkoutData.nombre} ${checkoutData.apellido}</strong>
+            </div>
+            <div class="confirmation-summary-row">
+              <span>Entrega:</span>
+              <strong>${checkoutData.direccion}, ${checkoutData.ciudad} (${checkoutData.departamento})</strong>
+            </div>
+            <div style="border-top:1px dashed #d5ded2; margin:10px 0; padding-top:10px;">
+              ${itemsList}
+            </div>
+            <div class="confirmation-summary-row" style="font-size:15px; color:var(--verde-bosque);">
+              <span>Total Pagado:</span>
+              <strong style="font-size:1.15rem;">${totalFormatted}</strong>
+            </div>
+          </div>
+        `;
+      }
+
+      setStep(3);
+    }
+
+    function finishCheckoutAndClose() {
+      cart = [];
+      saveCart();
+      closeCheckoutModal();
+      showToast('¡Gracias por tu compra en Nativa! Tu pedido ha sido procesado.');
+    }
+
+    function goToTrackingFromCheckout() {
+      cart = [];
+      saveCart();
+      closeCheckoutModal();
+      window.location.href = 'perfil.html';
+    }
+
+    function openEmailModalFromCheckout() {
+      closeCheckoutModal();
+      window.location.href = 'index.html';
+    }
+
+    function closeEmailModal() {
+      const emailModal = document.getElementById('email-modal-overlay');
+      if (emailModal) emailModal.classList.remove('active');
+    }
+
+    function openCheckoutModal() {
+      if (!cart || cart.length === 0) {
+        showToast('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
+        return;
+      }
+      closeCart();
+
+      initDepartments();
+
+      const registeredEmail = localStorage.getItem('nativa_user_email');
+      const emailInput = document.getElementById('checkout-email');
+      const emailBadge = document.getElementById('email-autofill-badge');
+      if (registeredEmail && emailInput) {
+        emailInput.value = registeredEmail;
+        if (emailBadge) emailBadge.style.display = 'inline-flex';
+      }
+
+      const registeredName = localStorage.getItem('nativa_user_name');
+      const nameInput = document.getElementById('checkout-nombre');
+      if (registeredName && nameInput && !nameInput.value) {
+        nameInput.value = registeredName;
+      }
+
+      const registeredLastname = localStorage.getItem('nativa_user_lastname');
+      const lastnameInput = document.getElementById('checkout-apellido');
+      if (registeredLastname && lastnameInput && !lastnameInput.value) {
+        lastnameInput.value = registeredLastname;
+      }
+
+      const registeredPhone = localStorage.getItem('nativa_user_phone');
+      const phoneInput = document.getElementById('checkout-telefono');
+      if (registeredPhone && phoneInput && !phoneInput.value) {
+        phoneInput.value = registeredPhone;
+      }
+
+      const total = cart.reduce((acc, item) => acc + (item.price * (item.qty || 1)), 0);
+      const totalQty = cart.reduce((acc, item) => acc + (item.qty || 1), 0);
+
+      const itemsSummary = document.getElementById('checkout-items-summary');
+      if (itemsSummary) {
+        itemsSummary.textContent = `${totalQty} producto${totalQty > 1 ? 's' : ''} en tu orden`;
+      }
+      const totalPrice = document.getElementById('checkout-total-price');
+      if (totalPrice) {
+        totalPrice.textContent = formatPrice(total);
+      }
+
+      goToCheckoutStep1();
+      if (checkoutModal) checkoutModal.classList.add('active');
+    }
+
+    function closeCheckoutModal() {
+      if (checkoutModal) checkoutModal.classList.remove('active');
+    }
+
+    if (btnFinalizarCompra) btnFinalizarCompra.addEventListener('click', openCheckoutModal);
+    if (closeCheckoutBtn) closeCheckoutBtn.addEventListener('click', closeCheckoutModal);
+    if (checkoutModal) {
+      checkoutModal.addEventListener('click', (e) => {
+        if (e.target === checkoutModal) closeCheckoutModal();
       });
     }
 
