@@ -672,6 +672,91 @@
     </div>
   </div>
 
+  <!-- Modal de Cancelación -->
+  <div class="modal-overlay" id="cancel-order-overlay" style="display: none; align-items: center; justify-content: center;" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 450px; padding: 24px; text-align: center; border-radius: 12px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+      <h3 style="color: var(--verde-bosque); margin-top: 0;">¿Quieres cancelar el pedido?</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+        Esta acción detendrá el envío de tu pedido y nos permitirá procesar la devolución de tu dinero.
+      </p>
+      <div style="text-align: left; margin-bottom: 20px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">¿A dónde deseas el reembolso?</label>
+        <select id="cancel-refund-method" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s;" onchange="document.getElementById('cancel-refund-details-container').style.display = this.value === 'original' ? 'none' : 'block';">
+          <option value="original">Método de pago original</option>
+          <option value="nequi">Nequi</option>
+          <option value="daviplata">Daviplata</option>
+          <option value="bancolombia">Cuenta Bancolombia</option>
+          <option value="otros">Otra cuenta bancaria</option>
+        </select>
+      </div>
+      <div id="cancel-refund-details-container" style="display: none; text-align: left; margin-bottom: 20px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">Detalles de la cuenta para reembolso</label>
+        <textarea id="cancel-refund-details" rows="2" placeholder="Ej: Nequi 3001234567 a nombre de Juan Pérez" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; resize: vertical;"></textarea>
+      </div>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" onclick="closeCancelModal()" style="padding: 10px 20px;">No, volver</button>
+        <button type="button" class="btn" onclick="submitCancelOrder()" style="padding: 10px 20px; background: #ef4444; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Cancelar pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Reembolso -->
+  <div class="modal-overlay" id="refund-order-overlay" style="display: none; align-items: center; justify-content: center;" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 450px; padding: 24px; text-align: left; border-radius: 12px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+      <h3 style="color: var(--verde-bosque); margin-top: 0; text-align: center;">Solicitar Reembolso</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 20px; text-align: center;">
+        Lamentamos que el pedido no haya cumplido tus expectativas. Por favor indícanos el motivo y dónde deseas recibir tu dinero.
+      </p>
+      
+      <div style="margin-bottom: 16px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">Motivo del reembolso</label>
+        <textarea id="refund-reason" rows="3" placeholder="Cuéntanos por qué deseas devolver el pedido..." style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; resize: vertical;"></textarea>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">¿A dónde deseas el reembolso?</label>
+        <select id="refund-method" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s;" onchange="document.getElementById('refund-details-container').style.display = this.value === 'original' ? 'none' : 'block';">
+          <option value="original">Método de pago original (<span id="refund-original-method-name">Online</span>)</option>
+          <option value="nequi">Nequi</option>
+          <option value="daviplata">Daviplata</option>
+          <option value="bancolombia">Cuenta Bancolombia</option>
+          <option value="otros">Otra cuenta bancaria</option>
+        </select>
+      </div>
+
+      <div id="refund-details-container" style="display: none; margin-bottom: 20px;">
+        <label style="display: block; font-size: 13px; font-weight: 600; color: #475569; margin-bottom: 6px;">Detalles de la cuenta para reembolso</label>
+        <textarea id="refund-details" rows="2" placeholder="Ej: Nequi 3001234567 a nombre de Juan Pérez" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; transition: border-color 0.2s; resize: vertical;"></textarea>
+      </div>
+
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" onclick="closeRefundModal()" style="padding: 10px 20px;">Cancelar</button>
+        <button type="button" class="btn" onclick="submitRefund()" style="padding: 10px 20px; background: #f59e0b; color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Solicitar Reembolso</button>
+      </div>
+    </div>
+  </div>
+
+  
+  <!-- Modal Confirmación de Método Original -->
+  <div class="modal-overlay" id="confirm-original-payment-overlay" style="display: none; align-items: center; justify-content: center;" role="dialog" aria-modal="true">
+    <div class="modal-dialog" style="max-width: 450px; padding: 24px; text-align: center; border-radius: 12px; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+      <h3 style="color: var(--verde-bosque); margin-top: 0;">Verifica tus datos de pago</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 20px;">
+        Tu reembolso será procesado a tu método de pago original:
+      </p>
+      <div id="confirm-original-payment-details" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-bottom: 20px; font-weight: 600; color: #1e293b; font-size: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <!-- Inyectado dinámicamente -->
+      </div>
+      <p style="color: #64748b; font-size: 13px; margin-bottom: 20px;">
+        ¿La información es correcta?
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" onclick="closeConfirmPaymentModal()" style="padding: 10px 20px;">Volver</button>
+        <button type="button" class="btn btn-primary" onclick="confirmOriginalPaymentSubmit()" style="padding: 10px 20px;">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast de Notificaciones -->
   <div class="toast-notification" id="toast"></div>
 
@@ -1175,12 +1260,14 @@
             </div>
 
             <div class="tracking-action-buttons">
-              <button type="button" class="btn btn-secondary" onclick="viewOrderEmail('${order.id}')" style="font-size: 12.5px; padding: 8px 14px;">
-                <i class="fas fa-envelope-open-text"></i> Ver Correo
-              </button>
               <a href="https://wa.me/573005427742?text=Hola%20Nativa%2C%20quisiera%20consultar%20el%20estado%20de%20mi%20pedido%20${encodeURIComponent(order.id)}" target="_blank" class="btn btn-primary" style="font-size: 12.5px; padding: 8px 16px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;">
                 <i class="fab fa-whatsapp"></i> Soporte WhatsApp
               </a>
+              ${(order.status || '').toLowerCase() === 'cancelado' || (order.status || '').toLowerCase() === 'devolución solicitada' ? '' : 
+                (step < 5 ? 
+                `<button type="button" class="btn" style="background:#ef4444; color:#fff; border:none; padding:8px 16px; font-size:12.5px; border-radius:8px; cursor:pointer;" onclick="openCancelModal('${order.id}')"><i class="fas fa-times-circle"></i> Cancelar Pedido</button>` : 
+                `<button type="button" class="btn" style="background:#f59e0b; color:#fff; border:none; padding:8px 16px; font-size:12.5px; border-radius:8px; cursor:pointer;" onclick="openRefundModal('${order.id}')"><i class="fas fa-undo"></i> Solicitar Reembolso</button>`
+              )}
             </div>
           </div>
         </div>
@@ -1420,6 +1507,207 @@
         }
         window.location.href = 'index.html?checkout=true';
       });
+    }
+
+    let currentCancelOrderId = null;
+    function openCancelModal(orderId) {
+      currentCancelOrderId = orderId;
+      document.getElementById('cancel-order-overlay').style.display = 'flex';
+      const selectMethod = document.getElementById('cancel-refund-method');
+      const detailsContainer = document.getElementById('cancel-refund-details-container');
+      selectMethod.value = 'original';
+      detailsContainer.style.display = 'none';
+      document.getElementById('cancel-refund-details').value = '';
+    }
+    function closeCancelModal() {
+      currentCancelOrderId = null;
+      document.getElementById('cancel-order-overlay').style.display = 'none';
+    }
+    function submitCancelOrder() {
+      if (!currentCancelOrderId) return;
+      const selectMethod = document.getElementById('cancel-refund-method').value;
+      const details = document.getElementById('cancel-refund-details').value.trim();
+      if (selectMethod !== 'original' && !details) {
+        showToast('Por favor ingresa los detalles de la cuenta para el reembolso.');
+        return;
+      }
+      if (selectMethod === 'original') {
+        openConfirmPaymentModal('cancel', currentCancelOrderId);
+        return;
+      }
+      
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(currentCancelOrderId));
+      if (order) {
+        order.status = 'Cancelado';
+        order.paymentStatus = 'reembolso_pendiente';
+        order.refundMethod = selectMethod;
+        order.refundDetails = details;
+        saveOrder(order);
+        
+        fetch(`/api/orders/${order.id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Cancelado', currentStep: 1 })
+        }).catch(e => console.warn(e));
+      }
+      
+      closeCancelModal();
+      showToast('Pedido cancelado. Tu reembolso está en proceso.');
+      showTrackingView(currentCancelOrderId); // Refresh tracking view
+      renderPerfilOrders(false);
+    }
+
+    let currentRefundOrderId = null;
+    function openRefundModal(orderId) {
+      currentRefundOrderId = orderId;
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(orderId));
+      if (order) {
+        const methodSpan = document.getElementById('refund-original-method-name');
+        if (methodSpan) methodSpan.textContent = order.paymentMethod || order.method || 'Online';
+      }
+      document.getElementById('refund-order-overlay').style.display = 'flex';
+      
+      document.getElementById('refund-reason').value = '';
+      document.getElementById('refund-method').value = 'original';
+      document.getElementById('refund-details-container').style.display = 'none';
+      document.getElementById('refund-details').value = '';
+    }
+    function closeRefundModal() {
+      currentRefundOrderId = null;
+      document.getElementById('refund-order-overlay').style.display = 'none';
+    }
+    function submitRefund() {
+      if (!currentRefundOrderId) return;
+      const reason = document.getElementById('refund-reason').value.trim();
+      const method = document.getElementById('refund-method').value;
+      const details = document.getElementById('refund-details').value.trim();
+      
+      if (!reason) {
+        showToast('Por favor ingresa el motivo del reembolso.');
+        return;
+      }
+      if (method !== 'original' && !details) {
+        showToast('Por favor ingresa los detalles de la cuenta para el reembolso.');
+        return;
+      }
+      if (method === 'original') {
+        openConfirmPaymentModal('refund', currentRefundOrderId, reason);
+        return;
+      }
+      
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(currentRefundOrderId));
+      if (order) {
+        order.status = 'Devolución solicitada';
+        order.paymentStatus = 'reembolso_pendiente';
+        order.refundReason = reason;
+        order.refundMethod = method;
+        order.refundDetails = details;
+        saveOrder(order);
+        
+        fetch(`/api/orders/${order.id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Devolución solicitada', currentStep: 5 })
+        }).catch(e => console.warn(e));
+      }
+      
+      closeRefundModal();
+      showToast('Solicitud de reembolso enviada. Te contactaremos pronto.');
+      showTrackingView(currentRefundOrderId);
+      renderPerfilOrders(false);
+    }
+
+    
+    let currentPaymentActionType = null;
+    let currentPaymentReason = '';
+    
+    function openConfirmPaymentModal(actionType, orderId, reason = '') {
+      currentPaymentActionType = actionType;
+      currentPaymentReason = reason;
+      
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(orderId));
+      if (!order) return;
+      
+      let htmlContent = '';
+      if (order.method === 'tarjeta' || order.method === 'tarjetas') {
+        const last4 = order.cardLast4 || '****';
+        htmlContent = `<i class="fas fa-credit-card" style="color: #64748b; font-size: 20px;"></i> Tarjeta terminada en <strong>${last4}</strong>`;
+      } else if (order.method === 'nequi') {
+        const phone = order.nequiPhone || order.customer?.telefono || 'No registrado';
+        htmlContent = `<i class="fas fa-mobile-alt" style="color: #64748b; font-size: 20px;"></i> Nequi - Línea <strong>${phone}</strong>`;
+      } else if (order.method === 'bancos') {
+        const entity = order.bankEntity || 'Entidad Bancaria';
+        htmlContent = `<i class="fas fa-university" style="color: #64748b; font-size: 20px;"></i> Cuenta PSE - <strong>${entity}</strong>`;
+      } else if (order.method === 'efectivo') {
+        htmlContent = `<i class="fas fa-money-bill-wave" style="color: #64748b; font-size: 20px;"></i> Pago en Efectivo<br><span style="font-size:12px; font-weight:normal; display:block; margin-top:4px;">Se te contactará para solicitar cuenta bancaria para consignar el reembolso.</span>`;
+      } else {
+        htmlContent = `<i class="fas fa-wallet" style="color: #64748b; font-size: 20px;"></i> <strong>${order.paymentMethod || 'Método Original'}</strong>`;
+      }
+      
+      document.getElementById('confirm-original-payment-details').innerHTML = htmlContent;
+      
+      if (actionType === 'cancel') {
+        closeCancelModal();
+      } else {
+        closeRefundModal();
+      }
+      document.getElementById('confirm-original-payment-overlay').style.display = 'flex';
+    }
+    
+    function closeConfirmPaymentModal() {
+      document.getElementById('confirm-original-payment-overlay').style.display = 'none';
+      if (currentPaymentActionType === 'cancel') {
+        document.getElementById('cancel-order-overlay').style.display = 'flex';
+      } else if (currentPaymentActionType === 'refund') {
+        document.getElementById('refund-order-overlay').style.display = 'flex';
+      }
+    }
+    
+    function confirmOriginalPaymentSubmit() {
+      const orderId = currentPaymentActionType === 'cancel' ? currentCancelOrderId : currentRefundOrderId;
+      const orders = getOrdersList();
+      const order = orders.find(o => String(o.id) === String(orderId));
+      if (!order) return;
+      
+      if (currentPaymentActionType === 'cancel') {
+        order.status = 'Cancelado';
+        order.paymentStatus = 'reembolso_pendiente';
+        order.refundMethod = 'original';
+        order.refundDetails = 'Reembolso al método original';
+        saveOrder(order);
+        fetch(`/api/orders/${order.id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Cancelado', currentStep: 1 })
+        }).catch(e => console.warn(e));
+        
+        showToast('Pedido cancelado. Tu reembolso al método original está en proceso.');
+      } else {
+        order.status = 'Devolución solicitada';
+        order.paymentStatus = 'reembolso_pendiente';
+        order.refundReason = currentPaymentReason;
+        order.refundMethod = 'original';
+        order.refundDetails = 'Reembolso al método original';
+        saveOrder(order);
+        fetch(`/api/orders/${order.id}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: 'Devolución solicitada', currentStep: 5 })
+        }).catch(e => console.warn(e));
+        
+        showToast('Solicitud enviada. Reembolsaremos a tu método original pronto.');
+      }
+      
+      document.getElementById('confirm-original-payment-overlay').style.display = 'none';
+      currentPaymentActionType = null;
+      currentCancelOrderId = null;
+      currentRefundOrderId = null;
+      showTrackingView(orderId);
+      renderPerfilOrders(false);
     }
 
     // Inicializar datos al cargar la página

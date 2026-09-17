@@ -1589,6 +1589,7 @@
         paymentMethod: getPaymentMethodLabel(method),
         bankEntity: entidad,
         nequiPhone: phoneNequi,
+        cardLast4: method === 'tarjetas' || method === 'tarjeta' ? (document.getElementById('card-num') ? document.getElementById('card-num').value.slice(-4) : '4567') : '',
         paymentStatus: isWaitingPayment ? 'esperando_pago' : 'aprobado',
         status: isWaitingPayment ? 'Pendiente de Pago' : 'En Preparación',
         currentStep: isWaitingPayment ? 1 : 2,
