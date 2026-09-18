@@ -35,6 +35,14 @@
 /* Main styling */
 body,
 html {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
   font-family: 'Montserrat', sans-serif;
   color: var(--text-dark);
   background-color: var(--beige);
@@ -162,7 +170,7 @@ hr {
   font-weight: 600;
   padding: 12px 24px;
   border: none;
-  border-radius: 6px;
+  border-radius: 50px;
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -214,7 +222,7 @@ hr {
   color: var(--blanco);
   font-size: 13px;
   padding: 9px 18px;
-  border-radius: 6px;
+  border-radius: 50px;
   font-weight: 600;
   letter-spacing: 0.3px;
 }
@@ -268,7 +276,7 @@ header {
   padding: 10px 16px 10px 38px;
   background: rgba(255, 255, 255, 0.15);
   border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 30px;
+  border-radius: 50px;
   color: var(--blanco);
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
@@ -325,7 +333,7 @@ header {
   gap: 6px;
   padding: 10px 14px;
   color: var(--blanco);
-  border-radius: 6px;
+  border-radius: 50px;
   font-size: 13px;
   font-weight: 600;
   letter-spacing: 0.5px;
@@ -347,7 +355,7 @@ header {
   color: var(--blanco);
   border: 1px solid rgba(255, 255, 255, 0.25);
   padding: 9px 16px;
-  border-radius: 30px;
+  border-radius: 50px;
   font-family: 'Montserrat', sans-serif;
   font-size: 13px;
   font-weight: 600;
@@ -600,7 +608,7 @@ header {
   display: block;
   padding: 10px 22px;
   text-align: center;
-  border-radius: 30px;
+  border-radius: 50px;
   background: var(--blanco);
   color: var(--verde-bosque);
   border: 1px solid var(--border-subtle);
@@ -684,7 +692,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   overflow: hidden;
   border-radius: 8px;
   background: #faf8f5;
@@ -764,7 +772,7 @@ header {
 .no-results-message i {
   font-size: 40px;
   color: var(--verde-natural);
-  margin-bottom: 16px;
+  margin-bottom: 24px;
 }
 
 .no-results-message h3 {
@@ -940,7 +948,7 @@ header {
   color: var(--text-muted);
   font-family: 'Lora', serif;
   font-style: italic;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   line-height: 1.5;
 }
 
@@ -1166,7 +1174,7 @@ header {
   gap: 10px;
   color: var(--verde-bosque);
   font-size: 20px;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   padding-bottom: 10px;
   border-bottom: 1px solid var(--border-subtle);
   font-family: 'Lora', serif;
@@ -1198,7 +1206,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -1318,7 +1326,7 @@ header {
   width: 100%;
   padding: 12px 16px;
   border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  border-radius: 50px;
   font-family: 'Montserrat', sans-serif;
   font-size: 14px;
   background: #faf8f5;
@@ -1341,6 +1349,7 @@ header {
 
 /* Footer */
 #main-footer {
+  margin-top: auto;
   background-color: var(--verde-bosque);
   color: var(--blanco);
   padding: 35px 0;
@@ -1357,7 +1366,7 @@ header {
 #main-footer .footer-brand {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
 }
 
 #main-footer img.footer-logo {
@@ -1787,7 +1796,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 16px;
+  margin-bottom: 24px;
   font-size: 17px;
   font-weight: 700;
   color: var(--verde-bosque);
@@ -2355,7 +2364,7 @@ header {
   color: #ffffff;
   border: none;
   padding: 10px 22px;
-  border-radius: 30px;
+  border-radius: 50px;
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
@@ -2385,7 +2394,7 @@ header {
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   padding-bottom: 20px;
   border-bottom: 1px solid #eef2eb;
 }
@@ -2463,7 +2472,7 @@ header {
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 24px;
 }
 
 .tracking-estimate-date {
@@ -2657,7 +2666,7 @@ header {
   width: 44px;
   height: 44px;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 50px;
   background: #fdfefe;
 }
 
@@ -2727,7 +2736,7 @@ header {
 
 .tracking-step-simulator select {
   padding: 6px 10px;
-  border-radius: 6px;
+  border-radius: 50px;
   border: 1px solid #cfe0cb;
   font-size: 12px;
   background: #ffffff;
@@ -2883,7 +2892,7 @@ header {
   align-items: center;
   gap: 10px;
   padding: 14px 32px;
-  border-radius: 30px;
+  border-radius: 50px;
   font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.5px;
@@ -2995,7 +3004,7 @@ header {
     flex-direction: row;
     align-items: flex-start;
     text-align: left;
-    gap: 16px;
+    gap: 24px;
   }
   .timeline-step-icon {
     margin-bottom: 0;
@@ -3043,7 +3052,7 @@ header {
 .profile-user-card {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 24px;
   background: #f8faf7;
   border: 1px solid #e0ece0;
   border-radius: 12px;
@@ -3128,7 +3137,7 @@ header {
   background: transparent;
   color: #dc2626;
   border: 1px solid #fca5a5;
-  border-radius: 6px;
+  border-radius: 50px;
   padding: 6px 14px;
   font-size: 12px;
   font-weight: 600;
@@ -3253,7 +3262,7 @@ header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 24px;
   flex-wrap: wrap;
 }
 
@@ -3293,7 +3302,7 @@ header {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 50px;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.06));
 }
 
@@ -3361,7 +3370,7 @@ header {
   color: #334155;
   border: 1px solid #cbd5e1;
   padding: 6px 12px;
-  border-radius: 6px;
+  border-radius: 50px;
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
@@ -3427,6 +3436,7 @@ header {
    ========================================================================== */
 .apartado-perfil-section {
   padding: 40px 0 70px 0;
+  flex: 1;
   background: #fbfdfa;
   border-top: 1px solid #e7eee4;
   min-height: 70vh;
@@ -3664,8 +3674,8 @@ header {
 .form-grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 16px;
+  gap: 24px;
+  margin-bottom: 24px;
 }
 
 @media (max-width: 640px) {

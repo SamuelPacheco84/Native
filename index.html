@@ -38,9 +38,8 @@
           <!-- Navegación y Botones de Acción -->
           <ul id="main-nav" class="txt-btn">
             <li><a class="current" href="#portfolio" id="nav-productos"><i class="fas fa-leaf"></i> Productos</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-            <li>
-              <a href="perfil.html" class="nav-action-btn" id="open-login-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                        <li>
+              <a href="perfil.html" class="nav-action-btn" id="nav-perfil-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
                 <i class="fas fa-user-circle"></i> <span id="nav-user-label">Perfil</span>
               </a>
             </li>
@@ -461,6 +460,11 @@
           <img src="img/logo.png" alt="Nativa" class="footer-logo">
           <p class="small">NATIVA &copy; 2026. Alimentos naturales y conscientes. Todos los derechos reservados.</p>
         </div>
+
+        <div class="footer-links" style="display: flex; gap: 20px; align-items: center;">
+          <a href="contact.html" style="color: var(--blanco); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color 0.3s;" onmouseover="this.style.color='var(--verde-natural)'" onmouseout="this.style.color='var(--blanco)'"><i class="fas fa-envelope" style="margin-right: 5px;"></i> Contacto</a>
+        </div>
+
         <ul>
           <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
           <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
@@ -802,118 +806,10 @@
   </div>
 
   <!-- Modal de Login / Cuenta -->
-  <div class="modal-overlay" id="login-modal-overlay">
-    <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="login-title">
-      <div class="modal-header">
-        <h3 id="login-title"><i class="fas fa-user-circle"></i> Iniciar Sesión</h3>
-        <button type="button" class="close-modal-btn" id="close-login-btn" aria-label="Cerrar">&times;</button>
-      </div>
-      <form id="login-form" onsubmit="event.preventDefault(); handleLoginSubmit();">
-        <div class="single-form" style="margin-bottom: 14px;">
-          <label for="login-email" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Correo Electrónico</label>
-          <input type="email" id="login-email" placeholder="tu@email.com" required style="width:100%; padding:10px 14px; border:1px solid var(--border-subtle); border-radius:6px;">
-        </div>
-        <div class="single-form" style="margin-bottom: 20px;">
-          <label for="login-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Contraseña</label>
-          <input type="password" id="login-password" placeholder="••••••••" required style="width:100%; padding:10px 14px; border:1px solid var(--border-subtle); border-radius:6px;">
-        </div>
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Ingresar a Nativa</button>
-        
-        <!-- O iniciar sesión con -->
-        <div class="auth-divider"><span>o iniciar sesión con:</span></div>
-        <div class="social-auth-grid">
-          <button type="button" class="btn-social google-btn" onclick="handleSocialAuth('Google')">
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.36 7.31 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12s.46 3.84 1.26 5.42l4.02-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span>Google</span>
-          </button>
-          <button type="button" class="btn-social facebook-btn" onclick="handleSocialAuth('Facebook')">
-            <i class="fab fa-facebook-f"></i>
-            <span>Facebook</span>
-          </button>
-        </div>
-
-        <p class="small lora-text" style="text-align:center; margin-top:14px; color:var(--text-muted); font-size:13px;">
-          ¿Aún no tienes cuenta? 
-          <button type="button" id="switch-to-register-btn" class="auth-switch-link">Registrarse</button>
-        </p>
-      </form>
-    </div>
-  </div>
+  
 
   <!-- Modal Flotante de Registro -->
-  <div class="modal-overlay" id="register-modal-overlay">
-    <div class="modal-dialog modal-dialog-register" role="dialog" aria-modal="true" aria-labelledby="register-title">
-      <div class="modal-header">
-        <h3 id="register-title"><i class="fas fa-user-plus"></i> Registrarse</h3>
-        <button type="button" class="close-modal-btn" id="close-register-btn" aria-label="Cerrar">&times;</button>
-      </div>
-      <form id="register-form" onsubmit="event.preventDefault(); handleRegisterSubmit();">
-        <div class="auth-form-grid">
-          <div class="single-form" style="margin-bottom: 12px;">
-            <label for="reg-nombre" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Nombre</label>
-            <input type="text" id="reg-nombre" placeholder="Tu nombre" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-          </div>
-          <div class="single-form" style="margin-bottom: 12px;">
-            <label for="reg-apellido" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Apellido</label>
-            <input type="text" id="reg-apellido" placeholder="Tu apellido" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-          </div>
-        </div>
-
-        <div class="single-form" style="margin-bottom: 12px;">
-          <label for="reg-correo" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Correo Electrónico</label>
-          <input type="email" id="reg-correo" placeholder="tu@email.com" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-        </div>
-
-        <div class="single-form" style="margin-bottom: 12px;">
-          <label for="reg-numero" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Número</label>
-          <input type="tel" id="reg-numero" placeholder="+57 300 000 0000" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-        </div>
-
-        <div class="auth-form-grid">
-          <div class="single-form" style="margin-bottom: 12px;">
-            <label for="reg-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Contraseña</label>
-            <input type="password" id="reg-password" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-          </div>
-          <div class="single-form" style="margin-bottom: 12px;">
-            <label for="reg-confirm-password" style="display:block; margin-bottom:4px; font-weight:600; font-size:13px; color:var(--verde-bosque);">Confirmar Contraseña</label>
-            <input type="password" id="reg-confirm-password" placeholder="••••••••" required style="width:100%; padding:9px 12px; border:1px solid var(--border-subtle); border-radius:6px;">
-          </div>
-        </div>
-
-        <div id="reg-error-msg" style="display:none; background:#fff2ee; color:#c9744e; border:1px solid #f2c7b5; padding:8px 12px; border-radius:6px; font-size:12px; margin-bottom:12px; font-weight:600;"></div>
-
-        <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:4px;">Registrarse en Nativa</button>
-
-        <!-- O registrarse con -->
-        <div class="auth-divider"><span>o registrarse con:</span></div>
-        <div class="social-auth-grid">
-          <button type="button" class="btn-social google-btn" onclick="handleSocialAuth('Google')">
-            <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#4285F4" d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v4.51h6.6c-.29 1.52-1.14 2.82-2.4 3.68v3.05h3.88c2.27-2.09 3.66-5.17 3.66-9.17z"/>
-              <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.88-3.05c-1.08.72-2.45 1.16-4.05 1.16-3.12 0-5.77-2.1-6.72-4.93H1.26v3.15C3.25 21.36 7.31 24 12 24z"/>
-              <path fill="#FBBC05" d="M5.28 14.27c-.25-.72-.38-1.49-.38-2.27s.13-1.55.38-2.27V6.58H1.26C.46 8.16 0 9.94 0 12s.46 3.84 1.26 5.42l4.02-3.15z"/>
-              <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.25 2.64 1.26 6.58l4.02 3.15c.95-2.83 3.6-4.98 6.72-4.98z"/>
-            </svg>
-            <span>Google</span>
-          </button>
-          <button type="button" class="btn-social facebook-btn" onclick="handleSocialAuth('Facebook')">
-            <i class="fab fa-facebook-f"></i>
-            <span>Facebook</span>
-          </button>
-        </div>
-
-        <p class="small lora-text" style="text-align:center; margin-top:12px; color:var(--text-muted); font-size:13px;">
-          ¿Ya tienes una cuenta? 
-          <button type="button" id="switch-to-login-btn" class="auth-switch-link">Iniciar Sesión</button>
-        </p>
-      </form>
-    </div>
-  </div>
+  
 
   <!-- Toast Notificación de Producto Agregado -->
   <div class="toast-notice" id="cart-toast">
@@ -2374,5 +2270,20 @@
       setTimeout(() => openCart(), 200);
     }
   </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Login check for Perfil links
+      document.querySelectorAll('a[href="perfil.html"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          if(!localStorage.getItem('nativa_user_email')) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+          }
+        });
+      });
+    });
+  </script>
 </body>
+
 </html>

@@ -120,6 +120,75 @@
       color: #0f172a;
     }
 
+    
+    
+    /* Estilos mejorados para el formulario de Mis Datos */
+    .single-form {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    #perfil-datos-form label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      margin-left: 2px;
+    }
+    #perfil-datos-form input {
+      width: 100%;
+      padding: 12px 18px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 50px;
+      background: #f8fafc;
+      font-family: inherit;
+      font-size: 14.5px;
+      color: #1e293b;
+      transition: all 0.2s ease;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.01);
+    }
+    #perfil-datos-form input:focus {
+      outline: none;
+      border-color: var(--verde-natural);
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(67, 133, 91, 0.15);
+    }
+    .apartado-datos-card {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
+      border: 1px solid #f1f5f9;
+      max-width: 650px;
+    }
+    #perfil-datos-form .btn-primary {
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      background-color: var(--verde-bosque);
+      box-shadow: 0 4px 12px rgba(40, 89, 67, 0.15);
+      transition: all 0.3s ease;
+    }
+    #perfil-datos-form .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(40, 89, 67, 0.25);
+    }
+    #perfil-datos-form .btn-secondary {
+      padding: 12px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      background-color: #f1f5f9;
+      color: #334155;
+      border: none;
+      transition: all 0.3s ease;
+    }
+    #perfil-datos-form .btn-secondary:hover {
+      background-color: #e2e8f0;
+      color: #0f172a;
+    }
+    /* ... */
+
     /* Estilos del Rastreador Integrado en Perfil */
     .tracking-meta-grid {
       display: grid;
@@ -462,6 +531,13 @@
       gap: 12px;
     }
   </style>
+
+  <script>
+    // Perfil auth guard
+    if (!localStorage.getItem('nativa_user_email')) {
+      window.location.href = 'login.html';
+    }
+  </script>
 </head>
 <body>
   <!-- Encabezado / Barra de Navegación -->
@@ -478,9 +554,8 @@
           <!-- Navegación y Botones de Acción -->
           <ul id="main-nav" class="txt-btn">
             <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-            <li>
-              <a href="perfil.html" class="nav-action-btn current" id="open-login-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
+                        <li>
+              <a href="perfil.html" class="nav-action-btn" id="nav-perfil-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
                 <i class="fas fa-user-circle"></i> <span id="nav-user-label">Mi Perfil</span>
               </a>
             </li>
@@ -768,6 +843,11 @@
           <img src="img/logo.png" alt="Nativa" class="footer-logo">
           <p class="small">NATIVA &copy; 2026. Alimentos naturales y conscientes. Todos los derechos reservados.</p>
         </div>
+
+        <div class="footer-links" style="display: flex; gap: 20px; align-items: center;">
+          <a href="contact.html" style="color: var(--blanco); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color 0.3s;" onmouseover="this.style.color='var(--verde-natural)'" onmouseout="this.style.color='var(--blanco)'"><i class="fas fa-envelope" style="margin-right: 5px;"></i> Contacto</a>
+        </div>
+
         <ul>
           <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
           <li><a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a></li>
@@ -870,7 +950,7 @@
       if (confirm('¿Deseas cerrar tu sesión actual?')) {
         showToast('Sesión cerrada correctamente.');
         setTimeout(() => {
-          window.location.href = 'index.html';
+          window.location.href = 'login.html';
         }, 800);
       }
     }
@@ -1635,7 +1715,7 @@
       let htmlContent = '';
       if (order.method === 'tarjeta' || order.method === 'tarjetas') {
         const last4 = order.cardLast4 || '****';
-        htmlContent = `<i class="fas fa-credit-card" style="color: #64748b; font-size: 20px;"></i> Tarjeta terminada en <strong>${last4}</strong>`;
+        htmlContent = `<i class="fas fa-credit-card" style="color: #64748b; font-size: 20px;"></i> Tarjeta <strong>**** **** **** ${last4}</strong>`;
       } else if (order.method === 'nequi') {
         const phone = order.nequiPhone || order.customer?.telefono || 'No registrado';
         htmlContent = `<i class="fas fa-mobile-alt" style="color: #64748b; font-size: 20px;"></i> Nequi - Línea <strong>${phone}</strong>`;
@@ -1713,5 +1793,20 @@
     // Inicializar datos al cargar la página
     updateCartBadge();
   </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Login check for Perfil links
+      document.querySelectorAll('a[href="perfil.html"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          if(!localStorage.getItem('nativa_user_email')) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+          }
+        });
+      });
+    });
+  </script>
 </body>
+
 </html>

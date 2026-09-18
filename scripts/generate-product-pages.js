@@ -354,8 +354,7 @@ function generateHtml(p) {
 
           <ul id="main-nav" class="txt-btn">
             <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contacto</a></li>
-            <li>
+                        <li>
               <a href="perfil.html" class="nav-action-btn" aria-label="Mi Perfil y Pedidos" title="Perfil y Mis Pedidos">
                 <i class="fas fa-user-circle"></i> <span>Perfil</span>
               </a>
@@ -514,6 +513,9 @@ function generateHtml(p) {
         <div class="footer-brand">
           <img src="img/logo.png" alt="Nativa" class="footer-logo">
           <p class="small">NATIVA &copy; 2026. Alimentos naturales y conscientes de origen artesanal.</p>
+        </div>
+        <div class="footer-links" style="display: flex; gap: 20px; align-items: center;">
+          <a href="contact.html" style="color: var(--blanco); text-decoration: none; font-size: 14.5px; font-weight: 500; transition: color 0.3s;" onmouseover="this.style.color='var(--verde-natural)'" onmouseout="this.style.color='var(--blanco)'"><i class="fas fa-envelope" style="margin-right: 5px;"></i> Contacto</a>
         </div>
         <ul>
           <li><a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a></li>
@@ -1502,6 +1504,20 @@ function generateHtml(p) {
 
     // Inicializar Carrito al cargar la página
     renderCart();
+  </script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Login check for Perfil links
+      document.querySelectorAll('a[href="perfil.html"]').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+          if(!localStorage.getItem('nativa_user_email')) {
+            e.preventDefault();
+            window.location.href = 'login.html';
+          }
+        });
+      });
+    });
   </script>
 </body>
 </html>
