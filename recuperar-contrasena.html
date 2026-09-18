@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recuperar Contraseña | Nativa</title>
+  <meta name="description" content="Recupera el acceso a tu cuenta de Nativa Productos Naturales con un código de verificación.">
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --verde-bosque: #285943;
+      --verde-natural: #6F9E73;
+      --beige: #F3EBDD;
+      --terracota: #C97852;
+      --blanco: #FFFFFF;
+      --gris-texto: #64748b;
+      --gris-claro: #f1f5f9;
+      --border-color: #cbd5e1;
+      --rojo-error: #dc2626;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      font-family: 'Montserrat', sans-serif;
+      min-height: 100vh;
+      background-color: var(--beige);
+      overflow-x: hidden;
+    }
+    .page-wrapper {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      overflow: hidden;
+    }
+    /* Background decorations */
+    .bg-decor {
+      position: absolute;
+      z-index: 0;
+      pointer-events: none;
+    }
+    .bg-top-left { top: -80px; left: -80px; width: 400px; transform: rotate(-120deg) scaleX(-1); }
+    .bg-top-right { top: 0; right: 0; width: 215px; }
+    .bg-bottom-left { bottom: 0; left: 0; width: 265px; z-index: 1; }
+    .bg-center-left { bottom: 0; left: 0; width: 464px; opacity: 0.8; z-index: 0; }
+    .bg-top-right-5 { top: 0; right: 0; width: 480px; }
+    .bg-bottom-right-4 {
+      bottom: 0;
+      right: 0;
+      width: clamp(160px, 18vw, 270px);
+      z-index: 0;
+      pointer-events: none;
+      transform: none;
+    }
+
+    .auth-container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      z-index: 2;
+      align-items: center;
+      gap: 40px;
+    }
+
+    /* Left Panel */
+    .auth-left {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+    .auth-logo {
+      width: 280px;
+      margin-bottom: 24px;
+    }
+    .round-icon {
+      width: 72px;
+      height: 72px;
+      margin-bottom: 20px;
+    }
+    .auth-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      margin-bottom: 12px;
+      line-height: 1.2;
+    }
+    .auth-subtitle {
+      font-family: 'Lora', serif;
+      font-size: 16px;
+      color: var(--gris-texto);
+      max-width: 320px;
+      margin-bottom: 40px;
+      line-height: 1.5;
+    }
+    .auth-features {
+      display: flex;
+      gap: 30px;
+      background: rgba(255,255,255,0.3);
+      padding: 20px 30px;
+      border-radius: 16px;
+    }
+    .feature-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .feature-icon {
+      width: 45px;
+      height: 45px;
+      background-color: rgba(111, 158, 115, 0.2);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--verde-bosque);
+    }
+    .feature-text {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--verde-bosque);
+      line-height: 1.3;
+    }
+
+    /* Right Panel (Card) */
+    .auth-right {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+    }
+    .auth-card {
+      background: var(--blanco);
+      border-radius: 16px;
+      padding: 38px 36px;
+      width: 100%;
+      max-width: 440px;
+      box-shadow: 0 15px 40px rgba(40, 89, 67, 0.08);
+      position: relative;
+    }
+    .card-icon {
+      width: 68px;
+      height: 68px;
+      margin: 0 auto 14px;
+      display: block;
+    }
+    .card-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      text-align: center;
+      margin-bottom: 8px;
+    }
+    .card-subtitle {
+      font-family: 'Lora', serif;
+      font-size: 13.5px;
+      color: var(--gris-texto);
+      text-align: center;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+    }
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 6px;
+      margin-left: 2px;
+    }
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .input-wrapper i.left-icon {
+      position: absolute;
+      left: 16px;
+      color: #94a3b8;
+      font-size: 14px;
+    }
+    .input-wrapper input {
+      width: 100%;
+      padding: 12px 16px 12px 40px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      color: #1e293b;
+      transition: all 0.3s;
+    }
+    .input-wrapper input:focus {
+      outline: none;
+      border-color: var(--verde-natural);
+      box-shadow: 0 0 0 3px rgba(111, 158, 115, 0.15);
+    }
+    .input-wrapper i.right-icon {
+      position: absolute;
+      right: 16px;
+      color: #94a3b8;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Verification Code Input Style */
+    .code-input-container {
+      display: flex;
+      justify-content: center;
+      margin: 18px 0;
+    }
+    .code-input {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 8px;
+      text-align: center;
+      padding: 12px 16px;
+      width: 220px;
+      border: 2px solid var(--border-color);
+      border-radius: 10px;
+      color: var(--verde-bosque);
+      background-color: #FAF8F5;
+      transition: all 0.2s ease;
+    }
+    .code-input:focus {
+      outline: none;
+      border-color: var(--verde-bosque);
+      background-color: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(40, 89, 67, 0.12);
+    }
+
+    /* Simulated Email Notification Banner */
+    .email-sent-badge {
+      background: #F0FDF4;
+      border: 1px solid #BBF7D0;
+      border-radius: 10px;
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 13px;
+      color: #166534;
+      animation: fadeIn 0.3s ease;
+    }
+    .email-sent-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 700;
+    }
+    .email-code-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #FFFFFF;
+      border: 1px dashed #86EFAC;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-top: 4px;
+    }
+    .email-code-text {
+      font-family: monospace;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--verde-bosque);
+    }
+    .btn-copy-code {
+      background: var(--verde-bosque);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.2s;
+    }
+    .btn-copy-code:hover {
+      background: #1e4533;
+    }
+
+    /* Error Message */
+    .error-box {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: var(--rojo-error);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      padding: 14px;
+      background-color: var(--verde-bosque);
+      color: var(--blanco);
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.1s;
+    }
+    .btn-submit:hover {
+      background-color: #1e4533;
+    }
+    .btn-submit:active {
+      transform: scale(0.99);
+    }
+
+    .auth-footer {
+      text-align: center;
+      font-size: 13px;
+      color: var(--gris-texto);
+      margin-top: 22px;
+    }
+    .auth-footer a {
+      color: var(--verde-bosque);
+      font-weight: 600;
+      text-decoration: none;
+    }
+    .auth-footer a:hover {
+      text-decoration: underline;
+    }
+
+    .action-links {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 16px;
+      font-size: 12.5px;
+    }
+    .action-links a {
+      color: var(--verde-bosque);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .action-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Step animations */
+    .step-section {
+      animation: fadeIn 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Success Step */
+    .success-icon-wrap {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background-color: #ECFDF5;
+      color: #059669;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 38px;
+      margin: 0 auto 20px;
+      box-shadow: 0 4px 14px rgba(5, 150, 105, 0.15);
+    }
+    .success-title {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      text-align: center;
+      margin-bottom: 10px;
+    }
+    .success-desc {
+      font-family: 'Lora', serif;
+      font-size: 14px;
+      color: var(--gris-texto);
+      text-align: center;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .login-prompt-text {
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: #1e293b;
+      margin-bottom: 14px;
+    }
+
+    @media (max-width: 900px) {
+      .auth-container {
+        flex-direction: column;
+        gap: 30px;
+      }
+      .bg-decor { display: none; }
+      .auth-card {
+        padding: 30px 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page-wrapper">
+    <!-- Background Decor Images -->
+    <img src="img_login/2.png" class="bg-decor bg-top-left" alt="" id="bg-decor-top-left">
+    <img src="img_login/5.png" class="bg-decor bg-top-right-5" alt="" id="bg-decor-top-right">
+    <img src="img_login/wave_bottom_left.png" class="bg-decor bg-center-left" alt="" id="bg-decor-wave">
+    <img src="img_login/3.png" class="bg-decor bg-bottom-left" alt="" id="bg-decor-bottom-left">
+    <img src="img_login/4.png" class="bg-decor bg-bottom-right-4" alt="" id="bg-decor-bottom-right">
+
+    <div class="auth-container">
+      
+      <!-- Left Panel -->
+      <div class="auth-left">
+        <a href="index.html" title="Nativa">
+          <img src="img/logo.png" alt="Nativa" class="auth-logo">
+        </a>
+        <img src="img_login/6.png" alt="Icono" class="round-icon">
+        <h1 class="auth-title">Bienestar que se<br>siente natural</h1>
+        <p class="auth-subtitle">Recupera el acceso a tu cuenta de Nativa de manera rápida y segura</p>
+        
+        <div class="auth-features">
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
+            <span class="feature-text">Acceso<br>seguro</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-key"></i></div>
+            <span class="feature-text">Código<br>único</span>
+          </div>
+          <div class="feature-item">
+            <div class="feature-icon"><i class="fas fa-leaf"></i></div>
+            <span class="feature-text">100%<br>confiable</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Panel (Multi-step Card) -->
+      <div class="auth-right">
+        <div class="auth-card" id="recovery-card">
+          
+          <!-- STEP 1: SOLICITAR CORREO -->
+          <div class="step-section" id="step-1-email">
+            <img src="img_login/6.png" alt="Icono" class="card-icon">
+            <h2 class="card-title">Recuperar Contraseña</h2>
+            <p class="card-subtitle">Ingresa el correo electrónico de tu cuenta para recibir un código de verificación.</p>
+
+            <div class="error-box" id="step1-error">
+              <i class="fas fa-exclamation-circle"></i> <span id="step1-error-text">Por favor ingresa un correo válido.</span>
+            </div>
+
+            <form onsubmit="handleSendCode(event)">
+              <div class="form-group">
+                <label class="form-label" for="recovery-email-input">Correo electrónico</label>
+                <div class="input-wrapper">
+                  <i class="far fa-envelope left-icon"></i>
+                  <input type="email" id="recovery-email-input" placeholder="ejemplo@correo.com" required autocomplete="email">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit" id="btn-send-code">
+                <i class="fas fa-paper-plane"></i> Enviar código
+              </button>
+
+              <div class="auth-footer">
+                ¿Recordaste tu contraseña? <a href="login.html">Inicia sesión</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 2: INGRESAR CÓDIGO -->
+          <div class="step-section" id="step-2-code" style="display: none;">
+            <img src="img_login/6.png" alt="Icono" class="card-icon">
+            <h2 class="card-title">Código de Verificación</h2>
+            <p class="card-subtitle">Ingresa el código que te enviamos al correo para confirmar tu identidad.</p>
+
+            <!-- Banner simulación de correo con el código aleatorio -->
+            <div class="email-sent-badge" id="email-notification-banner">
+              <div class="email-sent-header">
+                <i class="fas fa-envelope-open-text"></i> Correo enviado a <span id="target-email-label" style="text-decoration: underline;"></span>
+              </div>
+              <div class="email-code-box">
+                <div>
+                  <span style="font-size: 11px; display: block; color: #15803d;">Tu código de seguridad:</span>
+                  <span class="email-code-text" id="demo-generated-code">123456</span>
+                </div>
+                <button type="button" class="btn-copy-code" onclick="autoFillCode()" title="Copiar y pegar código">
+                  <i class="fas fa-magic"></i> Autocompletar
+                </button>
+              </div>
+            </div>
+
+            <div class="error-box" id="step2-error">
+              <i class="fas fa-exclamation-circle"></i> <span id="step2-error-text">Código incorrecto.</span>
+            </div>
+
+            <form onsubmit="handleVerifyCode(event)">
+              <div class="form-group" style="text-align: center;">
+                <label class="form-label">Ingresa el código de 6 dígitos</label>
+                <div class="code-input-container">
+                  <input type="text" id="verification-code-input" class="code-input" maxlength="6" pattern="[0-9]{6}" placeholder="------" required autocomplete="one-time-code">
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit" id="btn-verify-code">
+                <i class="fas fa-check"></i> Verificar código
+              </button>
+
+              <div class="action-links">
+                <a onclick="resendNewCode()"><i class="fas fa-redo-alt"></i> Reenviar código</a>
+                <a onclick="goBackToStep1()"><i class="fas fa-arrow-left"></i> Cambiar correo</a>
+              </div>
+            </form>
+          </div>
+
+          <!-- STEP 3: NUEVA CONTRASEÑA -->
+          <div class="step-section" id="step-3-password" style="display: none;">
+            <img src="img_login/6.png" alt="Icono" class="card-icon">
+            <h2 class="card-title">Nueva Contraseña</h2>
+            <p class="card-subtitle">Código verificado. Ingresa tu nueva contraseña y su confirmación.</p>
+
+            <div class="error-box" id="step3-error">
+              <i class="fas fa-exclamation-circle"></i> <span id="step3-error-text">Las contraseñas no coinciden.</span>
+            </div>
+
+            <form onsubmit="handleSaveNewPassword(event)">
+              <div class="form-group">
+                <label class="form-label">Nueva Contraseña</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-lock left-icon"></i>
+                  <input type="password" id="new-password-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+                  <i class="far fa-eye right-icon" onclick="togglePass('new-password-input')"></i>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Confirmar Nueva Contraseña</label>
+                <div class="input-wrapper">
+                  <i class="fas fa-lock left-icon"></i>
+                  <input type="password" id="confirm-password-input" placeholder="Repite la contraseña" required minlength="6">
+                  <i class="far fa-eye right-icon" onclick="togglePass('confirm-password-input')"></i>
+                </div>
+              </div>
+
+              <button type="submit" class="btn-submit" id="btn-save-password">
+                <i class="fas fa-save"></i> Guardar nueva contraseña
+              </button>
+            </form>
+          </div>
+
+          <!-- STEP 4: CONTRASEÑA CAMBIADA EXITOSAMENTE -->
+          <div class="step-section" id="step-4-success" style="display: none;">
+            <div class="success-icon-wrap">
+              <i class="fas fa-check"></i>
+            </div>
+            <h2 class="success-title">¡Contraseña cambiada con éxito!</h2>
+            <p class="success-desc">Tu contraseña fue cambiada exitosamente. Ahora puedes ingresar a tu cuenta de Nativa con tus nuevas credenciales.</p>
+
+            <p class="login-prompt-text">¿Quieres iniciar sesión?</p>
+
+            <a href="login.html" class="btn-submit" id="btn-go-to-login" style="display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;">
+              <i class="fas fa-sign-in-alt"></i> Iniciar sesión
+            </a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    // Estado de la recuperación
+    let recoveryState = {
+      email: '',
+      code: '',
+      attempts: 0
+    };
+
+    function togglePass(id) {
+      const input = document.getElementById(id);
+      const icon = input.nextElementSibling;
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      }
+    }
+
+    // Generar código aleatorio de 6 dígitos único para cada usuario y petición
+    function generateRandomCode() {
+      return Math.floor(100000 + Math.random() * 900000).toString();
+    }
+
+    // Paso 1: Enviar código
+    function handleSendCode(e) {
+      e.preventDefault();
+      const emailInput = document.getElementById('recovery-email-input');
+      const errBox = document.getElementById('step1-error');
+      const email = emailInput.value.trim().toLowerCase();
+
+      if (!email || !email.includes('@') || !email.includes('.')) {
+        errBox.style.display = 'flex';
+        document.getElementById('step1-error-text').textContent = 'Por favor ingresa un correo electrónico válido.';
+        return;
+      }
+
+      errBox.style.display = 'none';
+      recoveryState.email = email;
+      // Generar código aleatorio
+      recoveryState.code = generateRandomCode();
+      recoveryState.attempts = 0;
+
+      // Guardar en sessionStorage para este usuario
+      sessionStorage.setItem('nativa_recovery_email', recoveryState.email);
+      sessionStorage.setItem('nativa_recovery_code', recoveryState.code);
+
+      // Actualizar UI del paso 2
+      document.getElementById('target-email-label').textContent = recoveryState.email;
+      document.getElementById('demo-generated-code').textContent = recoveryState.code;
+      document.getElementById('verification-code-input').value = '';
+
+      // Transición al paso 2
+      document.getElementById('step-1-email').style.display = 'none';
+      document.getElementById('step-2-code').style.display = 'block';
+      document.getElementById('verification-code-input').focus();
+    }
+
+    // Reenviar un NUEVO código aleatorio
+    function resendNewCode() {
+      recoveryState.code = generateRandomCode();
+      sessionStorage.setItem('nativa_recovery_code', recoveryState.code);
+      document.getElementById('demo-generated-code').textContent = recoveryState.code;
+      document.getElementById('verification-code-input').value = '';
+      
+      const errBox = document.getElementById('step2-error');
+      errBox.style.display = 'none';
+
+      // Feedback visual
+      const banner = document.getElementById('email-notification-banner');
+      banner.style.animation = 'none';
+      setTimeout(() => banner.style.animation = 'fadeIn 0.3s ease', 10);
+    }
+
+    // Autocompletar código para conveniencia del usuario en pruebas
+    function autoFillCode() {
+      const input = document.getElementById('verification-code-input');
+      input.value = recoveryState.code;
+      input.focus();
+    }
+
+    // Volver al paso 1
+    function goBackToStep1() {
+      document.getElementById('step-2-code').style.display = 'none';
+      document.getElementById('step-1-email').style.display = 'block';
+      document.getElementById('recovery-email-input').focus();
+    }
+
+    // Paso 2: Verificar código
+    function handleVerifyCode(e) {
+      e.preventDefault();
+      const codeInput = document.getElementById('verification-code-input');
+      const userCode = codeInput.value.trim();
+      const errBox = document.getElementById('step2-error');
+      const errText = document.getElementById('step2-error-text');
+
+      const expectedCode = recoveryState.code || sessionStorage.getItem('nativa_recovery_code');
+
+      // Validar si es exactamente el código aleatorio enviado
+      if (userCode !== expectedCode) {
+        recoveryState.attempts++;
+        errBox.style.display = 'flex';
+        errText.textContent = `El código ingresado (${userCode}) no coincide con el enviado al correo. Por favor verifícalo.`;
+        codeInput.focus();
+        return;
+      }
+
+      // Código correcto -> Pasar al paso 3
+      errBox.style.display = 'none';
+      document.getElementById('step-2-code').style.display = 'none';
+      document.getElementById('step-3-password').style.display = 'block';
+      document.getElementById('new-password-input').focus();
+    }
+
+    // Paso 3: Guardar nueva contraseña
+    function handleSaveNewPassword(e) {
+      e.preventDefault();
+      const pass1 = document.getElementById('new-password-input').value;
+      const pass2 = document.getElementById('confirm-password-input').value;
+      const errBox = document.getElementById('step3-error');
+      const errText = document.getElementById('step3-error-text');
+
+      if (pass1.length < 6) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+        return;
+      }
+
+      if (pass1 !== pass2) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'Las contraseñas no coinciden. Por favor asegúrate de que sean iguales.';
+        return;
+      }
+
+      errBox.style.display = 'none';
+
+      // Guardar la nueva contraseña asociada en localStorage
+      const email = recoveryState.email || 'samueldpp12@gmail.com';
+      localStorage.setItem('nativa_user_password', pass1);
+      localStorage.setItem('nativa_pwd_' + email, pass1);
+
+      // Limpiar códigos temporales
+      sessionStorage.removeItem('nativa_recovery_code');
+
+      // Mostrar paso 4: éxito
+      document.getElementById('step-3-password').style.display = 'none';
+      document.getElementById('step-4-success').style.display = 'block';
+    }
+  </script>
+</body>
+</html>

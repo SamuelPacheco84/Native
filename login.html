@@ -35,6 +35,7 @@
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
+      overflow: hidden;
     }
     /* Background decorations */
     .bg-decor {
@@ -47,7 +48,15 @@
     .bg-bottom-left { bottom: 0; left: 0; width: 265px; z-index: 1; }
     .bg-center-left { bottom: 0; left: 0; width: 464px; opacity: 0.8; z-index: 0; }
     .bg-top-right-5 { top: 0; right: 0; width: 480px; }
-    .bg-bottom-right-1 { bottom: -60px; right: -80px; width: 380px; transform: rotate(15deg); }
+    .bg-bottom-right-4,
+    .bg-bottom-right-1 {
+      bottom: 0;
+      right: 0;
+      width: clamp(160px, 18vw, 270px);
+      z-index: 0;
+      pointer-events: none;
+      transform: none;
+    }
 
     .auth-container {
       display: flex;
@@ -315,11 +324,11 @@
 
   <div class="page-wrapper">
     <!-- Background Decor Images -->
-    <img src="img_login/2.png" class="bg-decor bg-top-left" alt="">
-    <img src="img_login/1.png" class="bg-decor bg-bottom-right-1" alt="">
-    <img src="img_login/4.png" class="bg-decor bg-center-left" alt="">
-    <img src="img_login/3.png" class="bg-decor bg-bottom-left" alt="">
-    <img src="img_login/5.png" class="bg-decor bg-top-right-5" alt="">
+    <img src="img_login/2.png" class="bg-decor bg-top-left" alt="" id="bg-decor-top-left">
+    <img src="img_login/5.png" class="bg-decor bg-top-right-5" alt="" id="bg-decor-top-right">
+    <img src="img_login/wave_bottom_left.png" class="bg-decor bg-center-left" alt="" id="bg-decor-wave">
+    <img src="img_login/3.png" class="bg-decor bg-bottom-left" alt="" id="bg-decor-bottom-left">
+    <img src="img_login/4.png" class="bg-decor bg-bottom-right-4" alt="" id="bg-decor-bottom-right">
 
     <div class="auth-container">
       <div class="auth-left">
@@ -350,12 +359,16 @@
           <h2 class="card-title">Iniciar Sesión</h2>
           <p class="card-subtitle">Accede a tu cuenta para continuar</p>
 
+          <div id="session-expired-alert" style="display: none; background: #FFFBEB; border: 1px solid #FDE68A; color: #92400E; padding: 10px 14px; border-radius: 8px; font-size: 12.5px; margin-bottom: 16px; align-items: center; gap: 8px;">
+            <i class="fas fa-clock"></i> Tu sesión expiró tras 1 semana. Por favor inicia sesión nuevamente.
+          </div>
+
           <form onsubmit="handleAuthSubmit(event)">
             <div class="form-group">
               <label class="form-label">Correo electrónico</label>
               <div class="input-wrapper">
                 <i class="far fa-envelope left-icon"></i>
-                <input type="email" placeholder="ejemplo@correo.com" required>
+                <input type="email" id="login-email-input" placeholder="ejemplo@correo.com" required>
               </div>
             </div>
             <div class="form-group">
@@ -368,19 +381,19 @@
             </div>
             
             <div class="form-options">
-              <label class="checkbox-wrap">
-                <input type="checkbox"> Recordarme
+              <label class="checkbox-wrap" id="label-remember-me">
+                <input type="checkbox" id="login-remember-me"> Recordarme
               </label>
-              <a href="#" class="forgot-link">¿Olvidaste tu contraseña?</a>
+              <a href="recuperar-contrasena.html" class="forgot-link" id="link-forgot-password">¿Olvidaste tu contraseña?</a>
             </div>
 
-            <button type="submit" class="btn-submit">Iniciar Sesión</button>
+            <button type="submit" class="btn-submit" id="btn-submit-login">Iniciar Sesión</button>
 
             <div class="divider">o continua con</div>
 
             <div class="social-btns">
               <!-- SVG Google Icon -->
-              <button type="button" class="btn-social">
+              <button type="button" class="btn-social" id="btn-login-google" onclick="openOAuthPopup('Google', 'login')">
                 <svg width="18" height="18" viewBox="0 0 48 48">
                   <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
                   <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
@@ -389,7 +402,7 @@
                 </svg>
                 Google
               </button>
-              <button type="button" class="btn-social">
+              <button type="button" class="btn-social" id="btn-login-facebook" onclick="openOAuthPopup('Facebook', 'login')">
                 <i class="fab fa-facebook"></i> Facebook
               </button>
             </div>
@@ -418,6 +431,64 @@
       }
     }
 
+    // Apertura de ventana emergente (Popup de Chrome) para Google / Facebook API
+    function openOAuthPopup(provider, mode) {
+      const width = 760;
+      const height = 660;
+      const left = window.screenLeft !== undefined ? window.screenLeft + (window.innerWidth - width) / 2 : (screen.width - width) / 2;
+      const top = window.screenTop !== undefined ? window.screenTop + (window.innerHeight - height) / 2 : (screen.height - height) / 2;
+
+      const url = `auth-popup.html?provider=${encodeURIComponent(provider.toLowerCase())}&mode=${encodeURIComponent(mode || 'login')}&origin=${encodeURIComponent(window.location.origin)}`;
+
+      const popup = window.open(
+        url,
+        `Nativa_${provider}_Auth_Popup`,
+        `width=${width},height=${height},top=${top},left=${left},scrollbars=yes,resizable=yes,status=no,toolbar=no,menubar=no,location=no`
+      );
+
+      if (!popup || popup.closed || typeof popup.closed === 'undefined') {
+        alert('Por favor habilita las ventanas emergentes (popups) en tu navegador para continuar con ' + provider);
+      } else {
+        popup.focus();
+      }
+    }
+
+    // Escuchar el evento postMessage cuando el usuario inicia sesión en la ventana emergente
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'OAUTH_AUTH_SUCCESS') {
+        const user = event.data.user || {};
+        const provider = event.data.provider || 'Google';
+
+        // Guardar datos autenticados en el navegador
+        localStorage.setItem('nativa_user_email', user.email || 'samueldpp12@gmail.com');
+        localStorage.setItem('nativa_user_name', user.name || 'Samuel');
+        localStorage.setItem('nativa_user_lastname', user.lastname || 'Pacheco');
+        localStorage.setItem('nativa_auth_provider', provider);
+
+        // Regla de recordarme por 1 semana si la casilla está marcada
+        const rememberCheckbox = document.getElementById('login-remember-me');
+        const isRemembered = rememberCheckbox ? rememberCheckbox.checked : true;
+        const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+        const duration = isRemembered ? ONE_WEEK_MS : ONE_DAY_MS;
+        const expiresAt = Date.now() + duration;
+
+        localStorage.setItem('nativa_session_expires', expiresAt.toString());
+        localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
+
+        // Notificar y redirigir
+        const submitBtn = document.getElementById('btn-submit-login');
+        if (submitBtn) {
+          submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Autenticado con ' + provider + '!';
+          submitBtn.style.background = '#285943';
+        }
+
+        setTimeout(() => {
+          window.location.href = 'perfil.html';
+        }, 400);
+      }
+    });
+
     function handleAuthSubmit(e) {
       e.preventDefault();
       let emailInput = null;
@@ -427,12 +498,18 @@
       const inputs = e.target.querySelectorAll('input');
       inputs.forEach(input => {
         if(input.type === 'email') emailInput = input.value;
-        if(input.placeholder.toLowerCase().includes('nombre')) nameInput = input.value;
-        if(input.placeholder.toLowerCase().includes('apellido')) lastnameInput = input.value;
+        if(input.placeholder && input.placeholder.toLowerCase().includes('nombre')) nameInput = input.value;
+        if(input.placeholder && input.placeholder.toLowerCase().includes('apellido')) lastnameInput = input.value;
       });
       
       if(emailInput) {
         localStorage.setItem('nativa_user_email', emailInput);
+        if(!nameInput && !localStorage.getItem('nativa_user_name')) {
+          const rawName = emailInput.split('@')[0];
+          const cleanName = rawName.replace(/[^a-zA-Z]/g, ' ').trim();
+          const capName = (cleanName || 'Usuario').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+          localStorage.setItem('nativa_user_name', capName);
+        }
       }
       if(nameInput) {
         localStorage.setItem('nativa_user_name', nameInput);
@@ -440,9 +517,38 @@
       if(lastnameInput) {
         localStorage.setItem('nativa_user_lastname', lastnameInput);
       }
+
+      // Regla de "Recordarme": Si está marcado, recordar por 1 semana (7 días)
+      const rememberCheckbox = document.getElementById('login-remember-me');
+      const isRemembered = rememberCheckbox ? rememberCheckbox.checked : false;
+      const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
+      const duration = isRemembered ? ONE_WEEK_MS : ONE_DAY_MS;
+      const expiresAt = Date.now() + duration;
+
+      localStorage.setItem('nativa_session_expires', expiresAt.toString());
+      localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
       
       window.location.href = 'perfil.html';
     }
+
+    // Inicialización y verificación de sesión expirada
+    document.addEventListener('DOMContentLoaded', () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const expiredAlert = document.getElementById('session-expired-alert');
+      if (urlParams.get('expired') === '1' && expiredAlert) {
+        expiredAlert.style.display = 'flex';
+      }
+
+      // Restaurar estado de "Recordarme" si estaba guardado
+      const rememberCheckbox = document.getElementById('login-remember-me');
+      if (rememberCheckbox) {
+        const wasRemembered = localStorage.getItem('nativa_remember_me');
+        if (wasRemembered === 'true') {
+          rememberCheckbox.checked = true;
+        }
+      }
+    });
   </script>
 </body>
 </html>

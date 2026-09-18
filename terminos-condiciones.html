@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Términos y Condiciones | Nativa</title>
+  <meta name="description" content="Términos y Condiciones de uso del sitio web de Nativa Productos Naturales.">
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    :root {
+      --primary: #285943;
+      --primary-hover: #1e4533;
+      --beige: #F3EBDD;
+      --beige-light: #FAF6EE;
+      --card-bg: #FFFFFF;
+      --text-dark: #2D3748;
+      --text-muted: #5A6A7E;
+      --border: #E8DFD1;
+      --sage: #778B6A;
+      --sage-light: #EBF2E8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body, html {
+      font-family: 'Montserrat', sans-serif;
+      background-color: var(--beige);
+      color: var(--text-dark);
+      min-height: 100vh;
+      line-height: 1.65;
+    }
+
+    /* Top Navigation Bar */
+    .terms-nav {
+      background: rgba(243, 235, 221, 0.95);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      padding: 16px 24px;
+    }
+
+    .terms-nav-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo-link {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .nav-logo-img {
+      height: 42px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn-nav-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 9999px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      text-decoration: none;
+      color: var(--primary);
+      background-color: #FFFFFF;
+      border: 1px solid var(--border);
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav-back:hover {
+      background-color: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      transform: translateY(-1px);
+    }
+
+    /* Page Layout */
+    .terms-wrapper {
+      max-width: 860px;
+      margin: 40px auto 60px;
+      padding: 0 20px;
+    }
+
+    .terms-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      padding: 48px 44px;
+      box-shadow: 0 10px 30px rgba(40, 89, 67, 0.05);
+      position: relative;
+    }
+
+    @media (max-width: 640px) {
+      .terms-card {
+        padding: 32px 20px;
+        border-radius: 16px;
+      }
+    }
+
+    /* Header in Card */
+    .terms-header {
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+      margin-bottom: 36px;
+    }
+
+    .terms-brand-logo {
+      height: 60px;
+      width: auto;
+      margin-bottom: 20px;
+      object-fit: contain;
+    }
+
+    .terms-title {
+      font-family: 'Lora', serif;
+      font-size: 2.1rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .terms-date-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--sage);
+      background: var(--sage-light);
+      padding: 6px 16px;
+      border-radius: 9999px;
+      margin-top: 6px;
+    }
+
+    /* Intro paragraph */
+    .terms-intro {
+      font-size: 1.05rem;
+      color: #334155;
+      background-color: var(--beige-light);
+      border-left: 4px solid var(--primary);
+      padding: 20px 24px;
+      border-radius: 8px;
+      margin-bottom: 36px;
+      line-height: 1.7;
+    }
+
+    .terms-intro a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: underline;
+    }
+
+    /* Numbered Sections */
+    .terms-section {
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px dashed #EAE3D6;
+    }
+
+    .terms-section:last-of-type {
+      border-bottom: none;
+      margin-bottom: 20px;
+      padding-bottom: 0;
+    }
+
+    .section-title {
+      font-family: 'Lora', serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-content {
+      font-size: 0.96rem;
+      color: #475569;
+      line-height: 1.75;
+    }
+
+    .section-content p {
+      margin-bottom: 12px;
+    }
+
+    .section-content p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Contact box */
+    .contact-card {
+      background: #F8FAF7;
+      border: 1px solid #DCE5D8;
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-top: 14px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+      font-size: 0.95rem;
+    }
+
+    .contact-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .contact-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: var(--sage-light);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .contact-item a {
+      color: var(--primary);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .contact-item a:hover {
+      text-decoration: underline;
+    }
+
+    /* Footer Buttons */
+    .terms-footer-actions {
+      margin-top: 40px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .btn-return-register {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--primary);
+      color: #FFFFFF;
+      padding: 12px 28px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(40, 89, 67, 0.2);
+    }
+
+    .btn-return-register:hover {
+      background-color: var(--primary-hover);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(40, 89, 67, 0.28);
+    }
+
+    .link-terms {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--primary);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: underline;
+    }
+    .btn-return-home {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      font-weight: 500;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 9999px;
+      transition: color 0.2s;
+    }
+
+    .btn-return-home:hover {
+      color: var(--primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sticky Top Navigation -->
+  <header class="terms-nav" id="terms-nav">
+    <div class="terms-nav-inner">
+      <a href="index.html" class="nav-logo-link" id="nav-logo-link" title="Ir al inicio de Nativa">
+        <img src="img/logo.png" alt="Nativa Productos Naturales" class="nav-logo-img">
+      </a>
+      <div class="nav-actions">
+        <a href="register.html" class="btn-nav-back" id="btn-nav-back">
+          <i class="fas fa-arrow-left"></i> Volver a Registro
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Terms Content Container -->
+  <main class="terms-wrapper" id="terms-main">
+    <article class="terms-card" id="terms-card">
+      
+      <!-- Header with Logo -->
+      <header class="terms-header">
+        <a href="index.html" title="Nativa">
+          <img src="img/logo.png" alt="Nativa" class="terms-brand-logo" id="terms-brand-logo">
+        </a>
+        <h1 class="terms-title">Términos y Condiciones</h1>
+        <div class="terms-date-badge" id="terms-update-badge">
+          <i class="far fa-calendar-alt"></i> Última actualización: 18/Septiembre/2026
+        </div>
+      </header>
+
+      <!-- Welcome & Introduction -->
+      <div class="terms-intro" id="terms-intro">
+        Bienvenido a <strong>Nativa</strong>. Al acceder y utilizar este sitio web (<a href="https://native-1.ai.studio" target="_blank" rel="noopener noreferrer">https://native-1.ai.studio</a>), aceptas estar sujeto a los siguientes Términos y Condiciones. Si no estás de acuerdo con alguna parte de estos términos, no debes utilizar nuestro sitio web.
+      </div>
+
+      <!-- Section 1 -->
+      <section class="terms-section" id="section-1">
+        <h2 class="section-title">1. Uso del Sitio Web</h2>
+        <div class="section-content">
+          <p>Eres responsable de garantizar que tu uso del sitio web cumpla con todas las leyes y regulaciones locales aplicables.</p>
+          <p>Te comprometes a no utilizar este sitio para fines ilegales, fraudulentos, o para transmitir cualquier material que sea difamatorio, ofensivo o dañino.</p>
+          <p>Nos reservamos el derecho de suspender o cancelar tu acceso al sitio web si violas estos Términos y Condiciones.</p>
+        </div>
+      </section>
+
+      <!-- Section 2 -->
+      <section class="terms-section" id="section-2">
+        <h2 class="section-title">2. Propiedad Intelectual</h2>
+        <div class="section-content">
+          <p>Todo el contenido, diseño, textos, gráficos, logotipos y software de este sitio web son propiedad exclusiva de <strong>Nativa</strong> o de sus licenciantes, y están protegidos por las leyes de propiedad intelectual y derechos de autor. No puedes reproducir, distribuir ni modificar ninguna parte del contenido sin nuestro permiso expreso por escrito.</p>
+        </div>
+      </section>
+
+      <!-- Section 3 -->
+      <section class="terms-section" id="section-3">
+        <h2 class="section-title">3. Productos y Servicios</h2>
+        <div class="section-content">
+          <p>Hacemos nuestro mejor esfuerzo para describir y mostrar los productos/servicios con la mayor precisión posible. Sin embargo, no garantizamos que las descripciones, colores o precios sean exactos, completos o libres de errores.</p>
+          <p>Nos reservamos el derecho de modificar los precios o descontinuar cualquier producto o servicio sin previo aviso.</p>
+        </div>
+      </section>
+
+      <!-- Section 4 -->
+      <section class="terms-section" id="section-4">
+        <h2 class="section-title">4. Limitación de Responsabilidad</h2>
+        <div class="section-content">
+          <p>El uso de este sitio web es bajo tu propio riesgo. <strong>Nativa</strong> no será responsable por ningún daño directo, indirecto, incidental o consecuente que resulte del uso o la imposibilidad de usar nuestro sitio web, incluso si hemos sido advertidos de la posibilidad de dichos daños.</p>
+        </div>
+      </section>
+
+      <!-- Section 5 -->
+      <section class="terms-section" id="section-5">
+        <h2 class="section-title">5. Enlaces a Terceros</h2>
+        <div class="section-content">
+          <p>Nuestro sitio puede contener enlaces a sitios web de terceros. No tenemos control sobre el contenido o las prácticas de privacidad de esos sitios y no asumimos ninguna responsabilidad por ellos.</p>
+        </div>
+      </section>
+
+      <!-- Section 6 -->
+      <section class="terms-section" id="section-6">
+        <h2 class="section-title">6. Modificaciones a los Términos</h2>
+        <div class="section-content">
+          <p>Nos reservamos el derecho de modificar o reemplazar estos Términos y Condiciones en cualquier momento. Los cambios entrarán en vigor inmediatamente después de su publicación en esta página. Tu uso continuado del sitio después de cualquier cambio constituye tu aceptación de los nuevos términos.</p>
+        </div>
+      </section>
+
+      <!-- Section 7 -->
+      <section class="terms-section" id="section-7">
+        <h2 class="section-title">7. Ley Aplicable y Jurisdicción</h2>
+        <div class="section-content">
+          <p>Estos Términos y Condiciones se regirán e interpretarán de acuerdo con las leyes de Colombia. Cualquier disputa relacionada con estos términos estará sujeta a la jurisdicción exclusiva de los tribunales de dicha ubicación.</p>
+        </div>
+      </section>
+
+      <!-- Section 8 -->
+      <section class="terms-section" id="section-8">
+        <h2 class="section-title">8. Contacto</h2>
+        <div class="section-content">
+          <p>Si tienes alguna pregunta sobre estos Términos y Condiciones, puedes contactarnos en:</p>
+          <div class="contact-card" id="contact-details-box">
+            <div class="contact-item">
+              <div class="contact-icon"><i class="far fa-envelope"></i></div>
+              <div>
+                <strong>Correo electrónico:</strong> <a href="mailto:samueldpp12@gmail.com">samueldpp12@gmail.com</a>
+              </div>
+            </div>
+            <div class="contact-item">
+              <div class="contact-icon"><i class="fas fa-phone-alt"></i></div>
+              <div>
+                <strong>Teléfono:</strong> <a href="tel:+573005427742">+57 3005427742</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Footer navigation -->
+      <div class="terms-footer-actions">
+        <a href="register.html" class="btn-return-register" id="btn-return-register">
+          <i class="fas fa-check-circle"></i> Aceptar y Volver al Registro
+        </a>
+        <a href="politica-privacidad.html" class="link-terms" id="link-view-privacy">
+          <i class="fas fa-user-shield"></i> Ver Política de Privacidad
+        </a>
+        <a href="index.html" class="btn-return-home" id="btn-return-home">
+          <i class="fas fa-home"></i> Ir al Inicio
+        </a>
+      </div>
+
+    </article>
+  </main>
+
+</body>
+</html>

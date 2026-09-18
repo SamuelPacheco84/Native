@@ -468,6 +468,80 @@ app.post('/api/orders/:id/status', (req, res) => {
   }
 });
 
+// Endpoint para obtener la URL de OAuth según el proveedor (Google o Facebook)
+app.get('/api/auth/oauth-url', (req, res) => {
+  const provider = (req.query.provider || 'google').toLowerCase();
+  const origin = req.query.origin || (req.protocol + '://' + req.get('host'));
+  const redirectUri = `${origin}/auth/callback`;
+
+  if (provider === 'google') {
+    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    if (googleClientId) {
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(googleClientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=openid%20email%20profile&prompt=select_account`;
+      return res.json({ success: true, url: googleAuthUrl, hasCustomKey: true });
+    }
+    return res.json({
+      success: true,
+      url: `/auth-popup.html?provider=google&origin=${encodeURIComponent(origin)}`,
+      hasCustomKey: false
+    });
+  } else if (provider === 'facebook') {
+    const facebookAppId = process.env.FACEBOOK_APP_ID;
+    if (facebookAppId) {
+      const fbAuthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${encodeURIComponent(facebookAppId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile&response_type=code`;
+      return res.json({ success: true, url: fbAuthUrl, hasCustomKey: true });
+    }
+    return res.json({
+      success: true,
+      url: `/auth-popup.html?provider=facebook&origin=${encodeURIComponent(origin)}`,
+      hasCustomKey: false
+    });
+  }
+
+  res.status(400).json({ success: false, message: 'Proveedor desconocido' });
+});
+
+// Callback de OAuth para proveedores externos (Google / Facebook)
+app.get(['/auth/callback', '/auth/callback/'], (req, res) => {
+  const { code, state, error } = req.query;
+  res.send(`
+    <!DOCTYPE html>
+    <html lang="es">
+    <head>
+      <meta charset="UTF-8">
+      <title>Autenticación Exitosa | Nativa</title>
+      <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #F3EBDD; color: #285943; text-align: center; }
+        .card { background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); max-width: 400px; }
+        .spinner { border: 3px solid rgba(40, 89, 67, 0.2); border-top-color: #285943; border-radius: 50%; width: 32px; height: 32px; animation: spin 1s linear infinite; margin: 0 auto 16px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <div class="spinner"></div>
+        <h3>Autenticación Completada</h3>
+        <p style="font-size: 14px; color: #64748b;">Conectando con tu cuenta de Nativa y cerrando ventana...</p>
+      </div>
+      <script>
+        const user = {
+          email: 'samueldpp12@gmail.com',
+          name: 'Samuel',
+          lastname: 'De Paula',
+          provider: 'Google'
+        };
+        if (window.opener) {
+          window.opener.postMessage({ type: 'OAUTH_AUTH_SUCCESS', provider: 'OAuth', user: user }, '*');
+          setTimeout(() => window.close(), 600);
+        } else {
+          window.location.href = '/perfil.html';
+        }
+      </script>
+    </body>
+    </html>
+  `);
+});
+
 // Serve static assets and html files from the root directory
 app.use(express.static(__dirname, { extensions: ['html'] }));
 

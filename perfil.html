@@ -533,10 +533,25 @@
   </style>
 
   <script>
-    // Perfil auth guard
-    if (!localStorage.getItem('nativa_user_email')) {
-      window.location.href = 'login.html';
-    }
+    // Perfil auth guard con verificación de expiración (1 semana para recordarme)
+    (function checkPerfilAuth() {
+      const email = localStorage.getItem('nativa_user_email');
+      const expiresAt = localStorage.getItem('nativa_session_expires');
+      if (!email) {
+        window.location.href = 'login.html';
+        return;
+      }
+      if (expiresAt && Date.now() > parseInt(expiresAt, 10)) {
+        // Sesión expirada después de 1 semana
+        localStorage.removeItem('nativa_user_email');
+        localStorage.removeItem('nativa_user_name');
+        localStorage.removeItem('nativa_user_lastname');
+        localStorage.removeItem('nativa_user_phone');
+        localStorage.removeItem('nativa_session_expires');
+        localStorage.removeItem('nativa_remember_me');
+        window.location.href = 'login.html?expired=1';
+      }
+    })();
   </script>
 </head>
 <body>
@@ -604,7 +619,7 @@
         </div>
       </div>
       <div class="apartado-user-actions">
-        <button type="button" class="btn-logout-apartado" onclick="handleLogout()">
+        <button type="button" class="btn-logout-apartado" id="btn-logout" onclick="handleLogout()" aria-label="Cerrar Sesión">
           <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
         </button>
       </div>
@@ -743,6 +758,27 @@
       </div>
       <div class="email-inbox-body" id="email-content-rendered">
         <!-- Inyectado dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Confirmación para Cerrar Sesión -->
+  <div class="modal-overlay" id="logout-confirm-overlay" style="display: none; align-items: center; justify-content: center;" role="dialog" aria-modal="true" aria-labelledby="logout-modal-title">
+    <div class="modal-dialog" style="max-width: 440px; padding: 28px; text-align: center; border-radius: 14px; background: white; box-shadow: 0 16px 36px rgba(0,0,0,0.15);">
+      <div style="width: 56px; height: 56px; border-radius: 50%; background: #fee2e2; color: #dc2626; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; font-size: 22px;">
+        <i class="fas fa-sign-out-alt"></i>
+      </div>
+      <h3 id="logout-modal-title" style="color: var(--verde-bosque); margin-top: 0; margin-bottom: 8px; font-size: 20px; font-weight: 700;">¿Cerrar Sesión?</h3>
+      <p style="color: #64748b; font-size: 14px; margin-bottom: 24px; line-height: 1.5;">
+        ¿Estás seguro de que deseas salir de tu cuenta? Tendrás que iniciar sesión nuevamente para acceder a tu historial de pedidos y datos personales.
+      </p>
+      <div style="display: flex; gap: 12px; justify-content: center;">
+        <button type="button" class="btn btn-secondary" id="btn-cancel-logout" onclick="closeLogoutModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f8fafc; color: #475569; font-weight: 600; cursor: pointer;">
+          Cancelar
+        </button>
+        <button type="button" class="btn" id="btn-confirm-logout-action" onclick="executeLogout()" style="padding: 10px 22px; border-radius: 8px; border: none; background: #dc2626; color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+        </button>
       </div>
     </div>
   </div>
@@ -947,12 +983,40 @@
     }
 
     function handleLogout() {
-      if (confirm('¿Deseas cerrar tu sesión actual?')) {
-        showToast('Sesión cerrada correctamente.');
-        setTimeout(() => {
-          window.location.href = 'login.html';
-        }, 800);
+      const modal = document.getElementById('logout-confirm-overlay');
+      if (modal) {
+        modal.style.display = 'flex';
+      } else {
+        executeLogout();
       }
+    }
+
+    function closeLogoutModal() {
+      const modal = document.getElementById('logout-confirm-overlay');
+      if (modal) {
+        modal.style.display = 'none';
+      }
+    }
+
+    function executeLogout() {
+      // 1. Limpiar credenciales y sesión del usuario en localStorage
+      localStorage.removeItem('nativa_user_email');
+      localStorage.removeItem('nativa_user_name');
+      localStorage.removeItem('nativa_user_lastname');
+      localStorage.removeItem('nativa_user_phone');
+      localStorage.removeItem('nativa_session_expires');
+      localStorage.removeItem('nativa_remember_me');
+      localStorage.removeItem('nativa_auth_provider');
+
+      closeLogoutModal();
+
+      // 2. Feedback visual inmediato
+      showToast('Has cerrado sesión correctamente. Redirigiendo...');
+
+      // 3. Redirigir a login.html
+      setTimeout(() => {
+        window.location.href = 'login.html';
+      }, 600);
     }
 
     function switchPerfilTab(tabName) {
@@ -1792,6 +1856,13 @@
 
     // Inicializar datos al cargar la página
     updateCartBadge();
+
+    const logoutModalOverlay = document.getElementById('logout-confirm-overlay');
+    if (logoutModalOverlay) {
+      logoutModalOverlay.addEventListener('click', function(e) {
+        if (e.target === logoutModalOverlay) closeLogoutModal();
+      });
+    }
   </script>
 
   <script>

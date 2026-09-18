@@ -26,7 +26,7 @@
 
           <ul id="main-nav" class="txt-btn">
             <li><a href="index.html#portfolio"><i class="fas fa-leaf"></i> Productos</a></li>
-                        <li><a href="perfil.html" class="nav-action-btn"><i class="fas fa-user-circle"></i> <span>Mi Perfil</span></a></li>
+            <li><a href="login.html" class="nav-action-btn" id="nav-perfil-btn" aria-label="Ingresar a mi cuenta" title="Ingresar"><i class="fas fa-user-circle"></i> <span id="nav-user-label">Ingresar</span></a></li>
             <li><a href="index.html#portfolio" class="nav-action-btn"><i class="fas fa-store"></i> <span>Tienda</span></a></li>
           </ul>
         </div>
@@ -135,17 +135,60 @@
 
 
   <script>
+    function updateNavAuthState() {
+      const expiresAt = localStorage.getItem('nativa_session_expires');
+      if (expiresAt && Date.now() > parseInt(expiresAt, 10)) {
+        localStorage.removeItem('nativa_user_email');
+        localStorage.removeItem('nativa_user_name');
+        localStorage.removeItem('nativa_user_lastname');
+        localStorage.removeItem('nativa_user_phone');
+        localStorage.removeItem('nativa_session_expires');
+        localStorage.removeItem('nativa_remember_me');
+        localStorage.removeItem('nativa_auth_provider');
+      }
+
+      const userEmail = localStorage.getItem('nativa_user_email');
+      const navPerfilBtn = document.getElementById('nav-perfil-btn');
+      const navUserLabel = document.getElementById('nav-user-label');
+
+      if (userEmail) {
+        if (navPerfilBtn) {
+          navPerfilBtn.href = 'perfil.html';
+          navPerfilBtn.title = 'Mi Perfil y Pedidos';
+          navPerfilBtn.setAttribute('aria-label', 'Mi Perfil y Pedidos');
+        }
+        if (navUserLabel) {
+          navUserLabel.textContent = 'Perfil';
+        }
+      } else {
+        if (navPerfilBtn) {
+          navPerfilBtn.href = 'login.html';
+          navPerfilBtn.title = 'Ingresar';
+          navPerfilBtn.setAttribute('aria-label', 'Ingresar a mi cuenta');
+        }
+        if (navUserLabel) {
+          navUserLabel.textContent = 'Ingresar';
+        }
+      }
+    }
+
+    updateNavAuthState();
+
     document.addEventListener('DOMContentLoaded', function() {
+      updateNavAuthState();
+
       // Login check for Perfil links
       document.querySelectorAll('a[href="perfil.html"]').forEach(btn => {
         btn.addEventListener('click', function(e) {
-          if(!localStorage.getItem('nativa_user_email')) {
+          if (!localStorage.getItem('nativa_user_email')) {
             e.preventDefault();
             window.location.href = 'login.html';
           }
         });
       });
     });
+
+    window.addEventListener('storage', updateNavAuthState);
   </script>
 </body>
 
