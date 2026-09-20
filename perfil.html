@@ -530,6 +530,110 @@
       padding-top: 12px;
       gap: 12px;
     }
+
+    /* Estilos del Centro de Notificaciones */
+    .notif-tab-badge {
+      background: #dc2626;
+      color: #ffffff;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 1px 7px;
+      border-radius: 12px;
+      margin-left: 4px;
+      display: inline-block;
+    }
+    .notif-banner-box {
+      background: #f0fdf4;
+      border: 1px solid #bbf7d0;
+      border-left: 4px solid #16a34a;
+      border-radius: 12px;
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      animation: fadeInNotif 0.4s ease;
+    }
+    @keyframes fadeInNotif {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .notif-card-item {
+      background: #ffffff;
+      border: 1px solid #e2e8df;
+      border-radius: 14px;
+      padding: 18px 20px;
+      margin-bottom: 14px;
+      transition: all 0.25s ease;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      position: relative;
+    }
+    .notif-card-item:hover {
+      box-shadow: 0 4px 14px rgba(40, 89, 67, 0.08);
+      border-color: #bbf7d0;
+    }
+    .notif-card-item.unread {
+      background: #fafdf9;
+      border-color: #a7f3d0;
+    }
+    .notif-card-item.unread::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 14px;
+      bottom: 14px;
+      width: 4px;
+      background: #285943;
+      border-radius: 0 4px 4px 0;
+    }
+    .notif-icon-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: #e8f4e5;
+      color: var(--verde-bosque);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+    .notif-body {
+      flex: 1;
+    }
+    .notif-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .notif-title-row h5 {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+    .notif-time {
+      font-size: 11.5px;
+      color: #64748b;
+    }
+    .notif-text {
+      font-size: 13.5px;
+      color: #4b5563;
+      margin: 0 0 10px 0;
+      line-height: 1.5;
+    }
+    .notif-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
   </style>
 
   <script>
@@ -610,12 +714,12 @@
       </div>
       <div class="apartado-user-info">
         <div class="user-name-row">
-          <h3 id="perfil-card-name">Samuel De Paula</h3>
+          <h3 id="perfil-card-name">Mi Perfil</h3>
           <span class="badge-cliente-verde"><i class="fas fa-leaf"></i> Cliente Nativa</span>
         </div>
         <div class="user-meta-row">
-          <span id="perfil-card-email"><i class="fas fa-envelope"></i> samueldpp12@gmail.com</span>
-          <span id="perfil-card-phone"><i class="fas fa-phone"></i> +57 300 542 7742</span>
+          <span id="perfil-card-email"><i class="fas fa-envelope"></i> Cargando...</span>
+          <span id="perfil-card-phone"><i class="fas fa-phone"></i> Sin teléfono</span>
         </div>
       </div>
       <div class="apartado-user-actions">
@@ -645,10 +749,13 @@
       </div>
     </div>
 
-    <!-- Pestañas de Navegación del Perfil: Pedidos y Datos -->
+    <!-- Pestañas de Navegación del Perfil: Pedidos, Notificaciones y Datos -->
     <div class="apartado-tabs-row" id="perfil-tabs-nav">
       <button type="button" class="apartado-tab-btn active" id="tab-pedidos-btn" onclick="switchPerfilTab('pedidos')">
         <i class="fas fa-box"></i> Pedidos (<span id="perfil-orders-count">0</span>)
+      </button>
+      <button type="button" class="apartado-tab-btn" id="tab-notif-btn" onclick="switchPerfilTab('notificaciones')">
+        <i class="fas fa-bell"></i> Notificaciones <span class="notif-tab-badge" id="perfil-notif-badge" style="display: none;">0</span>
       </button>
       <button type="button" class="apartado-tab-btn" id="tab-datos-btn" onclick="switchPerfilTab('datos')">
         <i class="fas fa-address-card"></i> Mis Datos
@@ -657,6 +764,9 @@
 
     <!-- Contenido Pestaña 1: Historial de Pedidos Realizados -->
     <div id="perfil-tab-pedidos" class="apartado-tab-content">
+      <!-- Banner de última actualización / notificación activa -->
+      <div id="perfil-latest-notification-banner" style="display: none;"></div>
+
       <div class="apartado-pedidos-header">
         <h4><i class="fas fa-clipboard-list"></i> Historial de Pedidos Realizados</h4>
         <p class="apartado-pedidos-desc">Consulta tus compras recientes, el estado de tu pedido (confirmación, preparación, envío, entregado) y accede al rastreo de tus paquetes en camino.</p>
@@ -671,37 +781,83 @@
     <div id="perfil-tab-datos" class="apartado-tab-content" style="display: none;">
       <div class="apartado-datos-card">
         <h4><i class="fas fa-user-edit"></i> Actualizar Información Personal</h4>
-        <p class="apartado-pedidos-desc">Tus datos se usan para la entrega de tus paquetes y el envío de recibos.</p>
+        <p class="apartado-pedidos-desc">
+          Modifica tu nombre, apellido, teléfono, contraseña o correo. Si cambias tu correo, se enviará un enlace de confirmación al nuevo correo para validarlo y actualizarlo automáticamente.
+        </p>
+
+        <!-- Mensajes dinámicos y confirmación de correo -->
+        <div id="perfil-datos-alert" style="display: none; margin-bottom: 20px; padding: 14px 18px; border-radius: 10px; font-size: 14px; line-height: 1.5;"></div>
+
         <form id="perfil-datos-form" onsubmit="event.preventDefault(); savePerfilData();">
           <div class="form-grid-2">
             <div class="single-form">
-              <label>Nombre</label>
+              <label for="perfil-input-name">Nombre</label>
               <input type="text" id="perfil-input-name" placeholder="Tu nombre" required>
             </div>
             <div class="single-form">
-              <label>Apellido</label>
+              <label for="perfil-input-lastname">Apellido</label>
               <input type="text" id="perfil-input-lastname" placeholder="Tu apellido" required>
             </div>
           </div>
           <div class="form-grid-2">
             <div class="single-form">
-              <label>Correo Electrónico</label>
+              <label for="perfil-input-email">
+                Correo Electrónico
+                <span style="font-size: 11px; color: #285943; font-weight: 600;">(requiere confirmación si cambia)</span>
+              </label>
               <input type="email" id="perfil-input-email" placeholder="tu@email.com" required>
             </div>
             <div class="single-form">
-              <label>Teléfono de Contacto</label>
-              <input type="tel" id="perfil-input-phone" placeholder="+57 300 000 0000" required>
+              <label for="perfil-input-phone">Teléfono de Contacto</label>
+              <input type="tel" id="perfil-input-phone" placeholder="+57 300 000 0000">
             </div>
           </div>
-          <div style="margin-top: 18px; display: flex; gap: 12px; flex-wrap: wrap;">
-            <button type="submit" class="btn btn-primary">
-              <i class="fas fa-save"></i> Guardar Datos
+          <div class="form-grid-2" style="margin-top: 8px;">
+            <div class="single-form">
+              <label for="perfil-input-password">Nueva Contraseña (opcional)</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="perfil-input-password" placeholder="Mínimo 6 caracteres" style="width: 100%; padding-right: 42px;">
+                <button type="button" onclick="togglePasswordVisibility('perfil-input-password', this)" style="position: absolute; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; font-size: 15px;">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+            <div class="single-form">
+              <label for="perfil-input-password-confirm">Confirmar Nueva Contraseña</label>
+              <div style="position: relative; display: flex; align-items: center;">
+                <input type="password" id="perfil-input-password-confirm" placeholder="Repite la nueva contraseña" style="width: 100%; padding-right: 42px;">
+                <button type="button" onclick="togglePasswordVisibility('perfil-input-password-confirm', this)" style="position: absolute; right: 12px; background: none; border: none; color: #64748b; cursor: pointer; font-size: 15px;">
+                  <i class="fas fa-eye"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap;">
+            <button type="submit" class="btn btn-primary" id="btn-save-perfil-datos">
+              <i class="fas fa-save"></i> Guardar Cambios
             </button>
             <button type="button" class="btn btn-secondary" onclick="switchPerfilTab('pedidos')">
               Ver Mis Pedidos
             </button>
           </div>
         </form>
+      </div>
+    </div>
+
+    <!-- Contenido Pestaña 3: Centro de Notificaciones en Tiempo Real -->
+    <div id="perfil-tab-notificaciones" class="apartado-tab-content" style="display: none;">
+      <div class="apartado-pedidos-header" style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h4><i class="fas fa-bell"></i> Notificaciones de tus Pedidos</h4>
+          <p class="apartado-pedidos-desc">Alertas instantáneas enviadas cuando el administrador actualiza el estado de tu compra (en preparación, despacho en tránsito, entrega).</p>
+        </div>
+        <button type="button" class="btn btn-secondary" onclick="markAllNotificationsAsRead()" style="font-size: 12px; padding: 7px 16px; border-radius: 20px;">
+          <i class="fas fa-check-double"></i> Marcar todas como leídas
+        </button>
+      </div>
+
+      <div id="perfil-notifications-list-container">
+        <!-- Inyectado dinámicamente -->
       </div>
     </div>
 
@@ -896,6 +1052,25 @@
 
   <!-- Script de la Página de Perfil y Pedidos -->
   <script>
+    // Verificación inmediata de autenticación:
+    // Si no hay sesión iniciada, redirigir al login preservando el pedido solicitado para rastrear.
+    (function enforcePerfilAuth() {
+      const email = localStorage.getItem('nativa_user_email');
+      const expires = localStorage.getItem('nativa_session_expires');
+      const isExpired = expires && Number(expires) < Date.now();
+      const urlParams = new URLSearchParams(window.location.search);
+      const trackId = urlParams.get('track') || urlParams.get('order');
+
+      if (!email || isExpired) {
+        if (isExpired) {
+          localStorage.removeItem('nativa_user_email');
+          localStorage.removeItem('nativa_session_expires');
+        }
+        const redirectParam = trackId ? `perfil.html?order=${encodeURIComponent(trackId)}` : 'perfil.html';
+        window.location.replace(`login.html?redirect=${encodeURIComponent(redirectParam)}${trackId ? `&order=${encodeURIComponent(trackId)}` : ''}`);
+      }
+    })();
+
     // Catálogo maestro para referencias de nombres, precios e imágenes
     const PRODUCTS_MAP = {
       1: { id: 1, name: "Granola Nativa Artesanal", price: 18500, img: "img/productos/Granola_Nativa.png", url: "portfolio-1.html" },
@@ -927,31 +1102,48 @@
     }
 
     // Inicialización al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       loadPerfilUserData();
-      renderPerfilOrders();
+      await syncOrdersWithServer();
+      renderPerfilOrders(false);
       updateCartBadge();
 
       // Revisar si viene un parámetro para rastrear directamente
       const urlParams = new URLSearchParams(window.location.search);
       const trackId = urlParams.get('track') || urlParams.get('order');
       if (trackId) {
-        setTimeout(() => showTrackingView(trackId), 150);
+        switchPerfilTab('pedidos');
+        setTimeout(() => {
+          showTrackingView(trackId);
+          showToast(`Mostrando el estado de tu pedido #${trackId}`);
+        }, 150);
       }
     });
 
+    function togglePasswordVisibility(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.innerHTML = '<i class="fas fa-eye-slash"></i>';
+      } else {
+        input.type = 'password';
+        btn.innerHTML = '<i class="fas fa-eye"></i>';
+      }
+    }
+
     // Cargar información del usuario
     function loadPerfilUserData() {
-      const email = localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com';
-      const nombre = localStorage.getItem('nativa_user_name') || 'Samuel';
-      const apellido = localStorage.getItem('nativa_user_lastname') || 'De Paula';
-      const telefono = localStorage.getItem('nativa_user_phone') || '+57 300 542 7742';
+      const email = localStorage.getItem('nativa_user_email') || 'cliente@nativa.com';
+      const nombre = localStorage.getItem('nativa_user_name') || 'Cliente';
+      const apellido = localStorage.getItem('nativa_user_lastname') || 'Nativa';
+      const telefono = localStorage.getItem('nativa_user_phone') || '+57 300 000 0000';
 
       const cardName = document.getElementById('perfil-card-name');
       const cardEmail = document.getElementById('perfil-card-email');
       const cardPhone = document.getElementById('perfil-card-phone');
 
-      if (cardName) cardName.textContent = `${nombre} ${apellido}`;
+      if (cardName) cardName.textContent = `${nombre} ${apellido}`.trim() || 'Mi Cuenta';
       if (cardEmail) cardEmail.innerHTML = `<i class="fas fa-envelope"></i> ${email}`;
       if (cardPhone) cardPhone.innerHTML = `<i class="fas fa-phone"></i> ${telefono}`;
 
@@ -966,20 +1158,129 @@
       if (inpPhone) inpPhone.value = telefono;
     }
 
-    function savePerfilData() {
+    async function savePerfilData() {
       const inpName = document.getElementById('perfil-input-name');
       const inpLast = document.getElementById('perfil-input-lastname');
       const inpEmail = document.getElementById('perfil-input-email');
       const inpPhone = document.getElementById('perfil-input-phone');
+      const inpPass = document.getElementById('perfil-input-password');
+      const inpPassConf = document.getElementById('perfil-input-password-confirm');
+      const alertEl = document.getElementById('perfil-datos-alert');
+      const btnSave = document.getElementById('btn-save-perfil-datos');
 
-      if (inpName) localStorage.setItem('nativa_user_name', inpName.value.trim());
-      if (inpLast) localStorage.setItem('nativa_user_lastname', inpLast.value.trim());
-      if (inpEmail) localStorage.setItem('nativa_user_email', inpEmail.value.trim());
-      if (inpPhone) localStorage.setItem('nativa_user_phone', inpPhone.value.trim());
+      const nameVal = inpName ? inpName.value.trim() : '';
+      const lastVal = inpLast ? inpLast.value.trim() : '';
+      const newEmailVal = inpEmail ? inpEmail.value.trim().toLowerCase() : '';
+      const phoneVal = inpPhone ? inpPhone.value.trim() : '';
+      const passVal = inpPass ? inpPass.value : '';
+      const passConfVal = inpPassConf ? inpPassConf.value : '';
 
-      loadPerfilUserData();
-      switchPerfilTab('pedidos');
-      showToast('Información de perfil actualizada con éxito.');
+      const currentEmail = localStorage.getItem('nativa_user_email') || newEmailVal;
+
+      if (passVal) {
+        if (passVal !== passConfVal) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> La nueva contraseña y su confirmación no coinciden.';
+          }
+          return;
+        }
+        if (passVal.length < 6) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> La contraseña debe tener como mínimo 6 caracteres.';
+          }
+          return;
+        }
+      }
+
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+      }
+
+      try {
+        const res = await fetch('/api/user/profile', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            currentEmail,
+            name: nameVal,
+            lastname: lastVal,
+            phone: phoneVal,
+            newEmail: newEmailVal,
+            password: passVal || undefined,
+            passwordConfirm: passConfVal || undefined,
+            baseUrl: window.location.origin
+          })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> ${data.message || 'No se pudieron guardar los cambios.'}`;
+          }
+          return;
+        }
+
+        if (inpName) localStorage.setItem('nativa_user_name', nameVal);
+        if (inpLast) localStorage.setItem('nativa_user_lastname', lastVal);
+        if (inpPhone) localStorage.setItem('nativa_user_phone', phoneVal);
+
+        if (data.emailVerificationSent) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#EFF6FF';
+            alertEl.style.color = '#1D4ED8';
+            alertEl.style.border = '1px solid #93C5FD';
+            alertEl.innerHTML = `
+              <div style="font-weight: 700; margin-bottom: 6px;"><i class="fas fa-paper-plane"></i> Correo de Verificación Enviado</div>
+              <div>Hemos enviado un correo a <strong>${data.newEmail}</strong> con un enlace para confirmar tu nueva dirección. Tu correo se actualizará automáticamente una vez hagas clic en el enlace.</div>
+              ${data.confirmationUrl ? `<div style="margin-top: 10px; font-size: 12px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 6px;"><strong>Enlace directo de confirmación:</strong> <a href="${data.confirmationUrl}" target="_blank" style="color: #1D4ED8; text-decoration: underline; font-weight: 600;">Confirmar ahora</a></div>` : ''}
+            `;
+          }
+          if (inpEmail) inpEmail.value = currentEmail;
+          showToast('Enlace de verificación enviado al nuevo correo.');
+        } else {
+          if (newEmailVal) localStorage.setItem('nativa_user_email', newEmailVal);
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#DCFCE7';
+            alertEl.style.color = '#15803D';
+            alertEl.style.border = '1px solid #86EFAC';
+            alertEl.innerHTML = '<i class="fas fa-check-circle"></i> <strong>¡Listo!</strong> Tus datos personales y contraseña se han actualizado exitosamente.';
+          }
+          showToast('Datos personales actualizados con éxito.');
+        }
+
+        if (inpPass) inpPass.value = '';
+        if (inpPassConf) inpPassConf.value = '';
+
+        loadPerfilUserData();
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.display = 'block';
+          alertEl.style.background = '#FEE2E2';
+          alertEl.style.color = '#DC2626';
+          alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error de red al comunicarse con el servidor.';
+        }
+      } finally {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios';
+        }
+      }
     }
 
     function handleLogout() {
@@ -1021,23 +1322,187 @@
 
     function switchPerfilTab(tabName) {
       const tabPedidosBtn = document.getElementById('tab-pedidos-btn');
+      const tabNotifBtn = document.getElementById('tab-notif-btn');
       const tabDatosBtn = document.getElementById('tab-datos-btn');
       const secPedidos = document.getElementById('perfil-tab-pedidos');
+      const secNotif = document.getElementById('perfil-tab-notificaciones');
       const secDatos = document.getElementById('perfil-tab-datos');
 
       hideTrackingView();
 
+      [tabPedidosBtn, tabNotifBtn, tabDatosBtn].forEach(btn => btn && btn.classList.remove('active'));
+      [secPedidos, secNotif, secDatos].forEach(sec => sec && (sec.style.display = 'none'));
+
       if (tabName === 'pedidos') {
         if (tabPedidosBtn) tabPedidosBtn.classList.add('active');
-        if (tabDatosBtn) tabDatosBtn.classList.remove('active');
         if (secPedidos) secPedidos.style.display = 'block';
-        if (secDatos) secDatos.style.display = 'none';
         renderPerfilOrders();
-      } else {
+      } else if (tabName === 'notificaciones') {
+        if (tabNotifBtn) tabNotifBtn.classList.add('active');
+        if (secNotif) secNotif.style.display = 'block';
+        loadUserNotifications(true);
+      } else if (tabName === 'datos') {
         if (tabDatosBtn) tabDatosBtn.classList.add('active');
-        if (tabPedidosBtn) tabPedidosBtn.classList.remove('active');
-        if (secPedidos) secPedidos.style.display = 'none';
         if (secDatos) secDatos.style.display = 'block';
+      }
+    }
+
+    // =========================================================================
+    // CENTRO DE NOTIFICACIONES EN TIEMPO REAL
+    // =========================================================================
+    let userNotifications = [];
+
+    async function loadUserNotifications(renderImmediately = false) {
+      const email = (localStorage.getItem('nativa_user_email') || '').toLowerCase().trim();
+      try {
+        const url = email ? `/api/notifications?email=${encodeURIComponent(email)}` : '/api/notifications';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data.success && Array.isArray(data.notifications)) {
+          userNotifications = data.notifications;
+          updateNotificationBadge(data.unreadCount || 0);
+          updateNotificationBanner(userNotifications);
+          if (renderImmediately || (document.getElementById('perfil-tab-notificaciones') && document.getElementById('perfil-tab-notificaciones').style.display !== 'none')) {
+            renderNotificationsList(userNotifications);
+          }
+        }
+      } catch (e) {
+        console.warn('Error loading notifications:', e);
+      }
+    }
+
+    function updateNotificationBadge(unreadCount) {
+      const badge = document.getElementById('perfil-notif-badge');
+      if (!badge) return;
+      if (unreadCount > 0) {
+        badge.textContent = unreadCount;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+    }
+
+    function updateNotificationBanner(notifications) {
+      const banner = document.getElementById('perfil-latest-notification-banner');
+      if (!banner) return;
+      const latestUnread = notifications.find(n => !n.read);
+      if (latestUnread) {
+        banner.style.display = 'block';
+        banner.innerHTML = `
+          <div class="notif-banner-box">
+            <div style="display: flex; align-items: center; gap: 14px;">
+              <div style="width: 38px; height: 38px; border-radius: 50%; background: #dcfce7; color: #166534; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0;">
+                <i class="fas fa-bell"></i>
+              </div>
+              <div>
+                <strong style="color: #14532d; font-size: 14px; display: block;">${latestUnread.title}</strong>
+                <span style="font-size: 13px; color: #374151;">${latestUnread.message}</span>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; flex-shrink: 0;">
+              <button type="button" class="btn btn-primary" onclick="showTrackingView('${latestUnread.orderId}')" style="font-size: 12px; padding: 6px 14px; border-radius: 20px;">
+                <i class="fas fa-truck-moving"></i> Rastrear Pedido
+              </button>
+              <button type="button" class="btn btn-secondary" onclick="markNotificationAsRead('${latestUnread.id}')" style="font-size: 12px; padding: 6px 12px; border-radius: 20px;" title="Cerrar notificación">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      } else {
+        banner.style.display = 'none';
+      }
+    }
+
+    function renderNotificationsList(notifications) {
+      const container = document.getElementById('perfil-notifications-list-container');
+      if (!container) return;
+
+      if (!notifications || notifications.length === 0) {
+        container.innerHTML = `
+          <div style="text-align: center; padding: 48px 16px; background: #ffffff; border: 1px dashed #cfe0cb; border-radius: 14px;">
+            <div style="width: 58px; height: 58px; border-radius: 50%; background: #e8f4e5; display: inline-flex; align-items: center; justify-content: center; color: var(--verde-bosque); font-size: 24px; margin-bottom: 12px;">
+              <i class="fas fa-bell-slash"></i>
+            </div>
+            <h5 style="margin: 0 0 6px 0; color: var(--verde-bosque); font-size: 17px; font-weight: 700;">No tienes notificaciones pendientes</h5>
+            <p style="font-size: 13.5px; color: var(--text-muted); margin: 0; max-width: 420px; margin-left: auto; margin-right: auto;">
+              Cada vez que el administrador actualice el estado de tus pedidos recibirás avisos automáticos aquí y en tu correo electrónico.
+            </p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = notifications.map(n => {
+        const timeStr = n.createdAt ? new Date(n.createdAt).toLocaleString('es-CO', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+        const isUnread = !n.read;
+        let iconHtml = '<i class="fas fa-box"></i>';
+        const s = (n.newStatus || '').toLowerCase();
+        if (s.includes('esperando')) iconHtml = '<i class="fas fa-hourglass-half"></i>';
+        else if (s.includes('prepar')) iconHtml = '<i class="fas fa-boxes"></i>';
+        else if (s.includes('tránsito') || s.includes('transito') || s.includes('camino') || s.includes('enviado')) iconHtml = '<i class="fas fa-shipping-fast"></i>';
+        else if (s.includes('entreg')) iconHtml = '<i class="fas fa-check-double"></i>';
+
+        return `
+          <div class="notif-card-item ${isUnread ? 'unread' : ''}" id="notif-card-${n.id}">
+            <div class="notif-icon-circle">
+              ${iconHtml}
+            </div>
+            <div class="notif-body">
+              <div class="notif-title-row">
+                <h5>${n.title}</h5>
+                <span class="notif-time"><i class="far fa-clock"></i> ${timeStr}</span>
+              </div>
+              <p class="notif-text">${n.htmlMessage || n.message}</p>
+              
+              <div class="notif-actions">
+                ${n.orderId ? `
+                  <button type="button" class="btn btn-primary" onclick="showTrackingView('${n.orderId}')" style="font-size: 12px; padding: 5px 14px; border-radius: 20px;">
+                    <i class="fas fa-search-location"></i> Ver Rastreo en Vivo
+                  </button>
+                ` : ''}
+                ${isUnread ? `
+                  <button type="button" class="btn btn-secondary" onclick="markNotificationAsRead('${n.id}')" style="font-size: 12px; padding: 5px 12px; border-radius: 20px;">
+                    <i class="fas fa-check"></i> Marcar leída
+                  </button>
+                ` : `
+                  <span style="font-size: 12px; color: #94a3b8;"><i class="fas fa-check-circle"></i> Leída</span>
+                `}
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function markNotificationAsRead(id) {
+      try {
+        await fetch(`/api/notifications/${id}/read`, { method: 'POST' });
+        const notif = userNotifications.find(n => n.id === id);
+        if (notif) notif.read = true;
+        updateNotificationBadge(userNotifications.filter(n => !n.read).length);
+        updateNotificationBanner(userNotifications);
+        renderNotificationsList(userNotifications);
+      } catch (e) {
+        console.warn(e);
+      }
+    }
+
+    async function markAllNotificationsAsRead() {
+      const email = (localStorage.getItem('nativa_user_email') || '').toLowerCase().trim();
+      try {
+        await fetch('/api/notifications/mark-all-read', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        userNotifications.forEach(n => n.read = true);
+        updateNotificationBadge(0);
+        updateNotificationBanner(userNotifications);
+        renderNotificationsList(userNotifications);
+        showToast('Todas las notificaciones fueron marcadas como leídas.');
+      } catch (e) {
+        console.warn(e);
       }
     }
 
@@ -1069,9 +1534,9 @@
         carrier: 'Envía Express Colombia',
         trackingNumber: 'ENV-COL-948271',
         shippingAddress: {
-          fullName: 'Samuel De Paula',
-          phone: '+57 300 542 7742',
-          email: 'samueldpp12@gmail.com',
+          fullName: 'Carlos Méndez',
+          phone: '+57 312 456 7890',
+          email: 'carlos.mendez@nativanatural.com',
           address: 'Calle 7 # 12-45',
           city: 'Garzón',
           department: 'Huila'
@@ -1221,13 +1686,30 @@
     // =========================================================================
     // VISTA DE RASTREO INTEGRADA EN EL PERFIL DE USUARIO (Sin ventanas emergentes)
     // =========================================================================
-    function showTrackingView(orderId) {
+    async function showTrackingView(orderId) {
       const trackingContainer = document.getElementById('perfil-tracking-view');
       const content = document.getElementById('tracking-view-content');
       if (!trackingContainer || !content) return;
 
       const orders = getOrdersList();
       let order = orders.find(o => String(o.id).toLowerCase() === String(orderId).toLowerCase() || String(o.guide || '').toLowerCase() === String(orderId).toLowerCase());
+
+      if (!order) {
+        try {
+          const res = await fetch('/api/orders');
+          const data = await res.json();
+          if (data && data.success && Array.isArray(data.orders)) {
+            const found = data.orders.find(o => String(o.id).toLowerCase() === String(orderId).toLowerCase() || String(o.guide || '').toLowerCase() === String(orderId).toLowerCase());
+            if (found) {
+              order = found;
+              orders.unshift(found);
+              localStorage.setItem('nativa_orders', JSON.stringify(orders));
+            }
+          }
+        } catch (e) {
+          console.warn('Sync note:', e);
+        }
+      }
 
       if (!order) {
         order = {
@@ -1241,13 +1723,13 @@
           total: 45000,
           totalFormatted: '$45.000 COP',
           shippingAddress: {
-            nombre: localStorage.getItem('nativa_user_name') || 'Samuel',
-            apellido: localStorage.getItem('nativa_user_lastname') || 'De Paula',
+            nombre: localStorage.getItem('nativa_user_name') || 'Cliente',
+            apellido: localStorage.getItem('nativa_user_lastname') || 'Nativa',
             ciudad: 'Bogotá D.C.',
             departamento: 'Cundinamarca',
             direccion: 'Dirección Registrada',
-            telefono: localStorage.getItem('nativa_user_phone') || '+57 300 542 7742',
-            email: localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com'
+            telefono: localStorage.getItem('nativa_user_phone') || '+57 300 000 0000',
+            email: localStorage.getItem('nativa_user_email') || 'cliente@nativa.com'
           },
           items: [
             { name: 'Granola Nativa Artesanal (400g)', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' }
@@ -1436,7 +1918,7 @@
       const content = document.getElementById('email-content-rendered');
       const recipientView = document.getElementById('email-recipient-view');
 
-      const email = (order.shippingAddress && order.shippingAddress.email) || localStorage.getItem('nativa_user_email') || 'samueldpp12@gmail.com';
+      const email = (order.shippingAddress && order.shippingAddress.email) || localStorage.getItem('nativa_user_email') || 'cliente@nativa.com';
       if (recipientView) recipientView.textContent = `Para: ${email}`;
 
       const itemsHtml = (order.items || []).map(item => `
@@ -1856,6 +2338,12 @@
 
     // Inicializar datos al cargar la página
     updateCartBadge();
+    loadUserNotifications();
+    // Sondeo periódico en segundo plano para novedades de pedidos en tiempo real
+    setInterval(() => {
+      loadUserNotifications();
+      syncOrdersWithServer();
+    }, 12000);
 
     const logoutModalOverlay = document.getElementById('logout-confirm-overlay');
     if (logoutModalOverlay) {

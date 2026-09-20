@@ -366,6 +366,13 @@
           <h2 class="card-title">Crear Cuenta</h2>
           <p class="card-subtitle">Únete a Nativa y comienza tu camino hacia un bienestar natural</p>
 
+          <div id="tracking-redirect-alert" style="display: none; background: #ECFDF5; border: 1.5px solid #A7F3D0; color: #065F46; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.4;">
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: #1b3d2e;">
+              <i class="fas fa-truck-moving" style="color: #285943; font-size: 16px;"></i> Rastrear Pedido
+            </div>
+            <span>Crea tu cuenta para acceder al seguimiento en tiempo real de tu pedido <strong>#<span id="banner-target-order"></span></strong>.</span>
+          </div>
+
           <form onsubmit="handleAuthSubmit(event)">
             <div class="form-row">
               <div class="form-group">
@@ -439,7 +446,7 @@
             </div>
 
             <div class="auth-footer">
-              ¿Ya tienes cuenta? <a href="login.html">Inicia sesión aquí</a>
+              ¿Ya tienes cuenta? <a href="login.html" id="link-to-login">Inicia sesión aquí</a>
             </div>
           </form>
         </div>
@@ -470,6 +477,15 @@
       }
     }
 
+    function getPostAuthRedirectUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect');
+      const order = urlParams.get('order');
+      if (redirect) return redirect;
+      if (order) return `perfil.html?order=${encodeURIComponent(order)}`;
+      return 'perfil.html';
+    }
+
     // Escuchar el evento postMessage desde la ventana emergente
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'OAUTH_AUTH_SUCCESS') {
@@ -477,9 +493,13 @@
         const provider = event.data.provider || 'Google';
 
         // Guardar datos autenticados en el navegador
-        localStorage.setItem('nativa_user_email', user.email || 'samueldpp12@gmail.com');
-        localStorage.setItem('nativa_user_name', user.name || 'Samuel');
-        localStorage.setItem('nativa_user_lastname', user.lastname || 'Pacheco');
+        const authEmail = user.email || 'cliente@nativa.com';
+        const authName = user.name || 'Cliente';
+        const authLastname = user.lastname || 'Nativa';
+
+        localStorage.setItem('nativa_user_email', authEmail);
+        localStorage.setItem('nativa_user_name', authName);
+        localStorage.setItem('nativa_user_lastname', authLastname);
         localStorage.setItem('nativa_auth_provider', provider);
 
         // Registro social con sesión activa por 1 semana
@@ -487,8 +507,20 @@
         localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
         localStorage.setItem('nativa_remember_me', 'true');
 
+        // Sincronizar en Firebase Firestore
+        fetch('/api/users/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authEmail,
+            name: authName,
+            lastname: authLastname,
+            provider: provider
+          })
+        }).catch(err => console.warn('Sync notice:', err));
+
         setTimeout(() => {
-          window.location.href = 'perfil.html';
+          window.location.href = getPostAuthRedirectUrl();
         }, 400);
       }
     });
@@ -535,6 +567,12 @@
         if(input.placeholder && input.placeholder.toLowerCase().includes('apellido')) lastnameInput = input.value;
       });
       
+      const cleanEmail = (emailInput || '').trim().toLowerCase();
+      if (cleanEmail === 'samueldpp12@gmail.com') {
+        alert('Este correo está reservado exclusivamente para el Administrador del sistema. Si eres el administrador, ingresa por el portal administrativo (admin.html).');
+        return false;
+      }
+
       if(emailInput) {
         localStorage.setItem('nativa_user_email', emailInput);
       }
@@ -545,10 +583,45 @@
         localStorage.setItem('nativa_user_lastname', lastnameInput);
       }
       
-      window.location.href = 'perfil.html';
+      // Sesión de 1 semana
+      const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+      localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
+      localStorage.setItem('nativa_remember_me', 'true');
+
+      if(emailInput) {
+        fetch('/api/users/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: emailInput,
+            name: nameInput || '',
+            lastname: lastnameInput || '',
+            provider: 'password'
+          })
+        }).catch(err => console.warn('Sync notice:', err));
+      }
+
+      window.location.href = getPostAuthRedirectUrl();
     }
 
     document.addEventListener('DOMContentLoaded', () => {
+      // Si viene con orden a rastrear, mostrar aviso y preservar parámetros en enlace a login
+      const urlParams = new URLSearchParams(window.location.search);
+      const orderId = urlParams.get('order') || (urlParams.get('redirect') && urlParams.get('redirect').includes('order=') ? decodeURIComponent(urlParams.get('redirect').split('order=')[1].split('&')[0]) : null);
+      if (orderId) {
+        const trackingAlert = document.getElementById('tracking-redirect-alert');
+        const orderSpan = document.getElementById('banner-target-order');
+        if (trackingAlert && orderSpan) {
+          orderSpan.textContent = orderId;
+          trackingAlert.style.display = 'block';
+        }
+
+        const loginLink = document.getElementById('link-to-login');
+        if (loginLink) {
+          loginLink.href = `login.html?redirect=${encodeURIComponent('perfil.html?order=' + orderId)}&order=${encodeURIComponent(orderId)}`;
+        }
+      }
+
       const termsCheck = document.getElementById('reg-terms-check');
       const termsError = document.getElementById('terms-error-msg');
       const labelCheckbox = document.getElementById('label-terms-checkbox');

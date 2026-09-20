@@ -1,1 +1,97 @@
-[]
+[
+  {
+    "id": "NAT-TC-389423",
+    "date": "19/09/2026",
+    "dateDisplay": "Hoy",
+    "status": "En Tránsito",
+    "currentStep": 3,
+    "method": "tarjeta",
+    "paymentStatus": "aprobado",
+    "guide": "SE-94827104CO",
+    "carrier": "Servientrega Express",
+    "shippingAddress": {
+      "fullName": "Carlos Mendez",
+      "email": "carlos.mendez@gmail.com",
+      "phone": "+57 300 542 7742",
+      "department": "Huila",
+      "city": "Garzón",
+      "direccion": "Calle 7 # 12-45 Barrio Las Delicias"
+    },
+    "items": [
+      {
+        "name": "Granola Nativa Artesanal",
+        "price": 18500,
+        "qty": 1
+      },
+      {
+        "name": "Miel de Montaña Pura",
+        "price": 22000,
+        "qty": 1
+      }
+    ],
+    "total": 40500,
+    "totalFormatted": "$40.500 COP",
+    "lastUpdated": "2026-09-20T20:53:43.364Z"
+  },
+  {
+    "id": "NAT-TEST-34385",
+    "date": "18/09/2026",
+    "dateDisplay": "Ayer",
+    "status": "Esperando Pago",
+    "currentStep": 1,
+    "total": 55400,
+    "totalFormatted": "$55.400 COP",
+    "shippingAddress": {
+      "fullName": "Carolina Herrera",
+      "email": "carolina.h@gmail.com",
+      "phone": "+57 312 884 1920",
+      "city": "Medellín",
+      "department": "Antioquia",
+      "direccion": "Cra 43A # 18 Sur - 60"
+    },
+    "items": [
+      {
+        "name": "Granola Nativa Artesanal",
+        "price": 18500,
+        "qty": 2
+      },
+      {
+        "name": "Infusión Relax y Calma",
+        "price": 14500,
+        "qty": 1
+      }
+    ],
+    "lastUpdated": "2026-09-18T14:56:56.467Z"
+  },
+  {
+    "id": "NAT-ENV-90214",
+    "date": "17/09/2026",
+    "dateDisplay": "17 Sep 2026",
+    "status": "En Tránsito",
+    "currentStep": 3,
+    "guide": "ENV-9912048CO",
+    "total": 68000,
+    "totalFormatted": "$68.000 COP",
+    "shippingAddress": {
+      "fullName": "Andrés Felipe Gómez",
+      "email": "af.gomez@hotmail.com",
+      "phone": "+57 315 772 3341",
+      "city": "Bogotá D.C.",
+      "department": "Cundinamarca",
+      "direccion": "Calle 116 # 15-28 Apto 402"
+    },
+    "items": [
+      {
+        "name": "Aceite de Coco Extravirgen",
+        "price": 24500,
+        "qty": 2
+      },
+      {
+        "name": "Vinagre de Manzana Artesanal",
+        "price": 15600,
+        "qty": 1
+      }
+    ],
+    "lastUpdated": "2026-09-17T16:20:00.000Z"
+  }
+]

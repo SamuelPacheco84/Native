@@ -1215,7 +1215,7 @@
     }
 
     // Búsqueda manual de orden
-    function handleSearchTracking(e) {
+    async function handleSearchTracking(e) {
       if (e && e.preventDefault) e.preventDefault();
       const input = document.getElementById('tracking-search-input');
       if (!input) return;
@@ -1223,10 +1223,26 @@
       if (!query) return;
 
       const orders = getStoredOrders();
-      const found = orders.find(o => 
+      let found = orders.find(o => 
         (o.id && o.id.toLowerCase() === query.toLowerCase()) || 
         (o.guide && o.guide.toLowerCase() === query.toLowerCase())
       );
+
+      // Si no está en local, buscar en la base de datos de pedidos
+      if (!found) {
+        try {
+          const res = await fetch('/api/orders');
+          const data = await res.json();
+          if (data && data.orders) {
+            found = data.orders.find(o => 
+              (o.id && String(o.id).toLowerCase() === query.toLowerCase()) || 
+              (o.guide && String(o.guide).toLowerCase() === query.toLowerCase())
+            );
+          }
+        } catch (err) {
+          console.warn('Error al consultar pedidos:', err);
+        }
+      }
 
       // Actualizar URL sin recargar
       const newUrl = `${window.location.pathname}?order=${encodeURIComponent(query)}`;

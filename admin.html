@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración | Nativa Productos Naturales</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #285943;
+      --primary-dark: #1b3d2e;
+      --primary-light: #e8f0ec;
+      --primary-accent: #3a7d5f;
+      --bg: #F4F1EA;
+      --surface: #FFFFFF;
+      --surface-alt: #F9F7F2;
+      --border: #E5DFC8;
+      --text: #2D312E;
+      --text-muted: #6B726C;
+      --accent-gold: #D4A373;
+      --accent-warning: #D97706;
+      --accent-danger: #DC2626;
+      --accent-success: #16A34A;
+      --radius: 12px;
+      --shadow-sm: 0 2px 6px rgba(0,0,0,0.04);
+      --shadow: 0 8px 24px rgba(40,89,67,0.08);
+      --shadow-lg: 0 16px 36px rgba(40,89,67,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* PANTALLA DE LOGIN ADMINISTRADOR */
+    #admin-login-screen {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(135deg, #1b3d2e 0%, #285943 50%, #3a7d5f 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    #admin-login-screen::before {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(212,163,115,0.18) 0%, rgba(255,255,255,0) 70%);
+      top: -100px;
+      right: -100px;
+      border-radius: 50%;
+    }
+
+    .login-card {
+      background: var(--surface);
+      width: 100%;
+      max-width: 440px;
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+      position: relative;
+      z-index: 2;
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+    }
+
+    .login-header h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 26px;
+      color: var(--primary-dark);
+      margin-bottom: 6px;
+    }
+
+    .login-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .input-box {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .input-box i.icon {
+      position: absolute;
+      left: 14px;
+      color: #9CA3AF;
+      font-size: 15px;
+    }
+
+    .input-box input {
+      width: 100%;
+      padding: 13px 40px 13px 40px;
+      border: 1.5px solid #E5E7EB;
+      border-radius: 10px;
+      font-size: 14px;
+      color: var(--text);
+      transition: all 0.2s;
+      background: #FAFAFA;
+    }
+
+    .input-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: #FFFFFF;
+      box-shadow: 0 0 0 4px rgba(40,89,67,0.12);
+    }
+
+    .input-box .toggle-pwd {
+      position: absolute;
+      right: 14px;
+      color: #9CA3AF;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .btn-login {
+      width: 100%;
+      padding: 14px;
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 14px rgba(40,89,67,0.25);
+    }
+
+    .btn-login:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .login-error {
+      background: #FEF2F2;
+      border: 1px solid #FCA5A5;
+      color: #B91C1C;
+      padding: 12px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 18px;
+      display: none;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .login-hint {
+      margin-top: 24px;
+      padding-top: 18px;
+      border-top: 1px dashed #E5E7EB;
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* PANEL PRINCIPAL (SE MUESTRA TRAS AUTENTICACIÓN) */
+    #admin-dashboard {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* TOP BAR */
+    .admin-navbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .admin-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: var(--primary-dark);
+    }
+
+    .brand-logo-circle {
+      width: 42px;
+      height: 42px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .brand-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    .brand-tag {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .admin-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .admin-user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+    }
+
+    .admin-avatar {
+      width: 30px;
+      height: 30px;
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .btn-outline-action {
+      background: transparent;
+      border: 1.5px solid var(--border);
+      color: var(--text);
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-outline-action:hover {
+      background: var(--surface-alt);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-logout {
+      background: #FEF2F2;
+      border: 1.5px solid #FCA5A5;
+      color: #B91C1C;
+    }
+
+    .btn-logout:hover {
+      background: #FEE2E2;
+      border-color: #EF4444;
+      color: #991B1B;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .admin-container {
+      max-width: 1400px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 28px 24px;
+      flex: 1;
+    }
+
+    /* HEADER & STATS CARDS */
+    .dashboard-header {
+      margin-bottom: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .dashboard-header h2 {
+      font-size: 24px;
+      font-family: 'Playfair Display', Georgia, serif;
+      color: var(--primary-dark);
+    }
+
+    .dashboard-header p {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      margin-bottom: 32px;
+    }
+
+    .metric-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: transform 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow);
+    }
+
+    .metric-info h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .metric-info .metric-value {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--primary-dark);
+    }
+
+    .metric-info .metric-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .metric-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .metric-orders { background: #ECFDF5; color: var(--accent-success); }
+    .metric-pending { background: #FFFBEB; color: var(--accent-warning); }
+    .metric-products { background: #EFF6FF; color: #2563EB; }
+    .metric-stock { background: #FEF2F2; color: var(--accent-danger); }
+
+    /* PESTAÑAS DE NAVEGACIÓN DEL PANEL */
+    .admin-tabs {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--border);
+      margin-bottom: 24px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 12px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover {
+      color: var(--primary);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+      background: var(--surface);
+      border-top-left-radius: 8px;
+      border-top-right-radius: 8px;
+    }
+
+    .tab-badge {
+      background: var(--accent-warning);
+      color: #fff;
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 12px;
+      font-weight: 800;
+    }
+
+    /* CONTENIDO DE PESTAÑAS */
+    .tab-pane {
+      display: none;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    /* ACCIONES DE CATÁLOGO / PRODUCTOS */
+    .section-toolbar {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .search-filter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 260px;
+    }
+
+    .search-input-box {
+      position: relative;
+      flex: 1;
+      max-width: 400px;
+    }
+
+    .search-input-box i {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #9CA3AF;
+    }
+
+    .search-input-box input {
+      width: 100%;
+      padding: 10px 14px 10px 38px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    .search-input-box input:focus {
+      outline: none;
+      border-color: var(--primary);
+    }
+
+    .filter-select {
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .btn-primary-action {
+      background: var(--primary);
+      color: #fff;
+      border: none;
+      padding: 11px 22px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+
+    .btn-primary-action:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    /* TABLA DE PRODUCTOS */
+    .table-container {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 14px;
+    }
+
+    .data-table th {
+      background: var(--surface-alt);
+      padding: 14px 16px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      border-bottom: 1.5px solid var(--border);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid #E5E7EB;
+      vertical-align: middle;
+    }
+
+    .data-table tr:hover {
+      background: #FDFBF7;
+    }
+
+    .product-thumb {
+      width: 52px;
+      height: 52px;
+      border-radius: 8px;
+      object-fit: cover;
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+    }
+
+    .product-meta h5 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .product-meta p {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .stock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .stock-ok { background: #DCFCE7; color: #15803D; }
+    .stock-low { background: #FEF3C7; color: #B45309; }
+    .stock-empty { background: #FEE2E2; color: #B91C1C; }
+
+    .quick-stock-ctrl {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-stock-adjust {
+      width: 26px;
+      height: 26px;
+      border: 1px solid var(--border);
+      background: #fff;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      cursor: pointer;
+      color: var(--text);
+    }
+
+    .btn-stock-adjust:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .table-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-tbl-action {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      background: #fff;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .btn-tbl-edit { color: var(--primary); }
+    .btn-tbl-edit:hover { background: var(--primary-light); border-color: var(--primary); }
+
+    .btn-tbl-delete { color: var(--accent-danger); }
+    .btn-tbl-delete:hover { background: #FEE2E2; border-color: #EF4444; }
+
+    /* ESTILOS DE PEDIDOS */
+    .order-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .status-badge-pending { background: #FEF3C7; color: #B45309; }
+    .status-badge-transit { background: #DBEAFE; color: #1D4ED8; }
+    .status-badge-delivered { background: #DCFCE7; color: #15803D; }
+
+    .status-selector {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      font-size: 13px;
+      background: #fff;
+      font-weight: 600;
+    }
+
+    /* MODALES DE CREACIÓN Y EDICIÓN */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.55);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 20px;
+    }
+
+    .modal-card {
+      background: var(--surface);
+      width: 100%;
+      max-width: 620px;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid var(--border);
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .modal-header h3 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 20px;
+      color: var(--primary-dark);
+    }
+
+    .btn-close-modal {
+      background: transparent;
+      border: none;
+      font-size: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+      background: var(--surface-alt);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .image-preview-box {
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 10px;
+      background: var(--surface-alt);
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+
+    .image-preview-thumb {
+      width: 60px;
+      height: 60px;
+      border-radius: 6px;
+      object-fit: cover;
+      background: #fff;
+    }
+
+    /* TOAST NOTIFICACIÓN */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--primary-dark);
+      color: #fff;
+      padding: 14px 22px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 2000;
+    }
+
+    .toast-msg.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 768px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+      .admin-navbar {
+        padding: 12px 16px;
+      }
+      .admin-container {
+        padding: 16px;
+      }
+      .section-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-filter-wrap {
+        flex-direction: column;
+      }
+      .search-input-box {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- PANTALLA DE ACCESO ADMINISTRATIVO (BLOQUEO ESTRICTO DE CREDENCIALES) -->
+  <section id="admin-login-screen">
+    <div class="login-card">
+      <div class="login-header">
+        <img src="img/logo.png" alt="Nativa Natural" style="height: 54px; width: auto; object-fit: contain; margin-bottom: 14px; display: block; margin-left: auto; margin-right: auto;">
+        <div class="login-badge">
+          <i class="fas fa-shield-alt"></i> Portal Administrativo
+        </div>
+        <h1>Nativa Natural</h1>
+        <p>Ingreso exclusivo para la administración de la tienda</p>
+      </div>
+
+      <div id="login-error-box" class="login-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <span id="login-error-text">Credenciales incorrectas. Verifique correo y contraseña.</span>
+      </div>
+
+      <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico de Administrador</label>
+          <div class="input-box">
+            <i class="fas fa-envelope icon"></i>
+            <input type="email" id="admin-email" placeholder="samueldpp12@gmail.com" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contraseña de Administrador</label>
+          <div class="input-box">
+            <i class="fas fa-lock icon"></i>
+            <input type="password" id="admin-password" placeholder="••••••••••••" required autocomplete="current-password">
+            <i class="far fa-eye toggle-pwd" onclick="toggleAdminPwd()"></i>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-login" id="btn-admin-submit">
+          <i class="fas fa-key"></i> Entrar al Panel de Control
+        </button>
+      </form>
+
+      <div class="login-hint">
+        🔒 Acceso restringido. Solo el administrador asignado tiene autorización para gestionar el catálogo, los pedidos y el inventario.
+        <br><br>
+        <a href="index.html" style="color: var(--primary); text-decoration: underline;">Volver a la Tienda Pública</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PANEL DE ADMINISTRACIÓN COMPLETO -->
+  <div id="admin-dashboard">
+    <!-- BARRA SUPERIOR -->
+    <header class="admin-navbar">
+      <a href="index.html" class="admin-brand" style="display: flex; align-items: center; text-decoration: none;">
+        <img src="img/logo.png" alt="Nativa Natural" class="admin-header-logo" style="height: 42px; width: auto; object-fit: contain; margin-right: 12px;">
+        <div>
+          <div class="brand-title">Nativa</div>
+          <div class="brand-tag">Panel de Administración</div>
+        </div>
+      </a>
+
+      <div class="admin-nav-actions">
+        <div class="admin-user-badge" style="cursor: pointer;" onclick="switchAdminTab('perfil')" title="Ir a editar mi perfil">
+          <div class="admin-avatar" id="admin-nav-avatar">S</div>
+          <div>
+            <strong id="admin-user-name">Samuel De Paula</strong>
+            <div style="font-size: 11px; color: var(--text-muted);" id="admin-user-email">samueldpp12@gmail.com</div>
+          </div>
+        </div>
+
+        <a href="index.html" target="_blank" class="btn-outline-action" title="Ver tienda pública">
+          <i class="fas fa-external-link-alt"></i> Tienda
+        </a>
+
+        <button type="button" class="btn-outline-action btn-logout" id="btn-admin-logout" onclick="handleAdminLogout()" title="Cerrar sesión de administrador">
+          <i class="fas fa-sign-out-alt"></i> Salir
+        </button>
+      </div>
+    </header>
+
+    <!-- CONTENEDOR CENTRAL -->
+    <main class="admin-container">
+      <div class="dashboard-header">
+        <div>
+          <h2>Gestión General del Negocio</h2>
+          <p>Control de productos, actualización de pedidos pendientes y métricas de inventario.</p>
+        </div>
+        <div>
+          <button type="button" class="btn-primary-action" onclick="openCreateProductModal()">
+            <i class="fas fa-plus"></i> Agregar Nuevo Producto
+          </button>
+        </div>
+      </div>
+
+      <!-- MÉTRICAS EN TIEMPO REAL -->
+      <section class="metrics-grid">
+        <div class="metric-card">
+          <div class="metric-info">
+            <h4>Pedidos Pendientes</h4>
+            <div class="metric-value" id="metric-pending-count">0</div>
+            <div class="metric-sub">Requieren alistamiento o envío</div>
+          </div>
+          <div class="metric-icon-box metric-pending">
+            <i class="fas fa-hourglass-half"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-info">
+            <h4>Productos en Catálogo</h4>
+            <div class="metric-value" id="metric-products-count">12</div>
+            <div class="metric-sub">Activos en la tienda en línea</div>
+          </div>
+          <div class="metric-icon-box metric-products">
+            <i class="fas fa-boxes"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-info">
+            <h4>Alertas de Stock Bajo</h4>
+            <div class="metric-value" id="metric-low-stock-count" style="color: var(--accent-danger);">0</div>
+            <div class="metric-sub">Menos de 10 unidades en bodega</div>
+          </div>
+          <div class="metric-icon-box metric-stock">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+        </div>
+
+        <div class="metric-card">
+          <div class="metric-info">
+            <h4>Ingresos por Ventas</h4>
+            <div class="metric-value" id="metric-revenue">$0</div>
+            <div class="metric-sub">Total de pedidos registrados</div>
+          </div>
+          <div class="metric-icon-box metric-orders">
+            <i class="fas fa-dollar-sign"></i>
+          </div>
+        </div>
+      </section>
+
+      <!-- PESTAÑAS DE NAVEGACIÓN -->
+      <nav class="admin-tabs">
+        <button type="button" class="tab-btn active" data-tab="productos" onclick="switchAdminTab('productos')">
+          <i class="fas fa-cubes"></i> 1. Catálogo de Productos (<span id="tab-prod-count">12</span>)
+        </button>
+        <button type="button" class="tab-btn" data-tab="pedidos" onclick="switchAdminTab('pedidos')">
+          <i class="fas fa-truck-loading"></i> 2. Pedidos y Envíos
+          <span class="tab-badge" id="tab-orders-badge">0</span>
+        </button>
+        <button type="button" class="tab-btn" data-tab="inventario" onclick="switchAdminTab('inventario')">
+          <i class="fas fa-warehouse"></i> 3. Stock e Inventario
+        </button>
+        <button type="button" class="tab-btn" data-tab="usuarios" onclick="switchAdminTab('usuarios')">
+          <i class="fas fa-users"></i> 4. Clientes Registrados
+        </button>
+        <button type="button" class="tab-btn" data-tab="perfil" onclick="switchAdminTab('perfil')">
+          <i class="fas fa-user-cog"></i> 5. Mi Perfil
+        </button>
+      </nav>
+
+      <!-- TAB 1: GESTIÓN DE PRODUCTOS -->
+      <section id="tab-pane-productos" class="tab-pane active">
+        <div class="section-toolbar">
+          <div class="search-filter-wrap">
+            <div class="search-input-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="prod-search" placeholder="Buscar por nombre o descripción..." oninput="filterProductsTable()">
+            </div>
+            <select id="prod-cat-filter" class="filter-select" onchange="filterProductsTable()">
+              <option value="all">Todas las categorías</option>
+              <option value="Despensa Natural">Despensa Natural</option>
+              <option value="Miel & Dulces">Miel & Dulces</option>
+              <option value="Tés & Infusiones">Tés & Infusiones</option>
+              <option value="Frutos Secos">Frutos Secos</option>
+            </select>
+          </div>
+
+          <button type="button" class="btn-primary-action" onclick="openCreateProductModal()">
+            <i class="fas fa-plus-circle"></i> Nuevo Producto
+          </button>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 70px;">Imagen</th>
+                <th>Nombre & Descripción</th>
+                <th>Categoría</th>
+                <th>Precio (COP)</th>
+                <th>Stock Disponible</th>
+                <th>Estado</th>
+                <th style="text-align: right;">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-table-body">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 8px;"></i>
+                  <div>Cargando productos del catálogo...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 2: GESTIÓN DE PEDIDOS Y ENVÍOS -->
+      <section id="tab-pane-pedidos" class="tab-pane">
+        <div class="section-toolbar">
+          <div class="search-filter-wrap">
+            <div class="search-input-box">
+              <i class="fas fa-search"></i>
+              <input type="text" id="orders-search" placeholder="Buscar por ID de orden o cliente..." oninput="filterOrdersTable()">
+            </div>
+            <select id="orders-status-filter" class="filter-select" onchange="filterOrdersTable()">
+              <option value="all">Todos los estados</option>
+              <option value="pending">Solo Pendientes / En Preparación</option>
+              <option value="transit">En Tránsito</option>
+              <option value="delivered">Entregados</option>
+            </select>
+          </div>
+          <div>
+            <button type="button" class="btn-outline-action" onclick="loadAdminOrders()">
+              <i class="fas fa-sync-alt"></i> Actualizar Pedidos
+            </button>
+          </div>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>ID Orden</th>
+                <th>Fecha</th>
+                <th>Cliente & Contacto</th>
+                <th>Destino</th>
+                <th>Artículos</th>
+                <th>Total</th>
+                <th>Estado del Envío</th>
+                <th style="text-align: right;">Rastreo</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <tr>
+                <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                  Cargando pedidos...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 3: STOCK E INVENTARIO RÁPIDO -->
+      <section id="tab-pane-inventario" class="tab-pane">
+        <div class="section-toolbar">
+          <h3 style="font-size: 16px; color: var(--primary-dark);">Control Rápido de Bodega</h3>
+          <p style="font-size: 13px; color: var(--text-muted);">Ajusta rápidamente las cantidades en stock de cada producto con un solo clic.</p>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Categoría</th>
+                <th>Stock Actual</th>
+                <th>Ajuste Directo (+ / -)</th>
+                <th>Nivel</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-table-body">
+              <!-- Se puebla dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 4: CLIENTES REGISTRADOS -->
+      <section id="tab-pane-usuarios" class="tab-pane">
+        <div class="section-toolbar">
+          <h3 style="font-size: 16px; color: var(--primary-dark);">Clientes Registrados en Nativa</h3>
+          <p style="font-size: 13px; color: var(--text-muted);">Usuarios sincronizados a través de Google, Facebook o registro directo.</p>
+        </div>
+
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Nombre</th>
+                <th>Correo Electrónico</th>
+                <th>Teléfono</th>
+                <th>Proveedor</th>
+                <th>Fecha de Registro</th>
+              </tr>
+            </thead>
+            <tbody id="users-table-body">
+              <!-- Se puebla dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- TAB 5: PERFIL DEL ADMINISTRADOR -->
+      <section id="tab-pane-perfil" class="tab-pane">
+        <div style="background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 32px; max-width: 760px; margin: 0 auto; box-shadow: var(--shadow-sm);">
+          <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--border);">
+            <div style="width: 56px; height: 56px; border-radius: 50%; background: var(--primary); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 700; box-shadow: var(--shadow-sm);" id="admin-perfil-avatar">
+              S
+            </div>
+            <div>
+              <h3 style="font-family: 'Playfair Display', Georgia, serif; font-size: 22px; color: var(--primary-dark);">Editar Perfil de Administrador</h3>
+              <p style="font-size: 13px; color: var(--text-muted); margin-top: 3px;">Configura tu nombre, contraseña de acceso y correo electrónico administrativo.</p>
+            </div>
+          </div>
+
+          <!-- Mensajes dinámicos de éxito, error o confirmación de correo -->
+          <div id="admin-perfil-alert" style="display: none; margin-bottom: 22px; padding: 14px 18px; border-radius: 10px; font-size: 14px; line-height: 1.5;"></div>
+
+          <form id="admin-perfil-form" onsubmit="handleAdminProfileSubmit(event)">
+            <div class="form-grid-2">
+              <div class="form-group">
+                <label class="form-label" for="admin-perfil-name">Nombre *</label>
+                <input type="text" id="admin-perfil-name" class="filter-select" style="width: 100%;" required placeholder="Samuel">
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="admin-perfil-lastname">Apellido *</label>
+                <input type="text" id="admin-perfil-lastname" class="filter-select" style="width: 100%;" required placeholder="De Paula">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 6px;">
+              <label class="form-label" for="admin-perfil-email">
+                Correo Electrónico de Administrador *
+                <span style="font-size: 11px; color: var(--primary-accent); font-weight: 600; margin-left: 6px;">(si se cambia, se enviará confirmación al nuevo correo y al confirmarlo se actualizará automáticamente)</span>
+              </label>
+              <input type="email" id="admin-perfil-email" class="filter-select" style="width: 100%;" required placeholder="samueldpp12@gmail.com">
+            </div>
+
+            <div class="form-grid-2" style="margin-top: 10px;">
+              <div class="form-group">
+                <label class="form-label" for="admin-perfil-password">Nueva Contraseña (opcional)</label>
+                <div class="input-box" style="position: relative;">
+                  <input type="password" id="admin-perfil-password" placeholder="Mínimo 6 caracteres" style="width: 100%; padding-right: 42px;">
+                  <button type="button" onclick="toggleFieldPassword('admin-perfil-password', this)" style="position: absolute; right: 12px; background: none; border: none; color: #9CA3AF; cursor: pointer; font-size: 14px;">
+                    <i class="far fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="admin-perfil-password-confirm">Confirmar Nueva Contraseña</label>
+                <div class="input-box" style="position: relative;">
+                  <input type="password" id="admin-perfil-password-confirm" placeholder="Repite la nueva contraseña" style="width: 100%; padding-right: 42px;">
+                  <button type="button" onclick="toggleFieldPassword('admin-perfil-password-confirm', this)" style="position: absolute; right: 12px; background: none; border: none; color: #9CA3AF; cursor: pointer; font-size: 14px;">
+                    <i class="far fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 24px; display: flex; justify-content: flex-end; gap: 12px;">
+              <button type="button" class="btn-outline-action" onclick="switchAdminTab('productos')">Volver al Catálogo</button>
+              <button type="submit" class="btn-primary-action" id="btn-save-admin-profile" style="padding: 12px 26px;">
+                <i class="fas fa-save"></i> Guardar Cambios de Perfil
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- MODAL PARA AGREGAR O EDITAR PRODUCTO -->
+  <div id="product-modal" class="modal-overlay">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-product-title">Agregar Nuevo Producto</h3>
+        <button type="button" class="btn-close-modal" onclick="closeProductModal()">&times;</button>
+      </div>
+      <form id="product-form" onsubmit="handleProductSubmit(event)">
+        <input type="hidden" id="prod-id-field">
+
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Nombre del Producto *</label>
+            <input type="text" id="prod-name-field" class="filter-select" style="width: 100%;" required placeholder="Ej. Granola Nativa Artesanal">
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Precio en Pesos COP ($) *</label>
+              <input type="number" id="prod-price-field" class="filter-select" style="width: 100%;" required min="0" step="100" placeholder="Ej. 18500">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Stock / Cantidad Inicial *</label>
+              <input type="number" id="prod-stock-field" class="filter-select" style="width: 100%;" required min="0" placeholder="Ej. 25">
+            </div>
+          </div>
+
+          <div class="form-grid-2">
+            <div class="form-group">
+              <label class="form-label">Categoría *</label>
+              <select id="prod-category-field" class="filter-select" style="width: 100%;">
+                <option value="Despensa Natural">Despensa Natural</option>
+                <option value="Miel & Dulces">Miel & Dulces</option>
+                <option value="Tés & Infusiones">Tés & Infusiones</option>
+                <option value="Frutos Secos">Frutos Secos</option>
+                <option value="Cuidado Personal">Cuidado Personal</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Distintivo / Badge</label>
+              <input type="text" id="prod-badge-field" class="filter-select" style="width: 100%;" placeholder="Ej. 100% Orgánico, Tostado Lento">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Descripción del Producto</label>
+            <textarea id="prod-desc-field" class="filter-select" style="width: 100%; height: 80px; resize: vertical;" placeholder="Detalles de elaboración, ingredientes naturales y beneficios..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Imagen del Producto</label>
+            <input type="text" id="prod-image-field" class="filter-select" style="width: 100%;" placeholder="Ruta o URL (ej: img/productos/Granola_Nativa.png)" oninput="updateImagePreview()">
+            
+            <div style="margin-top: 8px; font-size: 12px; color: var(--text-muted);">
+              O subir una imagen desde tu dispositivo:
+            </div>
+            <input type="file" id="prod-file-input" accept="image/*" style="margin-top: 6px; font-size: 13px;" onchange="handleFileImageUpload(event)">
+
+            <div class="image-preview-box">
+              <img id="image-preview-element" src="img/productos/Granola_Nativa.png" class="image-preview-thumb" alt="Vista previa">
+              <div style="font-size: 13px;">
+                <strong>Vista Previa de la Imagen</strong>
+                <div style="font-size: 11px; color: var(--text-muted);">Se mostrará a los clientes en la tienda virtual</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn-outline-action" onclick="closeProductModal()">Cancelar</button>
+          <button type="submit" class="btn-primary-action" id="btn-save-product">
+            <i class="fas fa-save"></i> Guardar Producto
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- NOTIFICACIÓN TOAST -->
+  <div id="toast" class="toast-msg">
+    <i class="fas fa-check-circle"></i>
+    <span id="toast-text">Acción realizada exitosamente</span>
+  </div>
+
+  <script>
+    // CREDENCIALES ESTRICTAS ASIGNADAS
+    const ADMIN_CREDENTIALS = {
+      email: 'samueldpp12@gmail.com',
+      password: 'SuperPassword123'
+    };
+
+    let allProducts = [];
+    let allOrders = [];
+    let allUsers = [];
+
+    // Formatear pesos colombianos
+    function formatCOP(num) {
+      return '$' + Number(num || 0).toLocaleString('es-CO');
+    }
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      const toastText = document.getElementById('toast-text');
+      if (!toast) return;
+      toastText.textContent = message;
+      toast.style.background = isError ? '#B91C1C' : '#1b3d2e';
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+    }
+
+    function toggleAdminPwd() {
+      const pwdInput = document.getElementById('admin-password');
+      if (pwdInput.type === 'password') {
+        pwdInput.type = 'text';
+      } else {
+        pwdInput.type = 'password';
+      }
+    }
+
+    // GESTIÓN DE ACCESO ESTRICTO
+    async function handleAdminLogin(e) {
+      if (e) e.preventDefault();
+      const emailInput = document.getElementById('admin-email').value.trim();
+      const passInput = document.getElementById('admin-password').value;
+      const errorBox = document.getElementById('login-error-box');
+      const errorText = document.getElementById('login-error-text');
+      const submitBtn = document.getElementById('btn-admin-submit');
+
+      errorBox.style.display = 'none';
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+
+      try {
+        const response = await fetch('/api/admin/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailInput, password: passInput })
+        });
+
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          // Guardar sesión administrativa
+          localStorage.setItem('nativa_admin_token', data.token);
+          localStorage.setItem('nativa_admin_email', data.admin.email);
+          localStorage.setItem('nativa_admin_name', data.admin.name);
+
+          // Mostrar Dashboard
+          showDashboardView();
+          showToast('Bienvenido, Samuel. Panel de Administración activo.');
+        } else {
+          errorText.textContent = data.message || 'Credenciales no autorizadas. Acceso denegado.';
+          errorBox.style.display = 'flex';
+          submitBtn.innerHTML = '<i class="fas fa-key"></i> Entrar al Panel de Control';
+        }
+      } catch (err) {
+        // Validación local de respaldo si el servidor no responde
+        if (emailInput.toLowerCase() === ADMIN_CREDENTIALS.email.toLowerCase() && passInput === ADMIN_CREDENTIALS.password) {
+          const fakeToken = 'nat_adm_local_' + Date.now();
+          localStorage.setItem('nativa_admin_token', fakeToken);
+          localStorage.setItem('nativa_admin_email', ADMIN_CREDENTIALS.email);
+          localStorage.setItem('nativa_admin_name', 'Samuel De Paula');
+          showDashboardView();
+        } else {
+          errorText.textContent = 'Credenciales no válidas. Ingrese con el correo y contraseña autorizados.';
+          errorBox.style.display = 'flex';
+        }
+        submitBtn.innerHTML = '<i class="fas fa-key"></i> Entrar al Panel de Control';
+      }
+    }
+
+    function checkAdminSession() {
+      const token = localStorage.getItem('nativa_admin_token');
+      const email = localStorage.getItem('nativa_admin_email');
+
+      if (token && email && email.toLowerCase() === ADMIN_CREDENTIALS.email.toLowerCase()) {
+        showDashboardView();
+      } else {
+        showLoginView();
+      }
+    }
+
+    function showDashboardView() {
+      document.getElementById('admin-login-screen').style.display = 'none';
+      document.getElementById('admin-dashboard').style.display = 'flex';
+      loadAdminDashboardData();
+    }
+
+    function showLoginView() {
+      document.getElementById('admin-login-screen').style.display = 'flex';
+      document.getElementById('admin-dashboard').style.display = 'none';
+    }
+
+    function handleAdminLogout() {
+      // Limpiar sesión administrativa de forma instantánea y confiable
+      localStorage.removeItem('nativa_admin_token');
+      localStorage.removeItem('nativa_admin_email');
+      localStorage.removeItem('nativa_admin_name');
+      showLoginView();
+      showToast('Sesión de administrador cerrada exitosamente.');
+    }
+
+    function getAdminHeaders() {
+      const token = localStorage.getItem('nativa_admin_token') || '';
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      };
+    }
+
+    // CARGA DE DATOS DEL PANEL
+    async function loadAdminDashboardData() {
+      await Promise.all([
+        loadAdminProducts(),
+        loadAdminOrders(),
+        loadAdminUsers(),
+        loadAdminMetrics(),
+        loadAdminProfileData()
+      ]);
+    }
+
+    // 1. CARGA Y GESTIÓN DE PRODUCTOS
+    async function loadAdminProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.products)) {
+          allProducts = data.products;
+          renderProductsTable(allProducts);
+          renderInventoryTable(allProducts);
+          updateProductsCount(allProducts.length);
+        }
+      } catch (err) {
+        console.error('Error al cargar productos:', err);
+      }
+    }
+
+    function renderProductsTable(products) {
+      const tbody = document.getElementById('products-table-body');
+      if (!tbody) return;
+
+      if (products.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              No se encontraron productos en el catálogo.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = products.map(p => {
+        const stock = Number(p.stock) || 0;
+        let stockClass = 'stock-ok';
+        let stockText = `${stock} disp.`;
+        if (stock === 0) {
+          stockClass = 'stock-empty';
+          stockText = 'Agotado (0)';
+        } else if (stock < 10) {
+          stockClass = 'stock-low';
+          stockText = `Bajo (${stock})`;
+        }
+
+        return `
+          <tr>
+            <td>
+              <img src="${p.image || 'img/productos/Granola_Nativa.png'}" class="product-thumb" alt="${p.name}" onerror="this.src='img/productos/Granola_Nativa.png'">
+            </td>
+            <td>
+              <div class="product-meta">
+                <h5>${p.name}</h5>
+                <p>${p.description ? p.description.substring(0, 75) + '...' : 'Sin descripción'}</p>
+              </div>
+            </td>
+            <td>
+              <span style="font-size: 12px; font-weight: 600; color: var(--text-muted);">${p.category || 'General'}</span>
+              ${p.badge ? `<br><span style="font-size: 10px; background: var(--surface-alt); border: 1px solid var(--border); padding: 2px 6px; border-radius: 4px;">${p.badge}</span>` : ''}
+            </td>
+            <td>
+              <strong style="color: var(--primary-dark);">${formatCOP(p.price)}</strong>
+            </td>
+            <td>
+              <div class="quick-stock-ctrl">
+                <span class="stock-badge ${stockClass}">${stockText}</span>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, -1)" title="Reducir 1">-</button>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, 1)" title="Aumentar 1">+</button>
+              </div>
+            </td>
+            <td>
+              <span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; color: ${p.active !== false ? 'var(--accent-success)' : 'var(--accent-danger)'};">
+                <i class="fas fa-circle" style="font-size: 8px;"></i> ${p.active !== false ? 'Activo' : 'Oculto'}
+              </span>
+            </td>
+            <td style="text-align: right;">
+              <div class="table-actions" style="justify-content: flex-end;">
+                <button type="button" class="btn-tbl-action btn-tbl-edit" onclick="openEditProductModal(${p.id})" title="Editar producto">
+                  <i class="fas fa-pen"></i>
+                </button>
+                <button type="button" class="btn-tbl-action btn-tbl-delete" onclick="confirmDeleteProduct(${p.id}, '${p.name.replace(/'/g, "\\'")}')" title="Eliminar producto">
+                  <i class="fas fa-trash-alt"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updateProductsCount(count) {
+      const metric = document.getElementById('metric-products-count');
+      const tabCount = document.getElementById('tab-prod-count');
+      if (metric) metric.textContent = count;
+      if (tabCount) tabCount.textContent = count;
+    }
+
+    function filterProductsTable() {
+      const query = (document.getElementById('prod-search').value || '').toLowerCase();
+      const cat = document.getElementById('prod-cat-filter').value;
+
+      const filtered = allProducts.filter(p => {
+        const matchesQuery = !query || p.name.toLowerCase().includes(query) || (p.description && p.description.toLowerCase().includes(query));
+        const matchesCat = cat === 'all' || p.category === cat;
+        return matchesQuery && matchesCat;
+      });
+
+      renderProductsTable(filtered);
+    }
+
+    // 1.1 AGREGAR PRODUCTO NUEVO (MODAL)
+    function openCreateProductModal() {
+      document.getElementById('modal-product-title').textContent = 'Agregar Nuevo Producto';
+      document.getElementById('prod-id-field').value = '';
+      document.getElementById('prod-name-field').value = '';
+      document.getElementById('prod-price-field').value = '';
+      document.getElementById('prod-stock-field').value = '20';
+      document.getElementById('prod-category-field').value = 'Despensa Natural';
+      document.getElementById('prod-badge-field').value = '100% Natural';
+      document.getElementById('prod-desc-field').value = '';
+      document.getElementById('prod-image-field').value = 'img/productos/Granola_Nativa.png';
+      document.getElementById('prod-file-input').value = '';
+      updateImagePreview();
+      document.getElementById('product-modal').style.display = 'flex';
+    }
+
+    // 1.3 EDITAR PRODUCTO (MODAL)
+    function openEditProductModal(id) {
+      const product = allProducts.find(p => p.id === id);
+      if (!product) return;
+
+      document.getElementById('modal-product-title').textContent = `Editar Producto #${product.id}`;
+      document.getElementById('prod-id-field').value = product.id;
+      document.getElementById('prod-name-field').value = product.name;
+      document.getElementById('prod-price-field').value = product.price;
+      document.getElementById('prod-stock-field').value = product.stock !== undefined ? product.stock : 20;
+      document.getElementById('prod-category-field').value = product.category || 'Despensa Natural';
+      document.getElementById('prod-badge-field').value = product.badge || '';
+      document.getElementById('prod-desc-field').value = product.description || '';
+      document.getElementById('prod-image-field').value = product.image || 'img/productos/Granola_Nativa.png';
+      document.getElementById('prod-file-input').value = '';
+      updateImagePreview();
+      document.getElementById('product-modal').style.display = 'flex';
+    }
+
+    function closeProductModal() {
+      document.getElementById('product-modal').style.display = 'none';
+    }
+
+    function updateImagePreview() {
+      const inputVal = document.getElementById('prod-image-field').value.trim();
+      const previewImg = document.getElementById('image-preview-element');
+      if (inputVal) {
+        previewImg.src = inputVal;
+      } else {
+        previewImg.src = 'img/productos/Granola_Nativa.png';
+      }
+    }
+
+    function handleFileImageUpload(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const base64Url = event.target.result;
+        document.getElementById('prod-image-field').value = base64Url;
+        document.getElementById('image-preview-element').src = base64Url;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // GUARDAR PRODUCTO (CREACIÓN O EDICIÓN)
+    async function handleProductSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('prod-id-field').value;
+      const isEditing = Boolean(id);
+
+      const payload = {
+        name: document.getElementById('prod-name-field').value.trim(),
+        price: Number(document.getElementById('prod-price-field').value),
+        stock: Number(document.getElementById('prod-stock-field').value),
+        category: document.getElementById('prod-category-field').value,
+        badge: document.getElementById('prod-badge-field').value.trim(),
+        description: document.getElementById('prod-desc-field').value.trim(),
+        image: document.getElementById('prod-image-field').value.trim() || 'img/productos/Granola_Nativa.png'
+      };
+
+      const btnSave = document.getElementById('btn-save-product');
+      btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+      try {
+        const url = isEditing ? `/api/products/${id}` : '/api/products';
+        const method = isEditing ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: getAdminHeaders(),
+          body: JSON.stringify(payload)
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          showToast(isEditing ? 'Producto actualizado con éxito' : 'Producto agregado al catálogo');
+          closeProductModal();
+          await loadAdminProducts();
+          await loadAdminMetrics();
+        } else {
+          showToast(data.message || 'Error al guardar el producto', true);
+        }
+      } catch (err) {
+        showToast('Error de conexión con el servidor', true);
+      } finally {
+        btnSave.innerHTML = '<i class="fas fa-save"></i> Guardar Producto';
+      }
+    }
+
+    // 1.2 ELIMINAR PRODUCTO
+    async function confirmDeleteProduct(id, name) {
+      if (confirm(`¿Estás seguro de que deseas eliminar permanentemente el producto "${name}" del catálogo?`)) {
+        try {
+          const res = await fetch(`/api/products/${id}`, {
+            method: 'DELETE',
+            headers: getAdminHeaders()
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showToast(`Producto "${name}" eliminado.`);
+            await loadAdminProducts();
+            await loadAdminMetrics();
+          } else {
+            showToast(data.message || 'No se pudo eliminar el producto', true);
+          }
+        } catch (err) {
+          showToast('Error al procesar la eliminación', true);
+        }
+      }
+    }
+
+    // 1.3 AJUSTE RÁPIDO DE STOCK (+ / -)
+    async function quickStockChange(id, delta) {
+      const product = allProducts.find(p => p.id === id);
+      if (!product) return;
+
+      const newStock = Math.max(0, (Number(product.stock) || 0) + delta);
+      try {
+        const res = await fetch(`/api/products/${id}`, {
+          method: 'PUT',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({ stock: newStock })
+        });
+        const data = await res.json();
+        if (res.ok && data.success) {
+          product.stock = newStock;
+          renderProductsTable(allProducts);
+          renderInventoryTable(allProducts);
+          loadAdminMetrics();
+        }
+      } catch (err) {
+        console.error('Error al actualizar stock:', err);
+      }
+    }
+
+    // 2. GESTIÓN DE PEDIDOS Y ESTADOS
+    async function loadAdminOrders() {
+      try {
+        const res = await fetch('/api/orders');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.orders)) {
+          allOrders = data.orders;
+          renderOrdersTable(allOrders);
+          updatePendingOrdersBadge();
+        }
+      } catch (err) {
+        console.error('Error al cargar pedidos:', err);
+      }
+    }
+
+    function renderOrdersTable(orders) {
+      const tbody = document.getElementById('orders-table-body');
+      if (!tbody) return;
+
+      if (orders.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">
+              <i class="fas fa-inbox" style="font-size: 28px; margin-bottom: 8px;"></i>
+              <div>No hay pedidos registrados en este momento.</div>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = orders.map(o => {
+        const status = (o.status || 'En Preparación').toLowerCase();
+        let badgeClass = 'status-badge-pending';
+        if (status.includes('tránsito') || status.includes('camino') || status.includes('enviado')) {
+          badgeClass = 'status-badge-transit';
+        } else if (status.includes('entregado')) {
+          badgeClass = 'status-badge-delivered';
+        }
+
+        const customer = o.customer || o.shippingAddress || {};
+        const customerName = customer.nombre || customer.fullName || 'Cliente Nativa';
+        const customerEmail = customer.email || 'No especificado';
+        const customerPhone = customer.telefono || customer.phone || 'No especificado';
+        const customerCity = customer.ciudad || customer.city || 'Colombia';
+        const customerDept = customer.departamento || customer.department || '';
+
+        const itemsSummary = Array.isArray(o.items) 
+          ? o.items.map(it => `${it.qty || 1}x ${it.name || 'Producto'}`).join(', ') 
+          : '1 artículo';
+
+        const totalFormatted = o.totalFormatted || formatCOP(o.total || 0);
+
+        return `
+          <tr>
+            <td>
+              <strong style="color: var(--primary); font-family: monospace; font-size: 13px;">#${o.id}</strong>
+              ${o.guide ? `<br><span style="font-size: 11px; color: var(--text-muted);">Guía: ${o.guide}</span>` : ''}
+            </td>
+            <td>
+              <span style="font-size: 13px; color: var(--text-muted);">${o.dateDisplay || o.date || 'Reciente'}</span>
+            </td>
+            <td>
+              <strong>${customerName}</strong>
+              <div style="font-size: 12px; color: var(--text-muted);">${customerEmail}</div>
+              <div style="font-size: 12px; color: var(--text-muted);"><i class="fas fa-phone"></i> ${customerPhone}</div>
+            </td>
+            <td>
+              <div style="font-size: 13px;">${customerCity} ${customerDept ? '(' + customerDept + ')' : ''}</div>
+              <div style="font-size: 11px; color: var(--text-muted);">${customer.direccion || ''}</div>
+            </td>
+            <td style="max-width: 200px;">
+              <span style="font-size: 12px; color: var(--text);">${itemsSummary}</span>
+            </td>
+            <td>
+              <strong style="color: var(--primary-dark);">${totalFormatted}</strong>
+            </td>
+            <td>
+              <select class="status-selector" onchange="changeOrderStatus('${o.id}', this.value)">
+                <option value="Esperando Pago" ${status.includes('esperando') ? 'selected' : ''}>Esperando Pago</option>
+                <option value="En Preparación" ${status.includes('prepar') ? 'selected' : ''}>En Preparación</option>
+                <option value="En Tránsito" ${status.includes('tránsito') || status.includes('camino') || status.includes('enviado') ? 'selected' : ''}>En Tránsito</option>
+                <option value="Entregado" ${status.includes('entregado') ? 'selected' : ''}>Entregado</option>
+              </select>
+            </td>
+            <td style="text-align: right;">
+              <a href="rastreo.html?order=${encodeURIComponent(o.id)}" target="_blank" class="btn-tbl-action" title="Ver en Rastreo de Compras">
+                <i class="fas fa-search-location" style="color: var(--primary);"></i>
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function updatePendingOrdersBadge() {
+      const pendingOrders = allOrders.filter(o => {
+        const s = (o.status || '').toLowerCase();
+        return !s.includes('entregado');
+      });
+
+      const badge = document.getElementById('tab-orders-badge');
+      const metric = document.getElementById('metric-pending-count');
+      if (badge) badge.textContent = pendingOrders.length;
+      if (metric) metric.textContent = pendingOrders.length;
+    }
+
+    async function changeOrderStatus(orderId, newStatus) {
+      let stepNum = 2;
+      if (newStatus === 'Esperando Pago') stepNum = 1;
+      if (newStatus === 'En Preparación') stepNum = 2;
+      if (newStatus === 'En Tránsito') stepNum = 3;
+      if (newStatus === 'Entregado') stepNum = 4;
+
+      let guide = undefined;
+      let carrier = undefined;
+      if (newStatus === 'En Tránsito') {
+        const suggestedGuide = 'SE-' + Math.floor(10000000 + Math.random() * 90000000) + 'CO';
+        const inputGuide = prompt(`Ingresa el número de guía de envío para la orden #${orderId} (o presiona Aceptar para asignar guía oficial Servientrega):`, suggestedGuide);
+        if (inputGuide !== null && inputGuide.trim()) {
+          guide = inputGuide.trim();
+          carrier = 'Servientrega Express';
+        }
+      }
+
+      try {
+        const res = await fetch(`/api/orders/${orderId}/status`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus, currentStep: stepNum, guide, carrier })
+        });
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          const emailNotice = data.emailSent 
+            ? `📧 Notificación enviada al correo del cliente (${data.recipient})` 
+            : `🔔 Notificación registrada en el perfil del cliente`;
+          showToast(`✅ Pedido #${orderId} actualizado a "${newStatus}". ${emailNotice}`);
+          await loadAdminOrders();
+          await loadAdminMetrics();
+        } else {
+          showToast('No se pudo actualizar el estado de la orden', true);
+        }
+      } catch (err) {
+        showToast('Error de comunicación con el servidor', true);
+      }
+    }
+
+    function filterOrdersTable() {
+      const query = (document.getElementById('orders-search').value || '').toLowerCase();
+      const statusFilter = document.getElementById('orders-status-filter').value;
+
+      const filtered = allOrders.filter(o => {
+        const customer = o.customer || o.shippingAddress || {};
+        const customerName = (customer.nombre || customer.fullName || '').toLowerCase();
+        const idMatch = (o.id || '').toLowerCase().includes(query);
+        const nameMatch = customerName.includes(query);
+        const matchesQuery = !query || idMatch || nameMatch;
+
+        const st = (o.status || '').toLowerCase();
+        let matchesStatus = true;
+        if (statusFilter === 'pending') matchesStatus = !st.includes('entregado');
+        if (statusFilter === 'transit') matchesStatus = st.includes('tránsito') || st.includes('camino') || st.includes('enviado');
+        if (statusFilter === 'delivered') matchesStatus = st.includes('entregado');
+
+        return matchesQuery && matchesStatus;
+      });
+
+      renderOrdersTable(filtered);
+    }
+
+    // 3. TABLA DE INVENTARIO Y BODEGA
+    function renderInventoryTable(products) {
+      const tbody = document.getElementById('inventory-table-body');
+      if (!tbody) return;
+
+      tbody.innerHTML = products.map(p => {
+        const stock = Number(p.stock) || 0;
+        let alertLevel = '<span style="color: var(--accent-success); font-weight: 700;"><i class="fas fa-check-circle"></i> Óptimo</span>';
+        if (stock === 0) {
+          alertLevel = '<span style="color: var(--accent-danger); font-weight: 700;"><i class="fas fa-ban"></i> Sin Existencias</span>';
+        } else if (stock < 10) {
+          alertLevel = '<span style="color: var(--accent-warning); font-weight: 700;"><i class="fas fa-exclamation-circle"></i> Reponer Urgente</span>';
+        }
+
+        return `
+          <tr>
+            <td>
+              <strong>${p.name}</strong>
+              <div style="font-size: 12px; color: var(--text-muted);">Ref: #${p.id}</div>
+            </td>
+            <td>${p.category || 'General'}</td>
+            <td>
+              <strong style="font-size: 16px; color: var(--primary-dark);">${stock}</strong> unidades
+            </td>
+            <td>
+              <div class="quick-stock-ctrl">
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, -5)">-5</button>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, -1)">-1</button>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, 1)">+1</button>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, 5)">+5</button>
+                <button type="button" class="btn-stock-adjust" onclick="quickStockChange(${p.id}, 20)">+20</button>
+              </div>
+            </td>
+            <td>${alertLevel}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 4. CLIENTES REGISTRADOS
+    async function loadAdminUsers() {
+      try {
+        const res = await fetch('/api/users');
+        const data = await res.json();
+        if (data.success && Array.isArray(data.users)) {
+          allUsers = data.users;
+          renderUsersTable(allUsers);
+        }
+      } catch (err) {
+        console.warn('Carga de usuarios:', err);
+      }
+    }
+
+    function renderUsersTable(users) {
+      const tbody = document.getElementById('users-table-body');
+      if (!tbody) return;
+
+      if (users.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              No hay usuarios registrados aún.
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      tbody.innerHTML = users.map(u => {
+        const fullName = `${u.name || ''} ${u.lastname || ''}`.trim() || 'Usuario';
+        return `
+          <tr>
+            <td><strong>${fullName}</strong></td>
+            <td><i class="fas fa-envelope" style="color: #9CA3AF; margin-right: 6px;"></i> ${u.email}</td>
+            <td>${u.phone || 'No registrado'}</td>
+            <td>
+              <span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; background: var(--surface-alt); font-size: 12px; font-weight: 600;">
+                <i class="fab fa-${(u.provider || '').toLowerCase().includes('google') ? 'google' : (u.provider || '').toLowerCase().includes('facebook') ? 'facebook' : 'user'}"></i>
+                ${u.provider || 'Cuenta Local'}
+              </span>
+            </td>
+            <td><span style="font-size: 12px; color: var(--text-muted);">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-CO') : 'Reciente'}</span></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // MÉTRICAS GENERALES
+    async function loadAdminMetrics() {
+      try {
+        const res = await fetch('/api/admin/metrics', {
+          headers: getAdminHeaders()
+        });
+        const data = await res.json();
+        if (res.ok && data.success && data.metrics) {
+          const m = data.metrics;
+          const metricPending = document.getElementById('metric-pending-count');
+          const metricProds = document.getElementById('metric-products-count');
+          const metricLowStock = document.getElementById('metric-low-stock-count');
+          const metricRevenue = document.getElementById('metric-revenue');
+
+          if (metricPending) metricPending.textContent = m.pendingOrdersCount;
+          if (metricProds) metricProds.textContent = m.totalProducts;
+          if (metricLowStock) metricLowStock.textContent = m.lowStockCount;
+          if (metricRevenue) metricRevenue.textContent = formatCOP(m.totalRevenue);
+        }
+      } catch (err) {
+        console.warn('Métricas warning:', err);
+      }
+    }
+
+    // CONTROL DE PESTAÑAS DEL PANEL
+    function switchAdminTab(tabName) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+
+      const activeBtn = document.querySelector(`.tab-btn[data-tab="${tabName}"]`) ||
+        Array.from(document.querySelectorAll('.tab-btn')).find(b => b.textContent.toLowerCase().includes(tabName.substring(0, 4)));
+      if (activeBtn) activeBtn.classList.add('active');
+
+      const targetPane = document.getElementById(`tab-pane-${tabName}`);
+      if (targetPane) targetPane.classList.add('active');
+
+      if (tabName === 'perfil') {
+        loadAdminProfileData();
+      }
+    }
+
+    function toggleFieldPassword(inputId, btn) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+      const isPassword = input.type === 'password';
+      input.type = isPassword ? 'text' : 'password';
+      if (btn) {
+        btn.innerHTML = isPassword ? '<i class="fas fa-eye-slash"></i>' : '<i class="far fa-eye"></i>';
+      }
+    }
+
+    async function loadAdminProfileData() {
+      const storedEmail = localStorage.getItem('nativa_admin_email') || 'samueldpp12@gmail.com';
+      const storedName = localStorage.getItem('nativa_admin_name') || 'Samuel De Paula';
+
+      const parts = storedName.split(' ');
+      const firstName = parts[0] || 'Samuel';
+      const lastName = parts.slice(1).join(' ') || 'De Paula';
+
+      const inpName = document.getElementById('admin-perfil-name');
+      const inpLast = document.getElementById('admin-perfil-lastname');
+      const inpEmail = document.getElementById('admin-perfil-email');
+      const avatar = document.getElementById('admin-perfil-avatar');
+      const navAvatar = document.getElementById('admin-nav-avatar');
+
+      if (inpName) inpName.value = firstName;
+      if (inpLast) inpLast.value = lastName;
+      if (inpEmail) inpEmail.value = storedEmail;
+      if (avatar) avatar.textContent = firstName.charAt(0).toUpperCase();
+      if (navAvatar) navAvatar.textContent = firstName.charAt(0).toUpperCase();
+
+      try {
+        const res = await fetch('/api/admin/profile', {
+          headers: getAdminHeaders()
+        });
+        const data = await res.json();
+        if (data.success && data.admin) {
+          if (inpName) inpName.value = data.admin.name || firstName;
+          if (inpLast) inpLast.value = data.admin.lastname || lastName;
+          if (inpEmail) inpEmail.value = data.admin.email || storedEmail;
+          const fullName = `${data.admin.name} ${data.admin.lastname || ''}`.trim();
+          const adminUserName = document.getElementById('admin-user-name');
+          const adminUserEmail = document.getElementById('admin-user-email');
+          if (adminUserName) adminUserName.textContent = fullName;
+          if (adminUserEmail) adminUserEmail.textContent = data.admin.email;
+          if (avatar) avatar.textContent = (data.admin.name || firstName).charAt(0).toUpperCase();
+          if (navAvatar) navAvatar.textContent = (data.admin.name || firstName).charAt(0).toUpperCase();
+        }
+      } catch (err) {
+        console.warn('Carga de perfil admin:', err);
+      }
+    }
+
+    async function handleAdminProfileSubmit(e) {
+      if (e) e.preventDefault();
+      const inpName = document.getElementById('admin-perfil-name');
+      const inpLast = document.getElementById('admin-perfil-lastname');
+      const inpEmail = document.getElementById('admin-perfil-email');
+      const inpPass = document.getElementById('admin-perfil-password');
+      const inpPassConf = document.getElementById('admin-perfil-password-confirm');
+      const alertEl = document.getElementById('admin-perfil-alert');
+      const btnSave = document.getElementById('btn-save-admin-profile');
+
+      const nameVal = inpName ? inpName.value.trim() : '';
+      const lastVal = inpLast ? inpLast.value.trim() : '';
+      const newEmailVal = inpEmail ? inpEmail.value.trim().toLowerCase() : '';
+      const passVal = inpPass ? inpPass.value : '';
+      const passConfVal = inpPassConf ? inpPassConf.value : '';
+
+      if (passVal) {
+        if (passVal !== passConfVal) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> La nueva contraseña y la confirmación no coinciden.';
+          }
+          return;
+        }
+        if (passVal.length < 6) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> La contraseña debe tener al menos 6 caracteres.';
+          }
+          return;
+        }
+      }
+
+      if (btnSave) {
+        btnSave.disabled = true;
+        btnSave.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando cambios...';
+      }
+
+      try {
+        const res = await fetch('/api/admin/profile', {
+          method: 'POST',
+          headers: getAdminHeaders(),
+          body: JSON.stringify({
+            name: nameVal,
+            lastname: lastVal,
+            newEmail: newEmailVal,
+            password: passVal || undefined,
+            passwordConfirm: passConfVal || undefined,
+            baseUrl: window.location.origin
+          })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#FEE2E2';
+            alertEl.style.color = '#DC2626';
+            alertEl.style.border = '1px solid #F87171';
+            alertEl.innerHTML = `<i class="fas fa-exclamation-circle"></i> <strong>Error:</strong> ${data.message || 'No se pudo actualizar el perfil.'}`;
+          }
+          return;
+        }
+
+        const fullName = `${nameVal} ${lastVal}`.trim();
+        localStorage.setItem('nativa_admin_name', fullName);
+        const adminUserName = document.getElementById('admin-user-name');
+        if (adminUserName) adminUserName.textContent = fullName;
+        const navAvatar = document.getElementById('admin-nav-avatar');
+        if (navAvatar && nameVal) navAvatar.textContent = nameVal.charAt(0).toUpperCase();
+
+        if (data.emailVerificationSent) {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#EFF6FF';
+            alertEl.style.color = '#1D4ED8';
+            alertEl.style.border = '1px solid #93C5FD';
+            alertEl.innerHTML = `
+              <div style="font-weight: 700; margin-bottom: 6px;"><i class="fas fa-paper-plane"></i> Correo de Verificación Enviado a <strong>${data.newEmail}</strong></div>
+              <div>Hemos enviado un mensaje con el enlace de confirmación. Al pulsar el enlace enviado al nuevo correo, la dirección administrativa se actualizará de forma automática.</div>
+              ${data.confirmationUrl ? `<div style="margin-top: 10px; font-size: 12px; background: rgba(255,255,255,0.9); padding: 8px 12px; border-radius: 6px;"><strong>Enlace directo de confirmación:</strong> <a href="${data.confirmationUrl}" target="_blank" style="color: #1D4ED8; text-decoration: underline; font-weight: 600;">Confirmar correo ahora</a></div>` : ''}
+            `;
+          }
+          showToast('Se envió el correo de confirmación al nuevo email.');
+        } else {
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            alertEl.style.background = '#DCFCE7';
+            alertEl.style.color = '#15803D';
+            alertEl.style.border = '1px solid #86EFAC';
+            alertEl.innerHTML = '<i class="fas fa-check-circle"></i> <strong>¡Listo!</strong> Los datos del perfil administrativo se han guardado exitosamente.';
+          }
+          showToast('Perfil de administrador actualizado con éxito.');
+        }
+
+        if (inpPass) inpPass.value = '';
+        if (inpPassConf) inpPassConf.value = '';
+      } catch (err) {
+        if (alertEl) {
+          alertEl.style.display = 'block';
+          alertEl.style.background = '#FEE2E2';
+          alertEl.style.color = '#DC2626';
+          alertEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error de conexión al guardar los datos del perfil.';
+        }
+      } finally {
+        if (btnSave) {
+          btnSave.disabled = false;
+          btnSave.innerHTML = '<i class="fas fa-save"></i> Guardar Cambios de Perfil';
+        }
+      }
+    }
+
+    // INICIALIZACIÓN
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAdminSession();
+    });
+  </script>
+</body>
+</html>

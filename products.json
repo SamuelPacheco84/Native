@@ -1,0 +1,134 @@
+[
+  {
+    "id": 1,
+    "name": "Granola Nativa Artesanal",
+    "category": "Despensa Natural",
+    "badge": "Tostado Lento",
+    "price": 18500,
+    "stock": 35,
+    "image": "img/productos/Granola_Nativa.png",
+    "description": "Tostado lento con miel pura de abejas silvestres, avena integral y semillas seleccionadas de chía y almendras.",
+    "active": true
+  },
+  {
+    "id": 2,
+    "name": "Miel de Montaña Pura",
+    "category": "Miel & Dulces",
+    "badge": "100% Pura y Cruda",
+    "price": 22000,
+    "stock": 24,
+    "image": "img/productos/Miel_de_Montaña.png",
+    "description": "Cruda, sin pasteurizar y recolectada en bosques altoandinos vírgenes sin químicos ni preservantes.",
+    "active": true
+  },
+  {
+    "id": 3,
+    "name": "Infusión Relax y Calma",
+    "category": "Tés & Infusiones",
+    "badge": "Blend Botánico",
+    "price": 14900,
+    "stock": 40,
+    "image": "img/productos/Infusión_relax.png",
+    "description": "Mezcla botánica reconfortante con manzanilla silvestre, toronjil, melisa y botones de lavanda.",
+    "active": true
+  },
+  {
+    "id": 4,
+    "name": "Mermelada Frutos Silvestres",
+    "category": "Miel & Dulces",
+    "badge": "Sin Conservantes",
+    "price": 16800,
+    "stock": 28,
+    "image": "img/productos/MERMELADA ARTESANAL DE FRUTOS SILVESTRES.png",
+    "description": "Cocción lenta en paila tradicional con más del 80% de trozos enteros de fruta real y panela orgánica.",
+    "active": true
+  },
+  {
+    "id": 5,
+    "name": "Aceite de Coco Extravirgen",
+    "category": "Despensa Natural",
+    "badge": "Prensado en Frío",
+    "price": 24500,
+    "stock": 19,
+    "image": "img/productos/ACEITE  DECOCO EXTRAVIRGEN.png.png",
+    "description": "Prensado en frío de pulpa de coco fresca, sin refinar, hidrogenar ni desodorizar.",
+    "active": true
+  },
+  {
+    "id": 6,
+    "name": "Vinagre de Manzana Artesanal",
+    "category": "Despensa Natural",
+    "badge": "Con Madre Viva",
+    "price": 15600,
+    "stock": 30,
+    "image": "img/productos/VINAGRE DE MANZANA ARTESANAL.png",
+    "description": "Crudo, sin filtrar y con la madre viva probiótica llena de enzimas y bacterias benéficas.",
+    "active": true
+  },
+  {
+    "id": 7,
+    "name": "Jarabe de Arce Puro",
+    "category": "Miel & Dulces",
+    "badge": "Grado A Puro",
+    "price": 28000,
+    "stock": 15,
+    "image": "img/productos/JARABE DE ARCE  PURO.png",
+    "description": "Savia 100% natural concentrada por evaporación lenta, libre de saborizantes ni glucosa de maíz.",
+    "active": true
+  },
+  {
+    "id": 8,
+    "name": "Azúcar Mascabado Orgánico",
+    "category": "Despensa Natural",
+    "badge": "No Refinado",
+    "price": 11200,
+    "stock": 50,
+    "image": "img/productos/AZUCAR MASCABADO ORGÁNICO.png",
+    "description": "Integral, húmedo, no refinado y con toda su melaza natural viva recién extraída de caña orgánica.",
+    "active": true
+  },
+  {
+    "id": 9,
+    "name": "Nueces Mariposa Naturales",
+    "category": "Frutos Secos",
+    "badge": "Selección Extra",
+    "price": 19800,
+    "stock": 32,
+    "image": "img/productos/NUECES MARIPOSA NATURALES.png",
+    "description": "Mitades enteras extra seleccionadas partidas a mano, ricas en ácidos grasos Omega-3 y vitamina E.",
+    "active": true
+  },
+  {
+    "id": 10,
+    "name": "Avellanas Enteras Tostadas",
+    "category": "Frutos Secos",
+    "badge": "Tueste Lento",
+    "price": 21500,
+    "stock": 25,
+    "image": "img/productos/AVELLANAS ENTERAS TOSTADAS.png",
+    "description": "Tostadas artesanalmente con calor seco sin aceites añadidos, súper crujientes y ricas en antioxidantes.",
+    "active": true
+  },
+  {
+    "id": 11,
+    "name": "Galletas de Avena y Miel",
+    "category": "Despensa Natural",
+    "badge": "Horneado Diario",
+    "price": 12500,
+    "stock": 45,
+    "image": "img/productos/GALLETAS DE AVENA Y MIEL.png",
+    "description": "Horneadas artesanalmente con copos enteros de avena, miel pura de montaña, canela de Ceilán y aceite de coco.",
+    "active": true
+  },
+  {
+    "id": 12,
+    "name": "Té Vital Blend Energético",
+    "category": "Tés & Infusiones",
+    "badge": "Blend Exclusivo",
+    "price": 16500,
+    "stock": 38,
+    "image": "img/Té Vital_ Energía Natural y Bienestar.png",
+    "description": "Té verde premium sencha con jengibre fresco, cáscaras de naranja dulce y hierbabuena tonificante.",
+    "active": true
+  }
+]

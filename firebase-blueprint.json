@@ -1,0 +1,104 @@
+{
+  "entities": {
+    "User": {
+      "title": "User Profile",
+      "description": "Customer profile and authentication data",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "User unique ID" },
+        "name": { "type": "string", "description": "First name" },
+        "lastname": { "type": "string", "description": "Last name" },
+        "email": { "type": "string", "description": "Customer email" },
+        "phone": { "type": "string", "description": "Phone number" },
+        "authProvider": { "type": "string", "description": "Authentication provider (Google, Facebook, password)" },
+        "createdAt": { "type": "string", "description": "Account creation timestamp" },
+        "updatedAt": { "type": "string", "description": "Last update timestamp" }
+      },
+      "required": ["email"]
+    },
+    "Admin": {
+      "title": "Administrator Profile",
+      "description": "Privileged administrator account and configuration",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "description": "Admin email address" },
+        "name": { "type": "string", "description": "Admin first name" },
+        "lastname": { "type": "string", "description": "Admin last name" },
+        "role": { "type": "string", "description": "Role description" },
+        "updatedAt": { "type": "string", "description": "Last updated timestamp" }
+      },
+      "required": ["email", "name"]
+    },
+    "Product": {
+      "title": "Product",
+      "description": "Natural product items in the catalog",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Product ID" },
+        "name": { "type": "string", "description": "Product name" },
+        "category": { "type": "string", "description": "Category (suplementos, infusion, aceites, etc.)" },
+        "price": { "type": "number", "description": "Price in COP" },
+        "stock": { "type": "number", "description": "Available stock" },
+        "rating": { "type": "number", "description": "Average review rating" },
+        "image": { "type": "string", "description": "Image path" },
+        "description": { "type": "string", "description": "Product description" },
+        "featured": { "type": "boolean", "description": "Featured on home page" }
+      },
+      "required": ["id", "name", "price"]
+    },
+    "Order": {
+      "title": "Customer Order",
+      "description": "Store purchase order details and status",
+      "type": "object",
+      "properties": {
+        "orderId": { "type": "string", "description": "Unique order tracking code" },
+        "userId": { "type": "string", "description": "Customer UID or email" },
+        "customerName": { "type": "string", "description": "Full customer name" },
+        "customerEmail": { "type": "string", "description": "Customer email" },
+        "items": { "type": "array", "description": "List of ordered products" },
+        "total": { "type": "number", "description": "Total order amount" },
+        "shippingAddress": { "type": "string", "description": "Shipping address" },
+        "status": { "type": "string", "description": "Status: Esperando Pago, En Preparación, En Tránsito, Entregado" },
+        "createdAt": { "type": "string", "description": "Order placement date" }
+      },
+      "required": ["orderId", "total", "status"]
+    },
+    "Notification": {
+      "title": "Order Notification",
+      "description": "Real-time user order update notification",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Notification ID" },
+        "orderId": { "type": "string", "description": "Associated Order ID" },
+        "userEmail": { "type": "string", "description": "Recipient email" },
+        "title": { "type": "string", "description": "Notification title" },
+        "message": { "type": "string", "description": "Notification message" },
+        "read": { "type": "boolean", "description": "Read status" },
+        "createdAt": { "type": "string", "description": "Creation timestamp" }
+      },
+      "required": ["id", "orderId", "userEmail", "title"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "User account profile collection"
+    },
+    "/admins/{adminId}": {
+      "schema": "Admin",
+      "description": "Privileged administrator configuration"
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Public catalog of natural products"
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Customer order purchase and tracking collection"
+    },
+    "/notifications/{notifId}": {
+      "schema": "Notification",
+      "description": "Customer notifications collection"
+    }
+  }
+}

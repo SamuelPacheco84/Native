@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmación de Correo Electrónico | Nativa Productos Naturales</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #285943;
+      --primary-dark: #1b3d2e;
+      --primary-light: #e8f0ec;
+      --bg: #F4F1EA;
+      --surface: #FFFFFF;
+      --border: #E5DFC8;
+      --text: #2D312E;
+      --text-muted: #6B726C;
+      --accent-gold: #D4A373;
+      --success: #16a34a;
+      --danger: #dc2626;
+      --radius: 16px;
+      --shadow: 0 16px 36px rgba(40,89,67,0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .confirm-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 520px;
+      width: 100%;
+      padding: 40px 32px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .confirm-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 6px;
+      background: linear-gradient(90deg, #285943, #D4A373, #16a34a);
+    }
+
+    .brand-logo-img {
+      height: 52px;
+      width: auto;
+      object-fit: contain;
+      margin-bottom: 18px;
+    }
+
+    .status-icon {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 20px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      transition: all 0.3s ease;
+    }
+
+    .status-loading {
+      background: #EFF6FF;
+      color: #2563EB;
+    }
+
+    .status-success {
+      background: #DCFCE7;
+      color: #16A34A;
+      box-shadow: 0 0 0 8px rgba(22, 163, 74, 0.1);
+    }
+
+    .status-error {
+      background: #FEE2E2;
+      color: #DC2626;
+      box-shadow: 0 0 0 8px rgba(220, 38, 38, 0.1);
+    }
+
+    h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 24px;
+      color: var(--primary-dark);
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .email-highlight-box {
+      background: var(--primary-light);
+      border: 1px solid rgba(40,89,67,0.2);
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      display: inline-block;
+      max-width: 100%;
+      word-break: break-all;
+    }
+
+    .email-highlight-box strong {
+      color: var(--primary-dark);
+      font-size: 16px;
+    }
+
+    .action-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #ffffff;
+      padding: 14px 28px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(40,89,67,0.28);
+      transition: all 0.2s ease;
+    }
+
+    .action-btn:hover {
+      background: var(--primary-dark);
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary-action {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      margin-top: 10px;
+    }
+
+    .btn-secondary-action:hover {
+      background: #f8fafc;
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="confirm-card" id="confirm-card">
+    <img src="img/logo.png" alt="Nativa Natural" class="brand-logo-img">
+
+    <!-- Estado: Cargando -->
+    <div id="state-loading">
+      <div class="status-icon status-loading">
+        <i class="fas fa-spinner fa-spin"></i>
+      </div>
+      <h1>Verificando Enlace...</h1>
+      <p>Estamos validando tu solicitud de cambio de correo electrónico en la base de datos de Nativa.</p>
+    </div>
+
+    <!-- Estado: Éxito -->
+    <div id="state-success" style="display: none;">
+      <div class="status-icon status-success">
+        <i class="fas fa-check"></i>
+      </div>
+      <h1 id="success-title">¡Correo Confirmado con Éxito!</h1>
+      <p id="success-desc">Tu dirección de correo electrónico ha sido confirmada y actualizada automáticamente en tu cuenta.</p>
+      
+      <div class="email-highlight-box">
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; font-weight: 600;">Nuevo Correo Activo</div>
+        <strong id="new-email-display">-</strong>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="perfil.html" id="success-redirect-btn" class="action-btn">
+          <i class="fas fa-arrow-right"></i> Ir a Mi Perfil
+        </a>
+        <a href="index.html" class="action-btn btn-secondary-action">
+          <i class="fas fa-store"></i> Ir a la Tienda Pública
+        </a>
+      </div>
+    </div>
+
+    <!-- Estado: Error -->
+    <div id="state-error" style="display: none;">
+      <div class="status-icon status-error">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h1>Enlace Inválido o Expirado</h1>
+      <p id="error-desc">El enlace de confirmación no es válido, ha expirado o ya fue utilizado anteriormente.</p>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <a href="login.html" class="action-btn">
+          <i class="fas fa-sign-in-alt"></i> Iniciar Sesión en Nativa
+        </a>
+        <a href="index.html" class="action-btn btn-secondary-action">
+          <i class="fas fa-home"></i> Volver al Inicio
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    async function processEmailConfirmation() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const token = urlParams.get('token');
+
+      if (!token) {
+        showError('No se proporcionó ningún token de confirmación en el enlace.');
+        return;
+      }
+
+      try {
+        const response = await fetch('/api/auth/confirm-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ token })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          showSuccess(result);
+        } else {
+          showError(result.message || 'No se pudo confirmar el correo.');
+        }
+      } catch (err) {
+        showError('Error de red o conexión al validar la confirmación: ' + err.message);
+      }
+    }
+
+    function showSuccess(data) {
+      document.getElementById('state-loading').style.display = 'none';
+      document.getElementById('state-error').style.display = 'none';
+      document.getElementById('state-success').style.display = 'block';
+
+      const emailEl = document.getElementById('new-email-display');
+      if (emailEl) emailEl.textContent = data.newEmail;
+
+      const titleEl = document.getElementById('success-title');
+      const descEl = document.getElementById('success-desc');
+      const redirectBtn = document.getElementById('success-redirect-btn');
+
+      if (data.type === 'admin') {
+        if (titleEl) titleEl.textContent = '¡Correo de Administrador Confirmado!';
+        if (descEl) descEl.textContent = 'Tu nuevo correo de administrador ha quedado configurado de forma oficial.';
+        if (redirectBtn) {
+          redirectBtn.innerHTML = '<i class="fas fa-shield-alt"></i> Ir al Panel de Administración';
+          redirectBtn.href = 'admin.html';
+        }
+        localStorage.setItem('nativa_admin_email', data.newEmail);
+      } else {
+        if (titleEl) titleEl.textContent = '¡Correo Actualizado con Éxito!';
+        if (descEl) descEl.textContent = 'Tu perfil y tus pedidos han sido actualizados con tu nueva dirección.';
+        if (redirectBtn) {
+          redirectBtn.innerHTML = '<i class="fas fa-user"></i> Ir a Mi Perfil';
+          redirectBtn.href = 'perfil.html';
+        }
+        localStorage.setItem('nativa_user_email', data.newEmail);
+      }
+    }
+
+    function showError(message) {
+      document.getElementById('state-loading').style.display = 'none';
+      document.getElementById('state-success').style.display = 'none';
+      document.getElementById('state-error').style.display = 'block';
+
+      const descEl = document.getElementById('error-desc');
+      if (descEl && message) descEl.textContent = message;
+    }
+
+    window.addEventListener('DOMContentLoaded', processEmailConfirmation);
+  </script>
+</body>
+</html>

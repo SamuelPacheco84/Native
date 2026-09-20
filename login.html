@@ -363,6 +363,13 @@
             <i class="fas fa-clock"></i> Tu sesión expiró tras 1 semana. Por favor inicia sesión nuevamente.
           </div>
 
+          <div id="tracking-redirect-alert" style="display: none; background: #ECFDF5; border: 1.5px solid #A7F3D0; color: #065F46; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.4;">
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: #1b3d2e;">
+              <i class="fas fa-truck-moving" style="color: #285943; font-size: 16px;"></i> Rastrear Pedido
+            </div>
+            <span>Inicia sesión con tu cuenta para ver el estado y seguimiento de tu orden <strong>#<span id="banner-target-order"></span></strong>. Te llevaremos a tu pedido inmediatamente.</span>
+          </div>
+
           <form onsubmit="handleAuthSubmit(event)">
             <div class="form-group">
               <label class="form-label">Correo electrónico</label>
@@ -408,7 +415,12 @@
             </div>
 
             <div class="auth-footer">
-              ¿No tienes cuenta? <a href="register.html">Regístrate aquí</a>
+              ¿No tienes cuenta? <a href="register.html" id="link-to-register">Regístrate aquí</a>
+              <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #E5DFC8;">
+                <a href="admin.html" id="link-admin-panel" style="font-size: 12px; color: #285943; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                  <i class="fas fa-shield-alt"></i> Portal de Administración
+                </a>
+              </div>
             </div>
           </form>
         </div>
@@ -453,6 +465,15 @@
       }
     }
 
+    function getPostAuthRedirectUrl() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const redirect = urlParams.get('redirect');
+      const order = urlParams.get('order');
+      if (redirect) return redirect;
+      if (order) return `perfil.html?order=${encodeURIComponent(order)}`;
+      return 'perfil.html';
+    }
+
     // Escuchar el evento postMessage cuando el usuario inicia sesión en la ventana emergente
     window.addEventListener('message', (event) => {
       if (event.data && event.data.type === 'OAUTH_AUTH_SUCCESS') {
@@ -460,9 +481,13 @@
         const provider = event.data.provider || 'Google';
 
         // Guardar datos autenticados en el navegador
-        localStorage.setItem('nativa_user_email', user.email || 'samueldpp12@gmail.com');
-        localStorage.setItem('nativa_user_name', user.name || 'Samuel');
-        localStorage.setItem('nativa_user_lastname', user.lastname || 'Pacheco');
+        const authEmail = user.email || 'cliente@nativa.com';
+        const authName = user.name || 'Cliente';
+        const authLastname = user.lastname || 'Nativa';
+
+        localStorage.setItem('nativa_user_email', authEmail);
+        localStorage.setItem('nativa_user_name', authName);
+        localStorage.setItem('nativa_user_lastname', authLastname);
         localStorage.setItem('nativa_auth_provider', provider);
 
         // Regla de recordarme por 1 semana si la casilla está marcada
@@ -476,6 +501,18 @@
         localStorage.setItem('nativa_session_expires', expiresAt.toString());
         localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
 
+        // Sincronizar usuario con Firebase Firestore
+        fetch('/api/users/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: authEmail,
+            name: authName,
+            lastname: authLastname,
+            provider: provider
+          })
+        }).catch(err => console.warn('Sync notice:', err));
+
         // Notificar y redirigir
         const submitBtn = document.getElementById('btn-submit-login');
         if (submitBtn) {
@@ -484,7 +521,7 @@
         }
 
         setTimeout(() => {
-          window.location.href = 'perfil.html';
+          window.location.href = getPostAuthRedirectUrl();
         }, 400);
       }
     });
@@ -501,6 +538,27 @@
         if(input.placeholder && input.placeholder.toLowerCase().includes('nombre')) nameInput = input.value;
         if(input.placeholder && input.placeholder.toLowerCase().includes('apellido')) lastnameInput = input.value;
       });
+
+      const passInput = document.getElementById('login-password') ? document.getElementById('login-password').value : '';
+      const cleanEmail = (emailInput || '').trim().toLowerCase();
+
+      // Si ingresa con las credenciales de administrador, entrar directo al panel de administración sin crear cuenta de cliente
+      if (cleanEmail === 'samueldpp12@gmail.com') {
+        if (passInput === 'SuperPassword123') {
+          const adminToken = 'nat_adm_' + btoa('samueldpp12@gmail.com:' + Date.now() + ':adminSecretKey');
+          localStorage.setItem('nativa_admin_token', adminToken);
+          localStorage.setItem('nativa_admin_email', 'samueldpp12@gmail.com');
+          localStorage.setItem('nativa_admin_name', 'Samuel De Paula');
+          if (localStorage.getItem('nativa_user_email') === 'samueldpp12@gmail.com') {
+            localStorage.removeItem('nativa_user_email');
+          }
+          window.location.href = 'admin.html';
+          return;
+        } else {
+          alert('Credenciales de administrador incorrectas. Por favor ingresa la contraseña válida.');
+          return;
+        }
+      }
       
       if(emailInput) {
         localStorage.setItem('nativa_user_email', emailInput);
@@ -529,15 +587,46 @@
       localStorage.setItem('nativa_session_expires', expiresAt.toString());
       localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
       
-      window.location.href = 'perfil.html';
+      // Sincronizar en Firebase Firestore
+      if(emailInput) {
+        fetch('/api/users/sync', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: emailInput,
+            name: localStorage.getItem('nativa_user_name') || '',
+            lastname: localStorage.getItem('nativa_user_lastname') || '',
+            provider: 'password'
+          })
+        }).catch(err => console.warn('Sync notice:', err));
+      }
+
+      window.location.href = getPostAuthRedirectUrl();
     }
 
-    // Inicialización y verificación de sesión expirada
+    // Inicialización y verificación de sesión expirada y orden a rastrear
     document.addEventListener('DOMContentLoaded', () => {
       const urlParams = new URLSearchParams(window.location.search);
       const expiredAlert = document.getElementById('session-expired-alert');
       if (urlParams.get('expired') === '1' && expiredAlert) {
         expiredAlert.style.display = 'flex';
+      }
+
+      // Detectar si el usuario viene para rastrear un pedido
+      const orderId = urlParams.get('order') || (urlParams.get('redirect') && urlParams.get('redirect').includes('order=') ? decodeURIComponent(urlParams.get('redirect').split('order=')[1].split('&')[0]) : null);
+      if (orderId) {
+        const trackingAlert = document.getElementById('tracking-redirect-alert');
+        const orderSpan = document.getElementById('banner-target-order');
+        if (trackingAlert && orderSpan) {
+          orderSpan.textContent = orderId;
+          trackingAlert.style.display = 'block';
+        }
+
+        // Si necesita registrarse, preservar los parámetros en el enlace a register.html
+        const regLink = document.getElementById('link-to-register');
+        if (regLink) {
+          regLink.href = `register.html?redirect=${encodeURIComponent('perfil.html?order=' + orderId)}&order=${encodeURIComponent(orderId)}`;
+        }
       }
 
       // Restaurar estado de "Recordarme" si estaba guardado

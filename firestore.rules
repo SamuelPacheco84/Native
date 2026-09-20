@@ -1,0 +1,41 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Reglas para Catálogo de Productos (lectura pública, escritura administrativa)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Reglas para Perfiles de Usuarios
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Reglas para Administrador
+    match /admins/{adminId} {
+      allow read, write: if true;
+    }
+
+    // Reglas para Pedidos y Rastreo de Compras
+    match /orders/{orderId} {
+      allow read, write: if true;
+    }
+
+    // Reglas para Notificaciones de Pedidos
+    match /notifications/{notifId} {
+      allow read, write: if true;
+    }
+
+    // Reglas para Confirmaciones de Correo
+    match /confirmations/{confirmId} {
+      allow read, write: if true;
+    }
+
+    // Colección de prueba para validación de conectividad
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+  }
+}
