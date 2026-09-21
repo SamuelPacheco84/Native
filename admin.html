@@ -1078,7 +1078,7 @@
                 <th>Artículos</th>
                 <th>Total</th>
                 <th>Estado del Envío</th>
-                <th style="text-align: right;">Rastreo</th>
+                <th style="text-align: right;">Acciones</th>
               </tr>
             </thead>
             <tbody id="orders-table-body">
@@ -1117,11 +1117,11 @@
         </div>
       </section>
 
-      <!-- TAB 4: CLIENTES REGISTRADOS -->
+      <!-- TAB 4: USUARIOS EN LA BASE DE DATOS -->
       <section id="tab-pane-usuarios" class="tab-pane">
         <div class="section-toolbar">
-          <h3 style="font-size: 16px; color: var(--primary-dark);">Clientes Registrados en Nativa</h3>
-          <p style="font-size: 13px; color: var(--text-muted);">Usuarios sincronizados a través de Google, Facebook o registro directo.</p>
+          <h3 style="font-size: 16px; color: var(--primary-dark);">Usuarios en la Base de Datos</h3>
+          <p style="font-size: 13px; color: var(--text-muted);">Cuentas y usuarios registrados en la base de datos de Nativa.</p>
         </div>
 
         <div class="table-container">
@@ -1133,6 +1133,7 @@
                 <th>Teléfono</th>
                 <th>Proveedor</th>
                 <th>Fecha de Registro</th>
+                <th style="text-align: right;">Acciones</th>
               </tr>
             </thead>
             <tbody id="users-table-body">
@@ -1296,12 +1297,6 @@
   </div>
 
   <script>
-    // CREDENCIALES ESTRICTAS ASIGNADAS
-    const ADMIN_CREDENTIALS = {
-      email: 'samueldpp12@gmail.com',
-      password: 'SuperPassword123'
-    };
-
     let allProducts = [];
     let allOrders = [];
     let allUsers = [];
@@ -1366,17 +1361,8 @@
           submitBtn.innerHTML = '<i class="fas fa-key"></i> Entrar al Panel de Control';
         }
       } catch (err) {
-        // Validación local de respaldo si el servidor no responde
-        if (emailInput.toLowerCase() === ADMIN_CREDENTIALS.email.toLowerCase() && passInput === ADMIN_CREDENTIALS.password) {
-          const fakeToken = 'nat_adm_local_' + Date.now();
-          localStorage.setItem('nativa_admin_token', fakeToken);
-          localStorage.setItem('nativa_admin_email', ADMIN_CREDENTIALS.email);
-          localStorage.setItem('nativa_admin_name', 'Samuel De Paula');
-          showDashboardView();
-        } else {
-          errorText.textContent = 'Credenciales no válidas. Ingrese con el correo y contraseña autorizados.';
-          errorBox.style.display = 'flex';
-        }
+        errorText.textContent = 'Error al conectar con el servidor de autenticación. Inténtelo de nuevo.';
+        errorBox.style.display = 'flex';
         submitBtn.innerHTML = '<i class="fas fa-key"></i> Entrar al Panel de Control';
       }
     }
@@ -1385,7 +1371,7 @@
       const token = localStorage.getItem('nativa_admin_token');
       const email = localStorage.getItem('nativa_admin_email');
 
-      if (token && email && email.toLowerCase() === ADMIN_CREDENTIALS.email.toLowerCase()) {
+      if (token && email) {
         showDashboardView();
       } else {
         showLoginView();
@@ -1777,14 +1763,39 @@
                 <option value="Entregado" ${status.includes('entregado') ? 'selected' : ''}>Entregado</option>
               </select>
             </td>
-            <td style="text-align: right;">
+            <td style="text-align: right; white-space: nowrap;">
               <a href="rastreo.html?order=${encodeURIComponent(o.id)}" target="_blank" class="btn-tbl-action" title="Ver en Rastreo de Compras">
                 <i class="fas fa-search-location" style="color: var(--primary);"></i>
               </a>
+              <button type="button" class="btn-tbl-action" onclick="handleDeleteOrder('${o.id}')" title="Eliminar Pedido" style="color: var(--accent-danger); margin-left: 4px;">
+                <i class="fas fa-trash-alt"></i>
+              </button>
             </td>
           </tr>
         `;
       }).join('');
+    }
+
+    async function handleDeleteOrder(orderId) {
+      if (!confirm(`¿Estás seguro de que deseas eliminar permanentemente el pedido #${orderId}?`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/orders/${encodeURIComponent(orderId)}`, {
+          method: 'DELETE',
+          headers: getAdminHeaders()
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Pedido #${orderId} eliminado exitosamente`);
+          await loadAdminOrders();
+          await loadAdminMetrics();
+        } else {
+          showToast(data.message || 'Error al eliminar pedido', true);
+        }
+      } catch (err) {
+        showToast('Error de conexión al eliminar pedido', true);
+      }
     }
 
     function updatePendingOrdersBadge() {
@@ -1920,11 +1931,12 @@
       const tbody = document.getElementById('users-table-body');
       if (!tbody) return;
 
-      if (users.length === 0) {
+      if (!users || users.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="5" style="text-align: center; padding: 30px; color: var(--text-muted);">
-              No hay usuarios registrados aún.
+            <td colspan="6" style="text-align: center; padding: 30px; color: var(--text-muted);">
+              <i class="fas fa-user-slash" style="font-size: 24px; margin-bottom: 8px; display: block; opacity: 0.4;"></i>
+              No hay usuarios registrados en la base de datos.
             </td>
           </tr>
         `;
@@ -1932,22 +1944,54 @@
       }
 
       tbody.innerHTML = users.map(u => {
-        const fullName = `${u.name || ''} ${u.lastname || ''}`.trim() || 'Usuario';
+        const isAdm = u.isAdmin || (u.email && u.email.toLowerCase() === 'samueldpp12@gmail.com') || (u.role && u.role.toLowerCase().includes('admin'));
+        const fullName = `${u.name || ''} ${u.lastname || ''}`.trim() || (isAdm ? 'Samuel Pacheco' : 'Usuario');
         return `
-          <tr>
-            <td><strong>${fullName}</strong></td>
+          <tr style="${isAdm ? 'background: rgba(40, 89, 67, 0.04);' : ''}">
+            <td>
+              <strong>${fullName}</strong>
+              ${isAdm ? '<span style="margin-left: 6px; background: #285943; color: #fff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; display: inline-flex; align-items: center; gap: 3px;"><i class="fas fa-shield-alt" style="font-size: 9px;"></i> Administrador</span>' : ''}
+            </td>
             <td><i class="fas fa-envelope" style="color: #9CA3AF; margin-right: 6px;"></i> ${u.email}</td>
             <td>${u.phone || 'No registrado'}</td>
             <td>
               <span style="display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px; border-radius: 4px; background: var(--surface-alt); font-size: 12px; font-weight: 600;">
-                <i class="fab fa-${(u.provider || '').toLowerCase().includes('google') ? 'google' : (u.provider || '').toLowerCase().includes('facebook') ? 'facebook' : 'user'}"></i>
-                ${u.provider || 'Cuenta Local'}
+                <i class="${isAdm ? 'fas fa-user-shield' : (u.provider || '').toLowerCase().includes('google') ? 'fab fa-google' : 'fas fa-user'}"></i>
+                ${isAdm ? 'Administrador Sistema' : (u.provider || 'Cuenta Google')}
               </span>
             </td>
-            <td><span style="font-size: 12px; color: var(--text-muted);">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-CO') : 'Reciente'}</span></td>
+            <td><span style="font-size: 12px; color: var(--text-muted);">${u.createdAt ? new Date(u.createdAt).toLocaleDateString('es-CO') : 'Activo'}</span></td>
+            <td style="text-align: right;">
+              ${isAdm 
+                ? '<span style="color: #64748b; font-size: 12px; display: inline-flex; align-items: center; gap: 4px;"><i class="fas fa-lock"></i> Protegido</span>' 
+                : `<button type="button" class="btn-action-icon" style="color: var(--accent-danger);" onclick="handleDeleteUser('${u.email}')" title="Eliminar usuario"><i class="fas fa-trash-alt"></i></button>`
+              }
+            </td>
           </tr>
         `;
       }).join('');
+    }
+
+    async function handleDeleteUser(email) {
+      if (!confirm(`¿Estás seguro de que deseas eliminar permanentemente el usuario "${email}" del sistema?`)) {
+        return;
+      }
+      try {
+        const res = await fetch(`/api/users/${encodeURIComponent(email)}`, {
+          method: 'DELETE',
+          headers: getAdminHeaders()
+        });
+        const data = await res.json();
+        if (data.success) {
+          showToast(`Usuario ${email} eliminado exitosamente`);
+          loadAdminUsers();
+          loadAdminMetrics();
+        } else {
+          showToast(data.message || 'Error al eliminar usuario', true);
+        }
+      } catch (err) {
+        showToast('Error de conexión al eliminar usuario', true);
+      }
     }
 
     // MÉTRICAS GENERALES

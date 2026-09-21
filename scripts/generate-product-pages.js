@@ -1263,7 +1263,29 @@ function generateHtml(p) {
       return \`\${prefix}-\${rand}\`;
     }
 
+    function isUserLoggedIn() {
+      const expiresAt = localStorage.getItem('nativa_session_expires');
+      if (expiresAt && Date.now() > parseInt(expiresAt, 10)) {
+        localStorage.removeItem('nativa_user_email');
+        localStorage.removeItem('nativa_user_name');
+        localStorage.removeItem('nativa_user_lastname');
+        localStorage.removeItem('nativa_user_phone');
+        localStorage.removeItem('nativa_session_expires');
+        localStorage.removeItem('nativa_remember_me');
+        localStorage.removeItem('nativa_auth_provider');
+        return false;
+      }
+      return Boolean(localStorage.getItem('nativa_user_email'));
+    }
+
     function submitFinalCheckout() {
+      if (!isUserLoggedIn()) {
+        closeCheckoutModal();
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        window.location.href = 'login.html?redirect=' + encodeURIComponent(currentPage + '?checkout=true') + '&reason=checkout';
+        return;
+      }
+
       const method = checkoutData.metodoPago || 'efectivo';
       const container = document.getElementById('confirmation-dynamic-content');
       if (!container) return;
@@ -1444,6 +1466,16 @@ function generateHtml(p) {
         showToast('Tu carrito está vacío. Agrega productos antes de finalizar la compra.');
         return;
       }
+
+      // Si el usuario no está registrado o no ha iniciado sesión, no puede comprar y debe redirigirse al panel de login
+      if (!isUserLoggedIn()) {
+        closeCart();
+        showToast('Debes iniciar sesión o registrarte para realizar tu compra.');
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        window.location.href = 'login.html?redirect=' + encodeURIComponent(currentPage + '?checkout=true') + '&reason=checkout';
+        return;
+      }
+
       closeCart();
 
       initDepartments();

@@ -33,6 +33,11 @@ service cloud.firestore {
       allow read, write: if true;
     }
 
+    // Reglas para Códigos de Verificación y Recuperación de Contraseña
+    match /verification_codes/{codeId} {
+      allow read, write: if true;
+    }
+
     // Colección de prueba para validación de conectividad
     match /test/{docId} {
       allow read, write: if true;

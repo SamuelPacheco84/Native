@@ -829,45 +829,13 @@
         const raw = localStorage.getItem('nativa_orders');
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         }
       } catch (e) {
         console.error('Error al leer pedidos de localStorage:', e);
       }
 
-      // Orden predeterminada de muestra rica si es la primera vez
-      return [{
-        id: 'NAT-TC-389423',
-        date: new Date().toISOString(),
-        dateDisplay: 'Hoy',
-        currentStep: 2, // En Preparación en Bodega
-        method: 'tarjeta',
-        paymentStatus: 'aprobado',
-        guide: 'SE-74829104CO',
-        carrier: 'Servientrega Express',
-        carrierPhone: '01 8000 515151',
-        originCity: 'Medellín, Antioquia',
-        estimatedDelivery: 'Llega entre el Jueves 18 y Sábado 20 de Septiembre',
-        customer: {
-          nombre: 'Samuel',
-          apellido: 'De Paula',
-          telefono: '+57 300 542 7742',
-          email: 'samueldpp12@gmail.com',
-          departamento: 'Huila',
-          ciudad: 'Garzón',
-          direccion: 'Calle 7 # 12-45 Barrio Las Delicias',
-          notas: 'Dejar en portería o recepción'
-        },
-        items: [{
-          id: 'granola-artesanal',
-          name: 'Granola Nativa Artesanal',
-          price: 36900,
-          qty: 1,
-          img: 'img/productos/Granola_Nativa.png'
-        }],
-        total: 36900,
-        totalFormatted: '$36.900 COP'
-      }];
+      return [];
     }
 
     // Obtener parámetros de la URL
@@ -1022,20 +990,36 @@
       if (!container) return;
 
       if (!order) {
-        container.innerHTML = `
-          <div class="tracking-not-found">
-            <div class="tracking-not-found-icon">
-              <i class="fas fa-search-minus"></i>
+        const searchVal = document.getElementById('tracking-search-input')?.value?.trim();
+        const hasSearch = Boolean(searchVal || getUrlParameter('order') || getUrlParameter('id') || getUrlParameter('guia'));
+        if (hasSearch) {
+          container.innerHTML = `
+            <div class="tracking-not-found">
+              <div class="tracking-not-found-icon">
+                <i class="fas fa-search-minus"></i>
+              </div>
+              <h3 style="color:var(--verde-bosque); margin:0 0 8px 0; font-size:20px;">No encontramos un pedido con ese identificador</h3>
+              <p style="color:#64748b; font-size:14px; max-width:480px; margin:0 auto 20px auto; line-height:1.6;">
+                Verifica el número de orden o guía ingresado. También puedes revisar tus pedidos en tu perfil.
+              </p>
+              <a href="perfil.html" class="btn-action-main">
+                <i class="fas fa-user-circle"></i> Ir a Mis Pedidos en el Perfil
+              </a>
             </div>
-            <h3 style="color:var(--verde-bosque); margin:0 0 8px 0; font-size:20px;">No encontramos un pedido con ese identificador</h3>
-            <p style="color:#64748b; font-size:14px; max-width:480px; margin:0 auto 20px auto; line-height:1.6;">
-              Verifica el número de orden o guía ingresado. También puedes revisar todos tus pedidos registrados en tu perfil.
-            </p>
-            <a href="perfil.html" class="btn-action-main">
-              <i class="fas fa-user-circle"></i> Ir a Mis Pedidos en el Perfil
-            </a>
-          </div>
-        `;
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="tracking-not-found" style="background:#f8faf8; border-color:#d4e5d2;">
+              <div class="tracking-not-found-icon" style="background:#e8f4e5; color:var(--verde-bosque);">
+                <i class="fas fa-search-location"></i>
+              </div>
+              <h3 style="color:var(--verde-bosque); margin:0 0 8px 0; font-size:20px;">Rastrea tu pedido en tiempo real</h3>
+              <p style="color:#64748b; font-size:14px; max-width:480px; margin:0 auto 20px auto; line-height:1.6;">
+                Ingresa el número de orden (ej. NAT-12345) o número de guía en la barra superior para conocer el estado y recorrido exacto de tu envío.
+              </p>
+            </div>
+          `;
+        }
         return;
       }
 

@@ -241,6 +241,13 @@
       box-shadow: 0 0 0 4px rgba(40, 89, 67, 0.12);
     }
 
+    .input-wrapper input.input-error,
+    .code-input.input-error {
+      border-color: var(--rojo-error) !important;
+      box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.18) !important;
+      background-color: #FEF2F2 !important;
+    }
+
     /* Simulated Email Notification Banner */
     .email-sent-badge {
       background: #F0FDF4;
@@ -260,40 +267,8 @@
       align-items: center;
       gap: 8px;
       font-weight: 700;
-    }
-    .email-code-box {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #FFFFFF;
-      border: 1px dashed #86EFAC;
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-top: 4px;
-    }
-    .email-code-text {
-      font-family: monospace;
-      font-size: 18px;
-      font-weight: 700;
-      letter-spacing: 2px;
-      color: var(--verde-bosque);
-    }
-    .btn-copy-code {
-      background: var(--verde-bosque);
-      color: #FFFFFF;
-      border: none;
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: 11px;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      transition: background 0.2s;
-    }
-    .btn-copy-code:hover {
-      background: #1e4533;
+      color: #166534;
+      font-size: 14px;
     }
 
     /* Error Message */
@@ -467,15 +442,16 @@
             <p class="card-subtitle">Ingresa el correo electrónico de tu cuenta para recibir un código de verificación.</p>
 
             <div class="error-box" id="step1-error">
-              <i class="fas fa-exclamation-circle"></i> <span id="step1-error-text">Por favor ingresa un correo válido.</span>
+              <i class="fas fa-exclamation-circle" style="font-size: 16px; flex-shrink: 0;"></i>
+              <span id="step1-error-text">Por favor ingresa un correo válido.</span>
             </div>
 
-            <form onsubmit="handleSendCode(event)">
+            <form onsubmit="handleSendCode(event)" novalidate id="form-step-1">
               <div class="form-group">
                 <label class="form-label" for="recovery-email-input">Correo electrónico</label>
                 <div class="input-wrapper">
                   <i class="far fa-envelope left-icon"></i>
-                  <input type="email" id="recovery-email-input" placeholder="ejemplo@correo.com" required autocomplete="email">
+                  <input type="email" id="recovery-email-input" placeholder="ejemplo@correo.com" autocomplete="email">
                 </div>
               </div>
 
@@ -489,47 +465,42 @@
             </form>
           </div>
 
-          <!-- STEP 2: INGRESAR CÓDIGO -->
+          <!-- STEP 2: INGRESAR Y VERIFICAR CÓDIGO -->
           <div class="step-section" id="step-2-code" style="display: none;">
             <img src="img_login/6.png" alt="Icono" class="card-icon">
-            <h2 class="card-title">Código de Verificación</h2>
-            <p class="card-subtitle">Ingresa el código que te enviamos al correo para confirmar tu identidad.</p>
+            <h2 class="card-title">Verificar Código</h2>
+            <p class="card-subtitle">Ingresa el código que te enviamos al correo para confirmar tu identidad y cambiar tu contraseña.</p>
 
-            <!-- Banner simulación de correo con el código aleatorio -->
+            <!-- Notificación informativa de código enviado -->
             <div class="email-sent-badge" id="email-notification-banner">
               <div class="email-sent-header">
-                <i class="fas fa-envelope-open-text"></i> Correo enviado a <span id="target-email-label" style="text-decoration: underline;"></span>
+                <i class="fas fa-paper-plane"></i> Código enviado a <span id="target-email-label" style="text-decoration: underline; font-weight: 700;"></span>
               </div>
-              <div class="email-code-box">
-                <div>
-                  <span style="font-size: 11px; display: block; color: #15803d;">Tu código de seguridad:</span>
-                  <span class="email-code-text" id="demo-generated-code">123456</span>
-                </div>
-                <button type="button" class="btn-copy-code" onclick="autoFillCode()" title="Copiar y pegar código">
-                  <i class="fas fa-magic"></i> Autocompletar
-                </button>
+              <div style="font-size: 13px; color: #166534; line-height: 1.5; margin-top: 4px;">
+                Hemos enviado un código único de 6 dígitos a tu bandeja de entrada. Revisa tu correo (incluyendo spam) e ingrésalo a continuación.
               </div>
             </div>
 
             <div class="error-box" id="step2-error">
-              <i class="fas fa-exclamation-circle"></i> <span id="step2-error-text">Código incorrecto.</span>
+              <i class="fas fa-exclamation-circle" style="font-size: 16px; flex-shrink: 0;"></i>
+              <span id="step2-error-text">El código ingresado es inválido.</span>
             </div>
 
-            <form onsubmit="handleVerifyCode(event)">
+            <form onsubmit="handleVerifyCode(event)" novalidate id="form-step-2">
               <div class="form-group" style="text-align: center;">
-                <label class="form-label">Ingresa el código de 6 dígitos</label>
+                <label class="form-label" for="verification-code-input">Ingresa el código de 6 dígitos</label>
                 <div class="code-input-container">
-                  <input type="text" id="verification-code-input" class="code-input" maxlength="6" pattern="[0-9]{6}" placeholder="------" required autocomplete="one-time-code">
+                  <input type="text" id="verification-code-input" class="code-input" maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="------" autocomplete="one-time-code">
                 </div>
               </div>
 
               <button type="submit" class="btn-submit" id="btn-verify-code">
-                <i class="fas fa-check"></i> Verificar código
+                <i class="fas fa-shield-alt"></i> Verificar código
               </button>
 
               <div class="action-links">
-                <a onclick="resendNewCode()"><i class="fas fa-redo-alt"></i> Reenviar código</a>
-                <a onclick="goBackToStep1()"><i class="fas fa-arrow-left"></i> Cambiar correo</a>
+                <a onclick="resendNewCode()" id="link-resend-code"><i class="fas fa-redo-alt"></i> Reenviar código</a>
+                <a onclick="goBackToStep1()" id="link-back-to-email"><i class="fas fa-arrow-left"></i> Cambiar correo</a>
               </div>
             </form>
           </div>
@@ -538,27 +509,28 @@
           <div class="step-section" id="step-3-password" style="display: none;">
             <img src="img_login/6.png" alt="Icono" class="card-icon">
             <h2 class="card-title">Nueva Contraseña</h2>
-            <p class="card-subtitle">Código verificado. Ingresa tu nueva contraseña y su confirmación.</p>
+            <p class="card-subtitle">Código verificado con éxito. Ingresa tu nueva contraseña para tu cuenta.</p>
 
             <div class="error-box" id="step3-error">
-              <i class="fas fa-exclamation-circle"></i> <span id="step3-error-text">Las contraseñas no coinciden.</span>
+              <i class="fas fa-exclamation-circle" style="font-size: 16px; flex-shrink: 0;"></i>
+              <span id="step3-error-text">Las contraseñas no coinciden.</span>
             </div>
 
-            <form onsubmit="handleSaveNewPassword(event)">
+            <form onsubmit="handleSaveNewPassword(event)" novalidate id="form-step-3">
               <div class="form-group">
-                <label class="form-label">Nueva Contraseña</label>
+                <label class="form-label" for="new-password-input">Nueva Contraseña</label>
                 <div class="input-wrapper">
                   <i class="fas fa-lock left-icon"></i>
-                  <input type="password" id="new-password-input" placeholder="Mínimo 6 caracteres" required minlength="6">
+                  <input type="password" id="new-password-input" placeholder="Mínimo 6 caracteres" minlength="6" autocomplete="new-password">
                   <i class="far fa-eye right-icon" onclick="togglePass('new-password-input')"></i>
                 </div>
               </div>
 
               <div class="form-group">
-                <label class="form-label">Confirmar Nueva Contraseña</label>
+                <label class="form-label" for="confirm-password-input">Confirmar Nueva Contraseña</label>
                 <div class="input-wrapper">
                   <i class="fas fa-lock left-icon"></i>
-                  <input type="password" id="confirm-password-input" placeholder="Repite la contraseña" required minlength="6">
+                  <input type="password" id="confirm-password-input" placeholder="Repite la contraseña" minlength="6" autocomplete="new-password">
                   <i class="far fa-eye right-icon" onclick="togglePass('confirm-password-input')"></i>
                 </div>
               </div>
@@ -575,7 +547,7 @@
               <i class="fas fa-check"></i>
             </div>
             <h2 class="success-title">¡Contraseña cambiada con éxito!</h2>
-            <p class="success-desc">Tu contraseña fue cambiada exitosamente. Ahora puedes ingresar a tu cuenta de Nativa con tus nuevas credenciales.</p>
+            <p class="success-desc">Tu contraseña fue actualizada correctamente. Ahora puedes iniciar sesión con tu nueva contraseña.</p>
 
             <p class="login-prompt-text">¿Quieres iniciar sesión?</p>
 
@@ -591,129 +563,280 @@
   </div>
 
   <script>
-    // Estado de la recuperación
-    let recoveryState = {
+    // Estado global de recuperación de contraseña
+    const recoveryState = {
       email: '',
-      code: '',
-      attempts: 0
+      verifiedCode: ''
     };
 
     function togglePass(id) {
       const input = document.getElementById(id);
+      if (!input) return;
       const icon = input.nextElementSibling;
       if (input.type === 'password') {
         input.type = 'text';
-        icon.classList.remove('fa-eye');
-        icon.classList.add('fa-eye-slash');
+        if (icon) {
+          icon.classList.remove('fa-eye');
+          icon.classList.add('fa-eye-slash');
+        }
       } else {
         input.type = 'password';
-        icon.classList.remove('fa-eye-slash');
-        icon.classList.add('fa-eye');
+        if (icon) {
+          icon.classList.remove('fa-eye-slash');
+          icon.classList.add('fa-eye');
+        }
       }
     }
 
-    // Generar código aleatorio de 6 dígitos único para cada usuario y petición
-    function generateRandomCode() {
-      return Math.floor(100000 + Math.random() * 900000).toString();
+    function showSection(sectionId) {
+      const sections = ['step-1-email', 'step-2-code', 'step-3-password', 'step-4-success'];
+      sections.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = (id === sectionId) ? 'block' : 'none';
+      });
     }
 
-    // Paso 1: Enviar código
-    function handleSendCode(e) {
-      e.preventDefault();
+    // Redirección entre apartados actualizando la URL
+    function goToStep(step, email, code) {
+      const url = new URL(window.location.href);
+      if (step === 'email') {
+        url.searchParams.delete('step');
+        window.history.pushState({}, '', url.pathname + (url.search ? url.search : ''));
+        showSection('step-1-email');
+        const emailInput = document.getElementById('recovery-email-input');
+        if (emailInput) {
+          if (email) emailInput.value = email;
+          emailInput.focus();
+        }
+      } else if (step === 'verificar') {
+        url.searchParams.set('step', 'verificar');
+        if (email) url.searchParams.set('email', email);
+        window.history.pushState({}, '', url.pathname + '?' + url.searchParams.toString());
+        showSection('step-2-code');
+        const targetLabel = document.getElementById('target-email-label');
+        if (targetLabel) targetLabel.textContent = email || recoveryState.email;
+        const codeInput = document.getElementById('verification-code-input');
+        if (codeInput) {
+          codeInput.value = '';
+          codeInput.classList.remove('input-error');
+          codeInput.focus();
+        }
+      } else if (step === 'cambiar-contrasena') {
+        url.searchParams.set('step', 'cambiar-contrasena');
+        if (email) url.searchParams.set('email', email);
+        window.history.pushState({}, '', url.pathname + '?' + url.searchParams.toString());
+        showSection('step-3-password');
+        const passInput = document.getElementById('new-password-input');
+        if (passInput) {
+          passInput.value = '';
+          const confirmInput = document.getElementById('confirm-password-input');
+          if (confirmInput) confirmInput.value = '';
+          passInput.focus();
+        }
+      } else if (step === 'success') {
+        url.searchParams.set('step', 'completado');
+        window.history.pushState({}, '', url.pathname + '?' + url.searchParams.toString());
+        showSection('step-4-success');
+      }
+    }
+
+    // Volver al apartado de correo
+    function goBackToStep1() {
+      goToStep('email', recoveryState.email);
+    }
+
+    // Paso 1: Validar si ingresó correo, enviar código al correo y redirigir al apartado de verificación
+    async function handleSendCode(e) {
+      if (e) e.preventDefault();
       const emailInput = document.getElementById('recovery-email-input');
       const errBox = document.getElementById('step1-error');
-      const email = emailInput.value.trim().toLowerCase();
+      const errText = document.getElementById('step1-error-text');
+      const sendBtn = document.getElementById('btn-send-code');
+      const email = emailInput ? emailInput.value.trim().toLowerCase() : '';
 
-      if (!email || !email.includes('@') || !email.includes('.')) {
+      // Si no ingresó correo, se le debe de decir al usuario
+      if (!email) {
         errBox.style.display = 'flex';
-        document.getElementById('step1-error-text').textContent = 'Por favor ingresa un correo electrónico válido.';
+        errText.textContent = 'No has ingresado ningún correo electrónico. Por favor escribe tu correo para enviarte el código.';
+        if (emailInput) {
+          emailInput.classList.add('input-error');
+          emailInput.focus();
+        }
+        return;
+      }
+
+      // Validar formato del correo
+      if (!email.includes('@') || !email.includes('.')) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'Por favor ingresa un correo electrónico válido (ejemplo: usuario@correo.com).';
+        if (emailInput) {
+          emailInput.classList.add('input-error');
+          emailInput.focus();
+        }
         return;
       }
 
       errBox.style.display = 'none';
-      recoveryState.email = email;
-      // Generar código aleatorio
-      recoveryState.code = generateRandomCode();
-      recoveryState.attempts = 0;
+      if (emailInput) emailInput.classList.remove('input-error');
 
-      // Guardar en sessionStorage para este usuario
-      sessionStorage.setItem('nativa_recovery_email', recoveryState.email);
-      sessionStorage.setItem('nativa_recovery_code', recoveryState.code);
+      const originalBtnHtml = sendBtn.innerHTML;
+      sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando código al correo...';
+      sendBtn.disabled = true;
 
-      // Actualizar UI del paso 2
-      document.getElementById('target-email-label').textContent = recoveryState.email;
-      document.getElementById('demo-generated-code').textContent = recoveryState.code;
-      document.getElementById('verification-code-input').value = '';
+      try {
+        const response = await fetch('/api/auth/send-recovery-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
 
-      // Transición al paso 2
-      document.getElementById('step-1-email').style.display = 'none';
-      document.getElementById('step-2-code').style.display = 'block';
-      document.getElementById('verification-code-input').focus();
+        if (data.success) {
+          recoveryState.email = email;
+          // Se le redirige al apartado en el cual tiene la opción de verificar el código
+          goToStep('verificar', email);
+        } else {
+          errBox.style.display = 'flex';
+          errText.textContent = data.message || 'No se pudo enviar el código. Inténtalo de nuevo.';
+          if (emailInput) emailInput.focus();
+        }
+      } catch (err) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'Error de conexión con el servidor. Inténtalo nuevamente.';
+      } finally {
+        sendBtn.innerHTML = originalBtnHtml;
+        sendBtn.disabled = false;
+      }
     }
 
-    // Reenviar un NUEVO código aleatorio
-    function resendNewCode() {
-      recoveryState.code = generateRandomCode();
-      sessionStorage.setItem('nativa_recovery_code', recoveryState.code);
-      document.getElementById('demo-generated-code').textContent = recoveryState.code;
-      document.getElementById('verification-code-input').value = '';
-      
+    // Reenviar un nuevo código al correo
+    async function resendNewCode() {
+      const email = recoveryState.email;
+      if (!email) {
+        goBackToStep1();
+        return;
+      }
+
       const errBox = document.getElementById('step2-error');
-      errBox.style.display = 'none';
+      if (errBox) errBox.style.display = 'none';
 
-      // Feedback visual
       const banner = document.getElementById('email-notification-banner');
-      banner.style.animation = 'none';
-      setTimeout(() => banner.style.animation = 'fadeIn 0.3s ease', 10);
+      if (banner) banner.style.opacity = '0.5';
+
+      try {
+        const response = await fetch('/api/auth/send-recovery-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await response.json();
+
+        if (banner) banner.style.opacity = '1';
+        const codeInput = document.getElementById('verification-code-input');
+        if (codeInput) {
+          codeInput.value = '';
+          codeInput.classList.remove('input-error');
+          codeInput.focus();
+        }
+
+        if (data.success) {
+          const targetLabel = document.getElementById('target-email-label');
+          if (targetLabel) targetLabel.textContent = email;
+        } else {
+          if (errBox) {
+            errBox.style.display = 'flex';
+            document.getElementById('step2-error-text').textContent = data.message || 'Error al reenviar el código.';
+          }
+        }
+      } catch (err) {
+        if (banner) banner.style.opacity = '1';
+        if (errBox) {
+          errBox.style.display = 'flex';
+          document.getElementById('step2-error-text').textContent = 'Error de conexión al reenviar código.';
+        }
+      }
     }
 
-    // Autocompletar código para conveniencia del usuario en pruebas
-    function autoFillCode() {
-      const input = document.getElementById('verification-code-input');
-      input.value = recoveryState.code;
-      input.focus();
-    }
-
-    // Volver al paso 1
-    function goBackToStep1() {
-      document.getElementById('step-2-code').style.display = 'none';
-      document.getElementById('step-1-email').style.display = 'block';
-      document.getElementById('recovery-email-input').focus();
-    }
-
-    // Paso 2: Verificar código
-    function handleVerifyCode(e) {
-      e.preventDefault();
+    // Paso 2: Verificar el código ingresado contra el enviado
+    async function handleVerifyCode(e) {
+      if (e) e.preventDefault();
       const codeInput = document.getElementById('verification-code-input');
-      const userCode = codeInput.value.trim();
+      const userCode = codeInput ? codeInput.value.trim() : '';
       const errBox = document.getElementById('step2-error');
       const errText = document.getElementById('step2-error-text');
+      const verifyBtn = document.getElementById('btn-verify-code');
 
-      const expectedCode = recoveryState.code || sessionStorage.getItem('nativa_recovery_code');
-
-      // Validar si es exactamente el código aleatorio enviado
-      if (userCode !== expectedCode) {
-        recoveryState.attempts++;
+      // Si no ingresó código o no tiene exactamente 6 dígitos
+      if (!userCode || userCode.length !== 6) {
         errBox.style.display = 'flex';
-        errText.textContent = `El código ingresado (${userCode}) no coincide con el enviado al correo. Por favor verifícalo.`;
-        codeInput.focus();
+        errText.textContent = 'El código ingresado es inválido.';
+        if (codeInput) {
+          codeInput.classList.add('input-error');
+          codeInput.focus();
+        }
         return;
       }
 
-      // Código correcto -> Pasar al paso 3
       errBox.style.display = 'none';
-      document.getElementById('step-2-code').style.display = 'none';
-      document.getElementById('step-3-password').style.display = 'block';
-      document.getElementById('new-password-input').focus();
+      if (codeInput) codeInput.classList.remove('input-error');
+
+      const origBtnHtml = verifyBtn.innerHTML;
+      verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando código...';
+      verifyBtn.disabled = true;
+
+      try {
+        const response = await fetch('/api/auth/verify-recovery-code', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: recoveryState.email,
+            code: userCode
+          })
+        });
+        const data = await response.json();
+
+        // Si el código es el mismo que el enviado se le permitirá cambiar su contraseña
+        if (data.success) {
+          recoveryState.verifiedCode = userCode;
+          goToStep('cambiar-contrasena', recoveryState.email, userCode);
+        } else {
+          // Si no es el mismo, debe de salir un mensaje diciendo que el código ingresado es inválido
+          errBox.style.display = 'flex';
+          errText.textContent = 'El código ingresado es inválido.';
+          if (codeInput) {
+            codeInput.classList.add('input-error');
+            codeInput.focus();
+            codeInput.select();
+          }
+        }
+      } catch (err) {
+        // En caso de fallo o error de red
+        errBox.style.display = 'flex';
+        errText.textContent = 'El código ingresado es inválido.';
+        if (codeInput) {
+          codeInput.classList.add('input-error');
+          codeInput.focus();
+        }
+      } finally {
+        verifyBtn.innerHTML = origBtnHtml;
+        verifyBtn.disabled = false;
+      }
     }
 
-    // Paso 3: Guardar nueva contraseña
-    function handleSaveNewPassword(e) {
-      e.preventDefault();
+    // Paso 3: Guardar la nueva contraseña
+    async function handleSaveNewPassword(e) {
+      if (e) e.preventDefault();
       const pass1 = document.getElementById('new-password-input').value;
       const pass2 = document.getElementById('confirm-password-input').value;
       const errBox = document.getElementById('step3-error');
       const errText = document.getElementById('step3-error-text');
+      const saveBtn = document.getElementById('btn-save-password');
+
+      if (!pass1) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'Por favor ingresa tu nueva contraseña.';
+        return;
+      }
 
       if (pass1.length < 6) {
         errBox.style.display = 'flex';
@@ -728,18 +851,80 @@
       }
 
       errBox.style.display = 'none';
+      const origSaveHtml = saveBtn.innerHTML;
+      saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando nueva contraseña...';
+      saveBtn.disabled = true;
 
-      // Guardar la nueva contraseña asociada en localStorage
-      const email = recoveryState.email || 'samueldpp12@gmail.com';
-      localStorage.setItem('nativa_user_password', pass1);
-      localStorage.setItem('nativa_pwd_' + email, pass1);
+      try {
+        const response = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            email: recoveryState.email,
+            code: recoveryState.verifiedCode,
+            newPassword: pass1
+          })
+        });
+        const data = await response.json();
 
-      // Limpiar códigos temporales
-      sessionStorage.removeItem('nativa_recovery_code');
+        if (data.success) {
+          goToStep('success');
+        } else {
+          errBox.style.display = 'flex';
+          errText.textContent = data.message || 'No se pudo actualizar la contraseña. Inténtalo nuevamente.';
+        }
+      } catch (err) {
+        errBox.style.display = 'flex';
+        errText.textContent = 'Error de comunicación con el servidor al guardar la contraseña.';
+      } finally {
+        saveBtn.innerHTML = origSaveHtml;
+        saveBtn.disabled = false;
+      }
+    }
 
-      // Mostrar paso 4: éxito
-      document.getElementById('step-3-password').style.display = 'none';
-      document.getElementById('step-4-success').style.display = 'block';
+    // Escuchadores de eventos para limpiar errores en tiempo real
+    document.addEventListener('DOMContentLoaded', () => {
+      const emailInput = document.getElementById('recovery-email-input');
+      const err1 = document.getElementById('step1-error');
+      if (emailInput && err1) {
+        emailInput.addEventListener('input', () => {
+          err1.style.display = 'none';
+          emailInput.classList.remove('input-error');
+        });
+      }
+
+      const codeInput = document.getElementById('verification-code-input');
+      const err2 = document.getElementById('step2-error');
+      if (codeInput && err2) {
+        codeInput.addEventListener('input', () => {
+          err2.style.display = 'none';
+          codeInput.classList.remove('input-error');
+          // Limitar a solo números
+          codeInput.value = codeInput.value.replace(/[^0-9]/g, '');
+        });
+      }
+
+      // Inicializar navegación por parámetros de URL
+      initFromUrl();
+    });
+
+    window.addEventListener('popstate', () => {
+      initFromUrl();
+    });
+
+    function initFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const step = params.get('step');
+      const email = params.get('email');
+
+      if (step === 'verificar' && email) {
+        recoveryState.email = email;
+        goToStep('verificar', email);
+      } else if (step === 'cambiar-contrasena' && email && recoveryState.verifiedCode) {
+        goToStep('cambiar-contrasena', email, recoveryState.verifiedCode);
+      } else {
+        goToStep('email', email || '');
+      }
     }
   </script>
 </body>

@@ -460,49 +460,33 @@
         <!-- Columna Derecha: Cuentas y Opciones -->
         <div class="col-right">
           
-          <div id="accounts-list-view">
-            <!-- Cuenta Demo del Cliente -->
-            <div class="account-item-row" id="account-primary-row" onclick="confirmAccountLogin('Cliente Nativa', 'cliente.nativa@gmail.com')">
-              <div class="account-avatar">
-                <span class="account-avatar-char" id="user-avatar-initial">C</span>
+          <!-- Formulario de Inicio de Sesión Oficial Google -->
+          <div id="manual-account-box" style="display: block;">
+            <div style="font-size: 15px; color: #202124; margin-bottom: 8px; font-weight: 500;">Introduce tu cuenta de Google</div>
+            <p style="font-size: 13px; color: #5f6368; margin-bottom: 18px; line-height: 1.4;">
+              Para continuar hacia <strong>Nativa</strong>, ingresa la dirección de correo con la que deseas autenticarte.
+            </p>
+            <form onsubmit="handleManualSubmit(event)">
+              <div style="margin-bottom: 12px;">
+                <label for="input-manual-email" style="display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-bottom: 6px;">Correo electrónico de Google</label>
+                <input type="email" id="input-manual-email" class="g-input-field" placeholder="ejemplo@gmail.com" required autofocus autocomplete="email">
               </div>
-              <div class="account-meta">
-                <div class="account-user-name" id="user-display-name">Cliente Nativa</div>
-                <div class="account-user-email" id="user-display-email">cliente.nativa@gmail.com</div>
+              <div style="margin-bottom: 18px;">
+                <label for="input-manual-name" style="display: block; font-size: 12px; font-weight: 600; color: #4b5563; margin-bottom: 6px;">Nombre y Apellido</label>
+                <input type="text" id="input-manual-name" class="g-input-field" placeholder="Tu nombre completo">
               </div>
-            </div>
-
-            <!-- Divisor -->
-            <div class="account-divider"></div>
-
-            <!-- Fila: Usar otra cuenta -->
-            <div class="use-another-row" onclick="showManualAccountForm()">
-              <div class="use-another-icon-wrap">
-                <i class="far fa-user-circle"></i>
+              <div style="display: flex; justify-content: flex-end; gap: 12px; align-items: center; margin-top: 14px;">
+                <button type="button" class="g-btn-cancel" onclick="window.close()">Cancelar</button>
+                <button type="submit" class="g-btn-next">Continuar con Google</button>
               </div>
-              <div class="use-another-text" id="use-another-label">Usar otra cuenta</div>
-            </div>
+            </form>
 
-            <!-- Divisor -->
-            <div class="account-divider" style="margin-bottom: 22px;"></div>
+            <div class="account-divider" style="margin: 22px 0 16px 0;"></div>
 
             <!-- Texto de Privacidad y Términos -->
             <div class="privacy-disclaimer" id="privacy-disclaimer-text">
-              Antes de usar esta aplicación, puedes leer la <a href="politica-privacidad.html" target="_blank">Política de Privacidad</a> y los <a href="terminos-condiciones.html" target="_blank">Términos del Servicio</a> de nativaproductos.com.
+              Antes de usar esta aplicación, puedes consultar la <a href="politica-privacidad.html" target="_blank">Política de Privacidad</a> y los <a href="terminos-condiciones.html" target="_blank">Términos del Servicio</a> de nativaproductos.com.
             </div>
-          </div>
-
-          <!-- Formulario Secundario si elige "Usar otra cuenta" -->
-          <div id="manual-account-box">
-            <h3 style="font-size: 18px; margin-bottom: 12px; font-weight: 400;">Introduce tu correo</h3>
-            <form onsubmit="handleManualSubmit(event)">
-              <input type="email" id="input-manual-email" class="g-input-field" placeholder="Correo electrónico o teléfono" required autofocus>
-              <input type="password" id="input-manual-pass" class="g-input-field" placeholder="Introduce tu contraseña" required minlength="4">
-              <div style="margin-top: 10px; overflow: hidden;">
-                <button type="button" class="g-btn-cancel" onclick="hideManualAccountForm()">Volver</button>
-                <button type="submit" class="g-btn-next">Siguiente</button>
-              </div>
-            </form>
           </div>
 
         </div>
@@ -598,11 +582,7 @@
             user: userData
           }, '*');
         } else {
-          localStorage.setItem('nativa_user_email', userData.email);
-          localStorage.setItem('nativa_user_name', userData.name);
-          localStorage.setItem('nativa_user_lastname', userData.lastname);
-          localStorage.setItem('nativa_auth_provider', userData.provider);
-          window.location.href = 'perfil.html';
+          window.location.href = `register.html?google_email=${encodeURIComponent(userData.email)}&google_name=${encodeURIComponent(userData.name)}&google_lastname=${encodeURIComponent(userData.lastname)}`;
           return;
         }
 
@@ -615,12 +595,17 @@
     function handleManualSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('input-manual-email').value.trim();
+      const nameInput = document.getElementById('input-manual-name');
+      const nameVal = nameInput ? nameInput.value.trim() : '';
       if (!email) return;
 
-      const userPart = email.split('@')[0];
-      const capitalized = userPart.charAt(0).toUpperCase() + userPart.slice(1);
+      let nameToUse = nameVal;
+      if (!nameToUse) {
+        const userPart = email.split('@')[0];
+        nameToUse = userPart.charAt(0).toUpperCase() + userPart.slice(1);
+      }
 
-      confirmAccountLogin(capitalized + ' Usuario', email);
+      confirmAccountLogin(nameToUse, email);
     }
   </script>
 

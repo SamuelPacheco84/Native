@@ -270,16 +270,17 @@
     }
     .social-btns {
       display: flex;
-      gap: 16px;
+      justify-content: center;
       margin-bottom: 24px;
     }
     .btn-social {
-      flex: 1;
+      width: 100%;
+      max-width: 320px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      padding: 12px;
+      gap: 10px;
+      padding: 12px 20px;
       border: 1px solid var(--border-color);
       border-radius: 8px;
       background: var(--blanco);
@@ -287,17 +288,17 @@
       font-weight: 600;
       color: #1e293b;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, border-color 0.2s, box-shadow 0.2s;
     }
     .btn-social:hover {
       background: var(--gris-claro);
+      border-color: #cbd5e1;
     }
-    .btn-social img {
+    .btn-social img,
+    .btn-social svg {
       width: 18px;
-    }
-    .btn-social i {
-      font-size: 18px;
-      color: #1877F2; /* Facebook blue */
+      height: 18px;
+      flex-shrink: 0;
     }
     .auth-footer {
       text-align: center;
@@ -317,6 +318,154 @@
       .bg-decor { display: none; 
       margin-top: -20px;
       }
+    }
+
+    /* Modal de Registro con Google para Personas Nuevas */
+    .greg-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100000;
+      padding: 16px;
+      animation: gregFadeIn 0.25s ease-out;
+    }
+    @keyframes gregFadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    .greg-modal-container {
+      background: #ffffff;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 490px;
+      max-height: 94vh;
+      overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      border: 1px solid #e2e8f0;
+      animation: gregScaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes gregScaleUp {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+    .greg-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 24px;
+      border-bottom: 1px solid #f1f5f9;
+      background: #fafaf9;
+      border-radius: 16px 16px 0 0;
+    }
+    .greg-google-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+    .greg-close-btn {
+      background: none;
+      border: none;
+      font-size: 26px;
+      color: #94a3b8;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px 8px;
+      border-radius: 6px;
+      transition: color 0.2s, background-color 0.2s;
+    }
+    .greg-close-btn:hover {
+      color: #1e293b;
+      background-color: #f1f5f9;
+    }
+    .greg-modal-body {
+      padding: 24px;
+    }
+    .greg-title {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--verde-bosque);
+      margin-bottom: 6px;
+    }
+    .greg-desc {
+      font-size: 13.5px;
+      color: #64748b;
+      line-height: 1.5;
+      margin-bottom: 18px;
+    }
+    .greg-alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      color: #b91c1c;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .greg-btn-row {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      margin-top: 22px;
+      padding-top: 16px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .greg-btn-cancel {
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 11px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .greg-btn-cancel:hover {
+      background: #e2e8f0;
+      color: #1e293b;
+    }
+    .greg-btn-submit {
+      background: var(--verde-bosque);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 22px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 10px rgba(40, 89, 67, 0.25);
+      transition: all 0.2s;
+    }
+    .greg-btn-submit:hover {
+      background: #1e4533;
+      box-shadow: 0 6px 14px rgba(40, 89, 67, 0.35);
+      transform: translateY(-1px);
+    }
+    .greg-btn-submit:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
     }
   </style>
 </head>
@@ -370,19 +519,31 @@
             <span>Inicia sesión con tu cuenta para ver el estado y seguimiento de tu orden <strong>#<span id="banner-target-order"></span></strong>. Te llevaremos a tu pedido inmediatamente.</span>
           </div>
 
+          <div id="checkout-redirect-alert" style="display: none; background: #FEF3C7; border: 1.5px solid #FCD34D; color: #92400E; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; line-height: 1.4;">
+            <div style="font-weight: 700; display: flex; align-items: center; gap: 8px; margin-bottom: 4px; color: #78350F;">
+              <i class="fas fa-shopping-bag" style="color: #B45309; font-size: 16px;"></i> Registro Requerido para Comprar
+            </div>
+            <span>Para finalizar tu compra de forma segura, por favor inicia sesión o regístrate. Los productos seleccionados se mantendrán en tu carrito de compras.</span>
+          </div>
+
+          <div id="login-error-alert" style="display: none; background: #FEF2F2; border: 1.5px solid #FCA5A5; color: #991B1B; padding: 12px 14px; border-radius: 8px; font-size: 13px; margin-bottom: 16px; align-items: center; gap: 10px; line-height: 1.4;">
+            <i class="fas fa-exclamation-circle" style="font-size: 16px; color: #DC2626; flex-shrink: 0;"></i>
+            <span id="login-error-text">El correo/contraseña ingresados no son válidos, inténtelo de nuevo.</span>
+          </div>
+
           <form onsubmit="handleAuthSubmit(event)">
             <div class="form-group">
               <label class="form-label">Correo electrónico</label>
               <div class="input-wrapper">
                 <i class="far fa-envelope left-icon"></i>
-                <input type="email" id="login-email-input" placeholder="ejemplo@correo.com" required>
+                <input type="email" id="login-email-input" placeholder="ejemplo@correo.com" required oninput="hideLoginError()">
               </div>
             </div>
             <div class="form-group">
               <label class="form-label">Contraseña</label>
               <div class="input-wrapper">
                 <i class="fas fa-lock left-icon"></i>
-                <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required>
+                <input type="password" id="login-password" placeholder="Ingresa tu contraseña" required oninput="hideLoginError()">
                 <i class="far fa-eye right-icon" onclick="togglePassword('login-password')"></i>
               </div>
             </div>
@@ -409,21 +570,102 @@
                 </svg>
                 Google
               </button>
-              <button type="button" class="btn-social" id="btn-login-facebook" onclick="openOAuthPopup('Facebook', 'login')">
-                <i class="fab fa-facebook"></i> Facebook
-              </button>
             </div>
 
             <div class="auth-footer">
               ¿No tienes cuenta? <a href="register.html" id="link-to-register">Regístrate aquí</a>
-              <div style="margin-top: 14px; padding-top: 10px; border-top: 1px dashed #E5DFC8;">
-                <a href="admin.html" id="link-admin-panel" style="font-size: 12px; color: #285943; font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
-                  <i class="fas fa-shield-alt"></i> Portal de Administración
-                </a>
-              </div>
             </div>
           </form>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de Registro con Google para Personas Nuevas -->
+  <div id="google-register-modal" class="greg-modal-overlay" style="display: none;">
+    <div class="greg-modal-container" role="dialog" aria-modal="true" aria-labelledby="greg-modal-title">
+      <div class="greg-modal-header">
+        <div class="greg-google-badge">
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+            <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+            <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+            <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+          </svg>
+          <span style="font-weight: 700; color: #1f2937; font-size: 14px;">Google</span>
+        </div>
+        <button type="button" class="greg-close-btn" onclick="closeGoogleRegisterModal()" title="Cerrar">&times;</button>
+      </div>
+
+      <div class="greg-modal-body">
+        <h3 id="greg-modal-title" class="greg-title">Completar Registro con Google</h3>
+        <p class="greg-desc">Has conectado tu cuenta de Google. Para activar tu perfil en Nativa, por favor confirma tus datos personales e ingresa tu teléfono y contraseña.</p>
+
+        <div id="greg-alert" class="greg-alert" style="display: none;"></div>
+
+        <form id="greg-form" onsubmit="handleGoogleRegisterSubmit(event)">
+          <div class="form-row">
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="greg-name">Nombre <span style="color: #dc2626;">*</span></label>
+              <div class="input-wrapper">
+                <i class="far fa-user left-icon"></i>
+                <input type="text" id="greg-name" placeholder="Tu nombre" required>
+              </div>
+            </div>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label class="form-label" for="greg-lastname">Apellido <span style="color: #dc2626;">*</span></label>
+              <div class="input-wrapper">
+                <i class="far fa-user left-icon"></i>
+                <input type="text" id="greg-lastname" placeholder="Tu apellido" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="greg-email">Correo electrónico <span style="color: #dc2626;">*</span></label>
+            <div class="input-wrapper">
+              <i class="far fa-envelope left-icon"></i>
+              <input type="email" id="greg-email" placeholder="correo@gmail.com" required readonly style="background-color: #f8fafc; cursor: default;">
+            </div>
+            <div style="font-size: 11.5px; color: #059669; margin-top: 4px; display: flex; align-items: center; gap: 4px;">
+              <i class="fas fa-check-circle"></i> Cuenta verificada por Google
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="greg-phone">Teléfono <span style="color: #dc2626;">*</span></label>
+            <div class="input-wrapper">
+              <i class="fas fa-phone left-icon"></i>
+              <input type="tel" id="greg-phone" placeholder="Ej: +57 300 123 4567" required>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label class="form-label" for="greg-password">Contraseña <span style="color: #dc2626;">*</span></label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock left-icon"></i>
+              <input type="password" id="greg-password" placeholder="Mínimo 6 caracteres" required minlength="6">
+              <i class="far fa-eye right-icon" onclick="togglePassword('greg-password')"></i>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 18px;">
+            <label class="form-label" for="greg-password-confirm">Confirmar Contraseña <span style="color: #dc2626;">*</span></label>
+            <div class="input-wrapper">
+              <i class="fas fa-lock left-icon"></i>
+              <input type="password" id="greg-password-confirm" placeholder="Repite tu contraseña" required minlength="6">
+              <i class="far fa-eye right-icon" onclick="togglePassword('greg-password-confirm')"></i>
+            </div>
+          </div>
+
+          <div class="greg-btn-row">
+            <button type="button" class="greg-btn-cancel" onclick="closeGoogleRegisterModal()">Cancelar</button>
+            <button type="submit" class="greg-btn-submit" id="greg-btn-submit">
+              <span>Completar Registro</span>
+              <i class="fas fa-arrow-right"></i>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
@@ -459,7 +701,13 @@
       );
 
       if (!popup || popup.closed || typeof popup.closed === 'undefined') {
-        alert('Por favor habilita las ventanas emergentes (popups) en tu navegador para continuar con ' + provider);
+        openGoogleRegisterModal({
+          name: '',
+          lastname: '',
+          email: '',
+          phone: '',
+          provider: provider
+        });
       } else {
         popup.focus();
       }
@@ -474,134 +722,276 @@
       return 'perfil.html';
     }
 
-    // Escuchar el evento postMessage cuando el usuario inicia sesión en la ventana emergente
-    window.addEventListener('message', (event) => {
-      if (event.data && event.data.type === 'OAUTH_AUTH_SUCCESS') {
-        const user = event.data.user || {};
-        const provider = event.data.provider || 'Google';
+    function showLoginError(msg) {
+      const alertBox = document.getElementById('login-error-alert');
+      const alertText = document.getElementById('login-error-text');
+      if (alertBox) {
+        if (alertText && msg) alertText.textContent = msg;
+        alertBox.style.display = 'flex';
+        alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      } else {
+        alert(msg || 'El correo/contraseña ingresados no son válidos, inténtelo de nuevo.');
+      }
+    }
 
-        // Guardar datos autenticados en el navegador
-        const authEmail = user.email || 'cliente@nativa.com';
-        const authName = user.name || 'Cliente';
-        const authLastname = user.lastname || 'Nativa';
+    function hideLoginError() {
+      const alertBox = document.getElementById('login-error-alert');
+      if (alertBox) alertBox.style.display = 'none';
+    }
 
-        localStorage.setItem('nativa_user_email', authEmail);
-        localStorage.setItem('nativa_user_name', authName);
-        localStorage.setItem('nativa_user_lastname', authLastname);
-        localStorage.setItem('nativa_auth_provider', provider);
+    // Funciones del Modal de Registro con Google
+    function openGoogleRegisterModal(user) {
+      const modal = document.getElementById('google-register-modal');
+      if (!modal) return;
 
-        // Regla de recordarme por 1 semana si la casilla está marcada
-        const rememberCheckbox = document.getElementById('login-remember-me');
-        const isRemembered = rememberCheckbox ? rememberCheckbox.checked : true;
-        const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-        const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-        const duration = isRemembered ? ONE_WEEK_MS : ONE_DAY_MS;
-        const expiresAt = Date.now() + duration;
+      const nameInput = document.getElementById('greg-name');
+      const lastnameInput = document.getElementById('greg-lastname');
+      const emailInput = document.getElementById('greg-email');
+      const phoneInput = document.getElementById('greg-phone');
+      const passInput = document.getElementById('greg-password');
+      const passConfirm = document.getElementById('greg-password-confirm');
+      const alertBox = document.getElementById('greg-alert');
 
-        localStorage.setItem('nativa_session_expires', expiresAt.toString());
-        localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
+      if (alertBox) alertBox.style.display = 'none';
 
-        // Sincronizar usuario con Firebase Firestore
-        fetch('/api/users/sync', {
+      if (nameInput) nameInput.value = user.name || '';
+      if (lastnameInput) lastnameInput.value = user.lastname || '';
+      if (emailInput) emailInput.value = user.email || '';
+      if (phoneInput) phoneInput.value = user.phone || '';
+      if (passInput) passInput.value = '';
+      if (passConfirm) passConfirm.value = '';
+
+      modal.style.display = 'flex';
+      document.body.style.overflow = 'hidden';
+
+      setTimeout(() => {
+        if (phoneInput && !phoneInput.value) {
+          phoneInput.focus();
+        } else if (nameInput && !nameInput.value) {
+          nameInput.focus();
+        } else if (passInput) {
+          passInput.focus();
+        }
+      }, 120);
+    }
+
+    function closeGoogleRegisterModal() {
+      const modal = document.getElementById('google-register-modal');
+      if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+      }
+    }
+
+    async function handleGoogleRegisterSubmit(e) {
+      e.preventDefault();
+      const alertBox = document.getElementById('greg-alert');
+      const submitBtn = document.getElementById('greg-btn-submit');
+
+      function showModalError(msg) {
+        if (alertBox) {
+          alertBox.style.background = '#fef2f2';
+          alertBox.style.borderColor = '#fecaca';
+          alertBox.style.color = '#b91c1c';
+          alertBox.innerHTML = `<i class="fas fa-exclamation-circle"></i> <span>${msg}</span>`;
+          alertBox.style.display = 'flex';
+          alertBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        } else {
+          alert(msg);
+        }
+      }
+
+      const name = document.getElementById('greg-name').value.trim();
+      const lastname = document.getElementById('greg-lastname').value.trim();
+      const email = document.getElementById('greg-email').value.trim().toLowerCase();
+      const phone = document.getElementById('greg-phone').value.trim();
+      const password = document.getElementById('greg-password').value;
+      const passwordConfirm = document.getElementById('greg-password-confirm').value;
+
+      if (!name) return showModalError('Por favor ingresa tu nombre.');
+      if (!lastname) return showModalError('Por favor ingresa tu apellido.');
+      if (!email || !email.includes('@')) return showModalError('Por favor ingresa un correo electrónico válido.');
+      if (!phone) return showModalError('Por favor ingresa tu número de teléfono.');
+      if (phone.replace(/\D/g, '').length < 7) {
+        return showModalError('Por favor ingresa un número de teléfono válido (mínimo 7 dígitos).');
+      }
+      if (!password || password.length < 6) {
+        return showModalError('La contraseña debe tener al menos 6 caracteres.');
+      }
+      if (password !== passwordConfirm) {
+        return showModalError('Las contraseñas no coinciden. Por favor verifícalas.');
+      }
+
+      try {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> <span>Registrando...</span>`;
+        }
+
+        const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            email: authEmail,
-            name: authName,
-            lastname: authLastname,
-            provider: provider
+            name,
+            lastname,
+            email,
+            phone,
+            password,
+            provider: 'Google'
           })
-        }).catch(err => console.warn('Sync notice:', err));
+        });
 
-        // Notificar y redirigir
-        const submitBtn = document.getElementById('btn-submit-login');
-        if (submitBtn) {
-          submitBtn.innerHTML = '<i class="fas fa-check"></i> ¡Autenticado con ' + provider + '!';
-          submitBtn.style.background = '#285943';
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          throw new Error(data.message || 'Error al completar el registro con Google.');
+        }
+
+        // Guardar sesión activa en localStorage
+        localStorage.setItem('nativa_user_email', email);
+        localStorage.setItem('nativa_user_name', name);
+        localStorage.setItem('nativa_user_lastname', lastname);
+        localStorage.setItem('nativa_user_phone', phone);
+        localStorage.setItem('nativa_auth_provider', 'Google');
+
+        const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+        localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
+        localStorage.setItem('nativa_remember_me', 'true');
+
+        if (alertBox) {
+          alertBox.style.background = '#ecfdf5';
+          alertBox.style.borderColor = '#a7f3d0';
+          alertBox.style.color = '#065f46';
+          alertBox.innerHTML = `<i class="fas fa-check-circle"></i> <span>¡Registro completado exitosamente! Entrando a tu cuenta...</span>`;
+          alertBox.style.display = 'flex';
         }
 
         setTimeout(() => {
           window.location.href = getPostAuthRedirectUrl();
-        }, 400);
+        }, 800);
+      } catch (err) {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `<span>Completar Registro</span> <i class="fas fa-arrow-right"></i>`;
+        }
+        showModalError(err.message || 'Ocurrió un error al registrar tu cuenta.');
       }
-    });
+    }
 
-    function handleAuthSubmit(e) {
-      e.preventDefault();
-      let emailInput = null;
-      let nameInput = null;
-      let lastnameInput = null;
-      
-      const inputs = e.target.querySelectorAll('input');
-      inputs.forEach(input => {
-        if(input.type === 'email') emailInput = input.value;
-        if(input.placeholder && input.placeholder.toLowerCase().includes('nombre')) nameInput = input.value;
-        if(input.placeholder && input.placeholder.toLowerCase().includes('apellido')) lastnameInput = input.value;
-      });
+    // Escuchar el evento postMessage cuando el usuario autentica en la ventana emergente
+    window.addEventListener('message', async (event) => {
+      if (event.data && event.data.type === 'OAUTH_AUTH_SUCCESS') {
+        hideLoginError();
+        const user = event.data.user || {};
+        const provider = event.data.provider || 'Google';
+        const authEmail = (user.email || '').trim().toLowerCase();
 
-      const passInput = document.getElementById('login-password') ? document.getElementById('login-password').value : '';
-      const cleanEmail = (emailInput || '').trim().toLowerCase();
-
-      // Si ingresa con las credenciales de administrador, entrar directo al panel de administración sin crear cuenta de cliente
-      if (cleanEmail === 'samueldpp12@gmail.com') {
-        if (passInput === 'SuperPassword123') {
+        if (authEmail === 'samueldpp12@gmail.com') {
           const adminToken = 'nat_adm_' + btoa('samueldpp12@gmail.com:' + Date.now() + ':adminSecretKey');
           localStorage.setItem('nativa_admin_token', adminToken);
           localStorage.setItem('nativa_admin_email', 'samueldpp12@gmail.com');
-          localStorage.setItem('nativa_admin_name', 'Samuel De Paula');
-          if (localStorage.getItem('nativa_user_email') === 'samueldpp12@gmail.com') {
-            localStorage.removeItem('nativa_user_email');
-          }
+          localStorage.setItem('nativa_admin_name', user.name || 'Samuel Pacheco');
           window.location.href = 'admin.html';
           return;
-        } else {
-          alert('Credenciales de administrador incorrectas. Por favor ingresa la contraseña válida.');
-          return;
         }
-      }
-      
-      if(emailInput) {
-        localStorage.setItem('nativa_user_email', emailInput);
-        if(!nameInput && !localStorage.getItem('nativa_user_name')) {
-          const rawName = emailInput.split('@')[0];
-          const cleanName = rawName.replace(/[^a-zA-Z]/g, ' ').trim();
-          const capName = (cleanName || 'Usuario').split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-          localStorage.setItem('nativa_user_name', capName);
+
+        // Consultar si el usuario ya existe en el sistema
+        try {
+          const checkRes = await fetch('/api/auth/check-user?email=' + encodeURIComponent(authEmail));
+          const checkData = await checkRes.json();
+
+          if (checkData.exists && checkData.user && checkData.user.phone && checkData.user.hasPassword) {
+            // Usuario ya registrado completamente -> Iniciar sesión
+            localStorage.setItem('nativa_user_email', checkData.user.email);
+            localStorage.setItem('nativa_user_name', checkData.user.name);
+            localStorage.setItem('nativa_user_lastname', checkData.user.lastname);
+            localStorage.setItem('nativa_user_phone', checkData.user.phone);
+            localStorage.setItem('nativa_auth_provider', provider);
+
+            const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+            localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
+            localStorage.setItem('nativa_remember_me', 'true');
+
+            window.location.href = getPostAuthRedirectUrl();
+            return;
+          }
+        } catch (e) {
+          console.warn('Check user notice:', e);
         }
-      }
-      if(nameInput) {
-        localStorage.setItem('nativa_user_name', nameInput);
-      }
-      if(lastnameInput) {
-        localStorage.setItem('nativa_user_lastname', lastnameInput);
-      }
 
-      // Regla de "Recordarme": Si está marcado, recordar por 1 semana (7 días)
-      const rememberCheckbox = document.getElementById('login-remember-me');
-      const isRemembered = rememberCheckbox ? rememberCheckbox.checked : false;
-      const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
-      const ONE_DAY_MS = 24 * 60 * 60 * 1000;
-      const duration = isRemembered ? ONE_WEEK_MS : ONE_DAY_MS;
-      const expiresAt = Date.now() + duration;
+        // Si es una persona nueva que se registra con Google -> Mostrar la ventana de completar registro
+        openGoogleRegisterModal({
+          name: user.name || '',
+          lastname: user.lastname || '',
+          email: authEmail,
+          phone: '',
+          provider: provider
+        });
+      }
+    });
 
-      localStorage.setItem('nativa_session_expires', expiresAt.toString());
-      localStorage.setItem('nativa_remember_me', isRemembered ? 'true' : 'false');
-      
-      // Sincronizar en Firebase Firestore
-      if(emailInput) {
-        fetch('/api/users/sync', {
+    async function handleAuthSubmit(e) {
+      e.preventDefault();
+      hideLoginError();
+
+      const emailInput = document.getElementById('login-email-input') ? document.getElementById('login-email-input').value : '';
+      const passInput = document.getElementById('login-password') ? document.getElementById('login-password').value : '';
+      const cleanEmail = (emailInput || '').trim().toLowerCase();
+
+      try {
+        const res = await fetch('/api/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            email: emailInput,
-            name: localStorage.getItem('nativa_user_name') || '',
-            lastname: localStorage.getItem('nativa_user_lastname') || '',
-            provider: 'password'
-          })
-        }).catch(err => console.warn('Sync notice:', err));
+          body: JSON.stringify({ email: cleanEmail, password: passInput })
+        });
+        const data = await res.json();
+
+        if (res.ok && data.success) {
+          if (data.isAdmin) {
+            localStorage.setItem('nativa_admin_token', data.token);
+            localStorage.setItem('nativa_admin_email', data.admin.email);
+            localStorage.setItem('nativa_admin_name', `${data.admin.name} ${data.admin.lastname || ''}`.trim());
+            localStorage.setItem('nativa_user_email', data.admin.email);
+            localStorage.setItem('nativa_user_name', data.admin.name);
+            localStorage.setItem('nativa_user_lastname', data.admin.lastname || 'Pacheco');
+            localStorage.setItem('nativa_user_phone', (data.user && data.user.phone) || '300 000 0000');
+            localStorage.setItem('nativa_auth_provider', 'admin');
+
+            const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+            localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
+            localStorage.setItem('nativa_remember_me', 'true');
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const redirect = urlParams.get('redirect');
+            const order = urlParams.get('order');
+            if (redirect) {
+              window.location.href = redirect;
+            } else if (order) {
+              window.location.href = `perfil.html?order=${encodeURIComponent(order)}`;
+            } else {
+              window.location.href = 'admin.html';
+            }
+            return;
+          } else if (data.user) {
+            localStorage.setItem('nativa_user_email', data.user.email);
+            localStorage.setItem('nativa_user_name', data.user.name);
+            localStorage.setItem('nativa_user_lastname', data.user.lastname);
+            localStorage.setItem('nativa_user_phone', data.user.phone || '');
+            localStorage.setItem('nativa_auth_provider', 'password');
+
+            const ONE_WEEK_MS = 7 * 24 * 60 * 60 * 1000;
+            localStorage.setItem('nativa_session_expires', (Date.now() + ONE_WEEK_MS).toString());
+            localStorage.setItem('nativa_remember_me', 'true');
+
+            window.location.href = getPostAuthRedirectUrl();
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn('Login request error:', err);
       }
 
-      window.location.href = getPostAuthRedirectUrl();
+      // Si las credenciales no son válidas o hubo error
+      showLoginError('El correo/contraseña ingresados no son válidos, inténtelo de nuevo.');
     }
 
     // Inicialización y verificación de sesión expirada y orden a rastrear
@@ -626,6 +1016,20 @@
         const regLink = document.getElementById('link-to-register');
         if (regLink) {
           regLink.href = `register.html?redirect=${encodeURIComponent('perfil.html?order=' + orderId)}&order=${encodeURIComponent(orderId)}`;
+        }
+      }
+
+      // Detectar si el usuario fue redirigido al intentar finalizar una compra sin estar registrado
+      const isCheckoutRedirect = urlParams.get('reason') === 'checkout' || (urlParams.get('redirect') && urlParams.get('redirect').includes('checkout=true'));
+      if (isCheckoutRedirect) {
+        const checkoutAlert = document.getElementById('checkout-redirect-alert');
+        if (checkoutAlert) {
+          checkoutAlert.style.display = 'block';
+        }
+        const regLink = document.getElementById('link-to-register');
+        if (regLink) {
+          const targetRedirect = urlParams.get('redirect') || 'index.html?checkout=true';
+          regLink.href = `register.html?redirect=${encodeURIComponent(targetRedirect)}&reason=checkout`;
         }
       }
 

@@ -65,7 +65,75 @@ try {
           await setDoc(doc(firebaseDb, 'orders', String(o.id)), o, { merge: true });
         }
       }
-      console.log(`Firestore bootstrap sync completed successfully: ${prods.length} products, ${ords.length} orders.`);
+
+      // 4. Sincronizar clientes registrados con Firestore (bidireccional)
+      const { collection, getDocs } = require('firebase/firestore');
+      try {
+        const firestoreUsersSnap = await getDocs(collection(firebaseDb, 'users'));
+        const localUsers = getUsersFromServer();
+        let changed = false;
+        firestoreUsersSnap.forEach(docSnap => {
+          const uData = docSnap.data();
+          if (uData && uData.email) {
+            const exists = localUsers.find(u => u.email && u.email.toLowerCase() === uData.email.toLowerCase());
+            if (!exists) {
+              localUsers.push({
+                email: uData.email,
+                name: uData.name || '',
+                lastname: uData.lastname || '',
+                phone: uData.phone || '',
+                password: uData.password || '',
+                provider: uData.authProvider || 'local',
+                createdAt: uData.createdAt || uData.lastLogin || new Date().toISOString(),
+                updatedAt: uData.updatedAt || uData.lastLogin || new Date().toISOString()
+              });
+              changed = true;
+            } else {
+              if (uData.password && !exists.password) {
+                exists.password = uData.password;
+                changed = true;
+              }
+              if (uData.name && !exists.name) {
+                exists.name = uData.name;
+                changed = true;
+              }
+              if (uData.lastname && !exists.lastname) {
+                exists.lastname = uData.lastname;
+                changed = true;
+              }
+              if (uData.phone && !exists.phone) {
+                exists.phone = uData.phone;
+                changed = true;
+              }
+            }
+          }
+        });
+        if (changed) {
+          fs.writeFileSync(USERS_FILE, JSON.stringify(localUsers, null, 2), 'utf8');
+        }
+      } catch (pullErr) {
+        console.warn('Notice pulling users from Firestore:', pullErr.message);
+      }
+
+      const usrs = getUsersFromServer();
+      for (const u of usrs) {
+        if (u && u.email) {
+          const userDocId = u.email.replace(/[^a-zA-Z0-9]/g, '_');
+          const fbPayload = {
+            email: u.email,
+            name: u.name || '',
+            lastname: u.lastname || '',
+            phone: u.phone || '',
+            authProvider: u.provider || 'local',
+            lastLogin: u.updatedAt || new Date().toISOString()
+          };
+          if (u.password) {
+            fbPayload.password = u.password;
+          }
+          await setDoc(doc(firebaseDb, 'users', userDocId), fbPayload, { merge: true });
+        }
+      }
+      console.log(`Firestore bootstrap sync completed successfully: ${prods.length} products, ${ords.length} orders, ${usrs.length} users.`);
     } catch (syncErr) {
       console.warn('Firestore bootstrap sync notice:', syncErr.message);
     }
@@ -122,12 +190,157 @@ function saveOrderToServer(order) {
   }
 }
 
+async function deleteOrderFromServer(orderId) {
+  if (!orderId) return;
+  const orders = getOrdersFromServer();
+  const filtered = orders.filter(o => String(o.id).toLowerCase() !== String(orderId).toLowerCase());
+  fs.writeFileSync(ORDERS_FILE, JSON.stringify(filtered, null, 2), 'utf8');
+
+  // Firestore sync
+  if (firebaseDb) {
+    try {
+      const { doc, deleteDoc } = require('firebase/firestore');
+      await deleteDoc(doc(firebaseDb, 'orders', String(orderId))).catch(() => {});
+    } catch (e) {
+      console.warn('Error deleting order from Firestore:', e.message);
+    }
+  }
+
+  // Also clean notifications related to this order
+  try {
+    const notifs = getNotificationsFromServer();
+    const filteredNotifs = notifs.filter(n => String(n.orderId).toLowerCase() !== String(orderId).toLowerCase());
+    fs.writeFileSync(NOTIFICATIONS_FILE, JSON.stringify(filteredNotifs, null, 2), 'utf8');
+  } catch (e) {}
+}
+
+async function clearAllOrders() {
+  const orders = getOrdersFromServer();
+  fs.writeFileSync(ORDERS_FILE, JSON.stringify([], null, 2), 'utf8');
+  fs.writeFileSync(NOTIFICATIONS_FILE, JSON.stringify([], null, 2), 'utf8');
+
+  if (firebaseDb) {
+    try {
+      const { doc, deleteDoc, collection, getDocs } = require('firebase/firestore');
+      for (const o of orders) {
+        if (o && o.id) {
+          await deleteDoc(doc(firebaseDb, 'orders', String(o.id))).catch(() => {});
+        }
+      }
+      const knownSampleOrderIds = ['NAT-TC-389423', 'NAT-TEST-34385', 'NAT-ENV-90214'];
+      for (const oid of knownSampleOrderIds) {
+        await deleteDoc(doc(firebaseDb, 'orders', oid)).catch(() => {});
+      }
+      try {
+        const snap = await getDocs(collection(firebaseDb, 'orders'));
+        for (const docItem of snap.docs) {
+          await deleteDoc(doc(firebaseDb, 'orders', docItem.id)).catch(() => {});
+        }
+      } catch (errSnap) {
+        console.warn('Warning querying Firestore orders collection:', errSnap.message);
+      }
+    } catch (e) {
+      console.warn('Error clearing orders from Firestore:', e.message);
+    }
+  }
+}
+
 // Archivos para productos, usuarios y notificaciones
 const PRODUCTS_FILE = path.join(__dirname, 'products.json');
 const USERS_FILE = path.join(__dirname, 'users.json');
 const NOTIFICATIONS_FILE = path.join(__dirname, 'notifications.json');
 const ADMIN_CONFIG_FILE = path.join(__dirname, 'admin-config.json');
 const CONFIRMATIONS_FILE = path.join(__dirname, 'pending-confirmations.json');
+const RECOVERY_CODES_FILE = path.join(__dirname, 'recovery-codes.json');
+
+function getRecoveryCodesMap() {
+  if (fs.existsSync(RECOVERY_CODES_FILE)) {
+    try {
+      return JSON.parse(fs.readFileSync(RECOVERY_CODES_FILE, 'utf8')) || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  return {};
+}
+
+async function saveVerificationCode(email, code) {
+  const map = getRecoveryCodesMap();
+  const cleanEmail = String(email).toLowerCase().trim();
+  const record = {
+    email: cleanEmail,
+    code: String(code).trim(),
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 15 * 60 * 1000, // 15 minutos
+    verified: false,
+    used: false
+  };
+  map[cleanEmail] = record;
+  fs.writeFileSync(RECOVERY_CODES_FILE, JSON.stringify(map, null, 2), 'utf8');
+
+  if (firebaseDb) {
+    try {
+      const { doc, setDoc } = require('firebase/firestore');
+      await setDoc(doc(firebaseDb, 'verification_codes', cleanEmail), record, { merge: true });
+    } catch (e) {
+      console.warn('Notice saving verification code in Firestore:', e.message);
+    }
+  }
+  return record;
+}
+
+async function getVerificationCode(email) {
+  const cleanEmail = String(email).toLowerCase().trim();
+  const map = getRecoveryCodesMap();
+  if (map[cleanEmail]) {
+    return map[cleanEmail];
+  }
+
+  if (firebaseDb) {
+    try {
+      const { doc, getDoc } = require('firebase/firestore');
+      const snap = await getDoc(doc(firebaseDb, 'verification_codes', cleanEmail));
+      if (snap.exists()) {
+        const data = snap.data();
+        map[cleanEmail] = data;
+        return data;
+      }
+    } catch (e) {
+      console.warn('Notice reading verification code from Firestore:', e.message);
+    }
+  }
+  return null;
+}
+
+async function markVerificationCodeVerified(email) {
+  const cleanEmail = String(email).toLowerCase().trim();
+  const map = getRecoveryCodesMap();
+  if (map[cleanEmail]) {
+    map[cleanEmail].verified = true;
+    fs.writeFileSync(RECOVERY_CODES_FILE, JSON.stringify(map, null, 2), 'utf8');
+  }
+  if (firebaseDb) {
+    try {
+      const { doc, updateDoc } = require('firebase/firestore');
+      await updateDoc(doc(firebaseDb, 'verification_codes', cleanEmail), { verified: true });
+    } catch (e) {}
+  }
+}
+
+async function markVerificationCodeUsed(email) {
+  const cleanEmail = String(email).toLowerCase().trim();
+  const map = getRecoveryCodesMap();
+  if (map[cleanEmail]) {
+    map[cleanEmail].used = true;
+    fs.writeFileSync(RECOVERY_CODES_FILE, JSON.stringify(map, null, 2), 'utf8');
+  }
+  if (firebaseDb) {
+    try {
+      const { doc, updateDoc } = require('firebase/firestore');
+      await updateDoc(doc(firebaseDb, 'verification_codes', cleanEmail), { used: true });
+    } catch (e) {}
+  }
+}
 
 function getAdminConfig() {
   if (fs.existsSync(ADMIN_CONFIG_FILE)) {
@@ -300,11 +513,12 @@ async function notifyUserOfOrderStatusChange(order, oldStatus, newStatus, custom
   // 2. Enviar correo de notificación al usuario
   let emailSent = false;
   let emailError = null;
+  const activeCfg = getEmailConfig();
 
-  if (customerEmail && customerEmail.includes('@') && emailConfig.user && emailConfig.pass && nodemailer) {
+  if (customerEmail && customerEmail.includes('@') && activeCfg.user && activeCfg.pass && nodemailer) {
     try {
-      const transporter = createTransporter(emailConfig);
-      const fromAddress = `"${emailConfig.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${emailConfig.fromEmail || emailConfig.user}>`;
+      const transporter = createTransporter(activeCfg);
+      const fromAddress = `"${activeCfg.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${activeCfg.fromEmail || activeCfg.user}>`;
 
       const itemsRows = (order.items || []).map(it => `
         <tr>
@@ -480,15 +694,70 @@ function saveUserToFile(user) {
     try {
       const { doc, setDoc } = require('firebase/firestore');
       const safeDocId = user.email.trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '_');
-      setDoc(doc(firebaseDb, 'users', safeDocId), {
+      const userPayload = {
         email: user.email.trim().toLowerCase(),
         name: user.name || '',
         lastname: user.lastname || '',
         phone: user.phone || '',
         authProvider: user.authProvider || user.provider || 'password',
         updatedAt: new Date().toISOString()
-      }, { merge: true }).catch(err => console.warn('Firestore user save notice:', err.message));
+      };
+      if (user.password) {
+        userPayload.password = user.password;
+      }
+      setDoc(doc(firebaseDb, 'users', safeDocId), userPayload, { merge: true }).catch(err => console.warn('Firestore user save notice:', err.message));
     } catch (e) {}
+  }
+}
+
+async function deleteUserFromServer(email) {
+  if (!email) return;
+  const adminCfg = getAdminConfig();
+  if (email.trim().toLowerCase() === adminCfg.email.trim().toLowerCase()) {
+    throw new Error('No se puede eliminar la cuenta de Administrador.');
+  }
+  const users = getUsersFromServer();
+  const filtered = users.filter(u => u.email && u.email.trim().toLowerCase() !== email.trim().toLowerCase());
+  fs.writeFileSync(USERS_FILE, JSON.stringify(filtered, null, 2), 'utf8');
+
+  if (firebaseDb) {
+    try {
+      const { doc, deleteDoc } = require('firebase/firestore');
+      const safeDocId = email.trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '_');
+      await deleteDoc(doc(firebaseDb, 'users', safeDocId)).catch(() => {});
+    } catch (e) {
+      console.warn('Error deleting user from Firestore:', e.message);
+    }
+  }
+}
+
+async function clearAllRegularUsers() {
+  const adminCfg = getAdminConfig();
+  const adminUser = {
+    email: adminCfg.email,
+    name: adminCfg.name,
+    lastname: adminCfg.lastname,
+    phone: '300 000 0000',
+    password: adminCfg.password,
+    provider: 'admin',
+    role: adminCfg.role || 'Super Administrador Nativa',
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  fs.writeFileSync(USERS_FILE, JSON.stringify([adminUser], null, 2), 'utf8');
+
+  if (firebaseDb) {
+    try {
+      const { doc, deleteDoc } = require('firebase/firestore');
+      // Also delete any existing sample customer accounts in Firestore
+      const knownSampleEmails = ['cliente.nativa@gmail.com', 'carlos.mendez@gmail.com', 'carolina.h@gmail.com', 'af.gomez@hotmail.com'];
+      for (const semail of knownSampleEmails) {
+        const safeDocId = semail.trim().toLowerCase().replace(/[^a-zA-Z0-9_-]/g, '_');
+        await deleteDoc(doc(firebaseDb, 'users', safeDocId)).catch(() => {});
+      }
+    } catch (e) {
+      console.warn('Error clearing regular users in Firestore:', e.message);
+    }
   }
 }
 
@@ -518,6 +787,23 @@ if (process.env.SMTP_KEY || process.env.SMTP_PASS) emailConfig.pass = process.en
 if (process.env.SMTP_HOST) emailConfig.host = process.env.SMTP_HOST;
 if (process.env.SMTP_PORT) emailConfig.port = parseInt(process.env.SMTP_PORT, 10) || 465;
 if (!emailConfig.fromEmail && emailConfig.user) emailConfig.fromEmail = emailConfig.user;
+
+function getEmailConfig() {
+  let cfg = { ...emailConfig };
+  if (fs.existsSync(CONFIG_FILE)) {
+    try {
+      const saved = JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
+      cfg = { ...cfg, ...saved };
+    } catch (e) {}
+  }
+  if (process.env.SMTP_KEY || process.env.SMTP_PASS) {
+    cfg.pass = process.env.SMTP_KEY || process.env.SMTP_PASS;
+  }
+  if (process.env.SMTP_USER) {
+    cfg.user = process.env.SMTP_USER;
+  }
+  return cfg;
+}
 
 function createTransporter(config) {
   if (!nodemailer) {
@@ -709,7 +995,9 @@ app.post('/api/send-order-email', async (req, res) => {
       }
     });
 
-    if (!emailConfig.user || !emailConfig.pass) {
+    const activeCfg = getEmailConfig();
+
+    if (!activeCfg.user || !activeCfg.pass) {
       return res.json({
         success: false,
         warning: true,
@@ -717,8 +1005,8 @@ app.post('/api/send-order-email', async (req, res) => {
       });
     }
 
-    const transporter = createTransporter(emailConfig);
-    const fromAddress = `"${emailConfig.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${emailConfig.fromEmail || emailConfig.user}>`;
+    const transporter = createTransporter(activeCfg);
+    const fromAddress = `"${activeCfg.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${activeCfg.fromEmail || activeCfg.user}>`;
 
     const host = req.get('host') || 'localhost:3000';
     const protocol = req.headers['x-forwarded-proto'] || req.protocol || 'https';
@@ -945,6 +1233,27 @@ const handleOrderStatusUpdate = async (req, res) => {
 app.post('/api/orders/:id/status', handleOrderStatusUpdate);
 app.put('/api/orders/:id/status', handleOrderStatusUpdate);
 
+// Endpoint para eliminar todas las órdenes del sistema
+app.delete('/api/orders/all', async (req, res) => {
+  try {
+    await clearAllOrders();
+    res.json({ success: true, message: 'Todos los pedidos de prueba han sido eliminados del sistema exitosamente.' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+// Endpoint para eliminar un pedido específico por ID
+app.delete('/api/orders/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    await deleteOrderFromServer(id);
+    res.json({ success: true, message: `Pedido #${id} eliminado con éxito del sistema.` });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
 // Endpoints para consultar y gestionar notificaciones de usuarios
 app.get('/api/notifications', (req, res) => {
   try {
@@ -1053,13 +1362,74 @@ app.post('/api/users/sync', async (req, res) => {
   }
 });
 
-// Endpoint para obtener la lista de usuarios registrados (excluye al administrador)
+// Endpoint para obtener la lista de usuarios registrados en la base de datos
 app.get('/api/users', (req, res) => {
   try {
     const adminCfg = getAdminConfig();
     const allUsers = getUsersFromServer();
-    const filteredUsers = allUsers.filter(u => u.email && u.email.trim().toLowerCase() !== adminCfg.email.trim().toLowerCase());
-    res.json({ success: true, users: filteredUsers });
+    
+    // Asegurar que el Administrador siempre exista en la base de datos
+    const adminInList = allUsers.find(u => u.email && u.email.trim().toLowerCase() === adminCfg.email.trim().toLowerCase());
+    const adminUser = adminInList || {
+      email: adminCfg.email,
+      name: adminCfg.name,
+      lastname: adminCfg.lastname,
+      phone: '300 000 0000',
+      role: adminCfg.role || 'Super Administrador Nativa',
+      provider: 'admin',
+      isAdmin: true,
+      createdAt: adminCfg.updatedAt || new Date().toISOString()
+    };
+    
+    // Formatear la lista de usuarios de la base de datos (ocultando contraseñas por seguridad)
+    let usersWithRoles = allUsers.map(u => {
+      const isAdm = u.email && u.email.trim().toLowerCase() === adminCfg.email.trim().toLowerCase();
+      const safeUser = { ...u };
+      delete safeUser.password;
+      return {
+        ...safeUser,
+        isAdmin: isAdm,
+        role: isAdm ? (u.role || adminCfg.role || 'Super Administrador Nativa') : (u.role || 'Cliente')
+      };
+    });
+
+    if (!adminInList) {
+      const safeAdmin = { ...adminUser };
+      delete safeAdmin.password;
+      usersWithRoles.unshift({
+        ...safeAdmin,
+        isAdmin: true,
+        role: adminCfg.role || 'Super Administrador Nativa'
+      });
+    }
+
+    res.json({ 
+      success: true, 
+      users: usersWithRoles,
+      total: usersWithRoles.length,
+      admin: adminCfg.email
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Endpoint para eliminar todos los clientes normales del sistema (manteniendo únicamente al Administrador)
+app.delete('/api/users/all', async (req, res) => {
+  try {
+    await clearAllRegularUsers();
+    res.json({ success: true, message: 'Todos los clientes han sido eliminados del sistema. El único usuario registrado es el Administrador.' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Endpoint para eliminar un usuario específico por correo
+app.delete('/api/users/:email', async (req, res) => {
+  try {
+    const { email } = req.params;
+    await deleteUserFromServer(email);
+    res.json({ success: true, message: `Usuario ${email} eliminado exitosamente.` });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
@@ -1068,7 +1438,9 @@ app.get('/api/users', (req, res) => {
 // Enviar correo de confirmación para cambio de correo electrónico
 async function sendConfirmationEmail(toEmail, confirmationUrl, type, recipientName, req) {
   try {
-    if (!emailConfig.user || !emailConfig.pass) {
+    const activeCfg = getEmailConfig();
+
+    if (!activeCfg.user || !activeCfg.pass) {
       console.log('--- ENLACE DE CONFIRMACIÓN DE CORREO (SMTP pendiente) ---');
       console.log(`Destinatario: ${toEmail} | Tipo: ${type}`);
       console.log(`Enlace de confirmación: ${confirmationUrl}`);
@@ -1076,8 +1448,8 @@ async function sendConfirmationEmail(toEmail, confirmationUrl, type, recipientNa
       return { sent: false, simulated: true, url: confirmationUrl };
     }
 
-    const transporter = createTransporter(emailConfig);
-    const fromAddress = `"${emailConfig.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${emailConfig.fromEmail || emailConfig.user}>`;
+    const transporter = createTransporter(activeCfg);
+    const fromAddress = `"${activeCfg.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${activeCfg.fromEmail || activeCfg.user}>`;
 
     const titleText = type === 'admin' 
       ? 'Confirmación de Cambio de Correo de Administrador'
@@ -1133,13 +1505,20 @@ async function sendConfirmationEmail(toEmail, confirmationUrl, type, recipientNa
 // AUTENTICACIÓN ESTRICTA DEL PANEL DE ADMINISTRADOR
 app.post('/api/admin/login', (req, res) => {
   const { email, password } = req.body || {};
+  const cleanEmail = (email || '').trim().toLowerCase();
+  const cleanPass = (password || '').trim();
   const currentAdmin = getAdminConfig();
+
+  const isPasswordValid = Boolean(
+    currentAdmin.password && (cleanPass === currentAdmin.password.trim() || password === currentAdmin.password)
+  );
+
   if (
-    email && 
-    email.trim().toLowerCase() === currentAdmin.email.toLowerCase() && 
-    password === currentAdmin.password
+    cleanEmail && 
+    cleanEmail === currentAdmin.email.trim().toLowerCase() && 
+    isPasswordValid
   ) {
-    const token = 'nat_adm_' + Buffer.from(`${email}:${Date.now()}:adminSecretKey`).toString('base64');
+    const token = 'nat_adm_' + Buffer.from(`${cleanEmail}:${Date.now()}:adminSecretKey`).toString('base64');
     return res.json({
       success: true,
       token,
@@ -1157,6 +1536,271 @@ app.post('/api/admin/login', (req, res) => {
     success: false,
     message: 'Credenciales de administrador incorrectas. Acceso denegado.'
   });
+});
+
+// Endpoint para verificar si un correo ya existe en el sistema
+app.get('/api/auth/check-user', (req, res) => {
+  try {
+    const email = (req.query.email || '').trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Email requerido' });
+    }
+
+    const adminCfg = getAdminConfig();
+    if (email === adminCfg.email.trim().toLowerCase()) {
+      return res.json({
+        success: true,
+        exists: true,
+        isAdmin: true,
+        user: {
+          email,
+          name: adminCfg.name,
+          lastname: adminCfg.lastname || '',
+          phone: '',
+          hasPassword: true
+        }
+      });
+    }
+
+    const users = getUsersFromServer();
+    const found = users.find(u => u.email && u.email.trim().toLowerCase() === email);
+    if (found) {
+      return res.json({
+        success: true,
+        exists: true,
+        isAdmin: false,
+        user: {
+          email: found.email,
+          name: found.name || '',
+          lastname: found.lastname || '',
+          phone: found.phone || '',
+          hasPassword: !!found.password
+        }
+      });
+    }
+
+    return res.json({ success: true, exists: false });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Endpoint unificado de inicio de sesión (Administrador y Clientes)
+app.post('/api/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body || {};
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanPass = password || '';
+
+    if (!cleanEmail || !cleanPass) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'El correo/contraseña ingresados no son válidos, inténtelo de nuevo.' 
+      });
+    }
+
+    // 1. Verificar si corresponde al Administrador
+    const adminCfg = getAdminConfig();
+    const users = getUsersFromServer();
+    let user = users.find(u => u.email && u.email.trim().toLowerCase() === cleanEmail);
+
+    if (cleanEmail === adminCfg.email.trim().toLowerCase()) {
+      const isPassValid = Boolean(
+        (adminCfg.password && (cleanPass === adminCfg.password.trim() || password === adminCfg.password)) ||
+        (user && user.password && (user.password.trim() === cleanPass || user.password === password))
+      );
+
+      if (isPassValid) {
+        const token = 'nat_adm_' + Buffer.from(`${cleanEmail}:${Date.now()}:adminSecretKey`).toString('base64');
+        return res.json({
+          success: true,
+          isAdmin: true,
+          token,
+          admin: {
+            email: adminCfg.email,
+            name: adminCfg.name,
+            lastname: adminCfg.lastname || 'Pacheco',
+            role: adminCfg.role || 'Super Administrador Nativa'
+          },
+          user: {
+            email: adminCfg.email,
+            name: adminCfg.name,
+            lastname: adminCfg.lastname || 'Pacheco',
+            phone: (user && user.phone) || '300 000 0000'
+          },
+          message: 'Inicio de sesión como administrador exitoso'
+        });
+      } else {
+        return res.status(401).json({ 
+          success: false, 
+          message: 'El correo/contraseña ingresados no son válidos, inténtelo de nuevo.' 
+        });
+      }
+    }
+
+    // 2. Si no se encontró en users.json o no tiene contraseña, consultar en Firestore
+    if ((!user || !user.password) && firebaseDb) {
+      try {
+        const { doc, getDoc } = require('firebase/firestore');
+        const safeDocId = cleanEmail.replace(/[^a-zA-Z0-9_-]/g, '_');
+        const snap = await getDoc(doc(firebaseDb, 'users', safeDocId));
+        if (snap.exists()) {
+          const fbU = snap.data();
+          if (fbU) {
+            if (!user) {
+              user = {
+                email: cleanEmail,
+                name: fbU.name || '',
+                lastname: fbU.lastname || '',
+                phone: fbU.phone || '',
+                password: fbU.password || '',
+                provider: fbU.authProvider || 'password',
+                createdAt: fbU.createdAt || new Date().toISOString(),
+                updatedAt: fbU.updatedAt || new Date().toISOString()
+              };
+              users.push(user);
+              fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+            } else if (fbU.password && !user.password) {
+              user.password = fbU.password;
+              fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+            }
+          }
+        }
+      } catch (e) {
+        console.warn('Firestore fallback lookup notice:', e);
+      }
+    }
+
+    // 3. Verificar en la base de usuarios regulares
+    if (user) {
+      // Caso A: Si el usuario existe pero no tenía contraseña registrada (p. ej. cuenta cliente registrada previamente o restaurada)
+      if (!user.password && cleanPass) {
+        user.password = cleanPass;
+        user.updatedAt = new Date().toISOString();
+        const uIdx = users.findIndex(u => u.email && u.email.toLowerCase() === cleanEmail);
+        if (uIdx >= 0) {
+          users[uIdx].password = cleanPass;
+          users[uIdx].updatedAt = new Date().toISOString();
+        } else {
+          users.push(user);
+        }
+        fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+
+        // Persistir la contraseña en Firestore
+        if (firebaseDb) {
+          try {
+            const { doc, setDoc } = require('firebase/firestore');
+            const safeDocId = cleanEmail.replace(/[^a-zA-Z0-9_-]/g, '_');
+            await setDoc(doc(firebaseDb, 'users', safeDocId), {
+              password: cleanPass,
+              updatedAt: new Date().toISOString()
+            }, { merge: true });
+          } catch (e) {
+            console.warn('Error saving password to Firestore during login:', e);
+          }
+        }
+
+        return res.json({
+          success: true,
+          isAdmin: false,
+          user: {
+            email: user.email,
+            name: user.name || '',
+            lastname: user.lastname || '',
+            phone: user.phone || '',
+            provider: user.provider || 'password'
+          },
+          message: 'Inicio de sesión exitoso'
+        });
+      }
+
+      // Caso B: Si tiene contraseña guardada, validar coincidencia
+      if (user.password && (user.password === cleanPass || user.password === password || user.password.trim() === cleanPass.trim())) {
+        return res.json({
+          success: true,
+          isAdmin: false,
+          user: {
+            email: user.email,
+            name: user.name || '',
+            lastname: user.lastname || '',
+            phone: user.phone || '',
+            provider: user.provider || 'password'
+          },
+          message: 'Inicio de sesión exitoso'
+        });
+      }
+    }
+
+    return res.status(401).json({
+      success: false,
+      message: 'El correo/contraseña ingresados no son válidos, inténtelo de nuevo.'
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Endpoint unificado para registro de usuarios (con Google u otros métodos)
+app.post('/api/auth/register', (req, res) => {
+  try {
+    const { name, lastname, email, phone, password, provider } = req.body || {};
+    const cleanEmail = (email || '').trim().toLowerCase();
+    const cleanName = (name || '').trim();
+    const cleanLastname = (lastname || '').trim();
+    const cleanPhone = (phone || '').trim();
+    const cleanPass = password || '';
+
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa un correo electrónico válido.' });
+    }
+    if (!cleanName) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa tu nombre.' });
+    }
+    if (!cleanLastname) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa tu apellido.' });
+    }
+    if (!cleanPhone) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa tu número de teléfono.' });
+    }
+    if (!cleanPass || cleanPass.length < 6) {
+      return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 6 caracteres.' });
+    }
+
+    const adminCfg = getAdminConfig();
+    if (cleanEmail === adminCfg.email.trim().toLowerCase()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Este correo está reservado exclusivamente para la administración del sistema.'
+      });
+    }
+
+    const userData = {
+      email: cleanEmail,
+      name: cleanName,
+      lastname: cleanLastname,
+      phone: cleanPhone,
+      password: cleanPass,
+      provider: provider || 'local',
+      authProvider: provider || 'local',
+      updatedAt: new Date().toISOString()
+    };
+
+    saveUserToFile(userData);
+
+    res.json({
+      success: true,
+      message: 'Cuenta creada y activada exitosamente',
+      user: {
+        email: cleanEmail,
+        name: cleanName,
+        lastname: cleanLastname,
+        phone: cleanPhone,
+        provider: userData.provider
+      }
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
 });
 
 // Middleware simple de verificación para rutas de administración
@@ -1335,12 +1979,14 @@ app.post('/api/user/profile', async (req, res) => {
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
+      if (password) newUser.password = password;
       users.push(newUser);
       userIndex = users.length - 1;
     } else {
       if (name) users[userIndex].name = name.trim();
       if (lastname !== undefined) users[userIndex].lastname = lastname.trim();
       if (phone !== undefined) users[userIndex].phone = phone.trim();
+      if (password) users[userIndex].password = password;
       users[userIndex].updatedAt = new Date().toISOString();
     }
     fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
@@ -1349,7 +1995,7 @@ app.post('/api/user/profile', async (req, res) => {
     if (firebaseDb) {
       try {
         const { doc, setDoc } = require('firebase/firestore');
-        const userDocId = cleanCurrent.replace(/[^a-zA-Z0-9]/g, '_');
+        const userDocId = cleanCurrent.replace(/[^a-zA-Z0-9_-]/g, '_');
         setDoc(doc(firebaseDb, 'users', userDocId), users[userIndex], { merge: true })
           .catch(err => console.warn('Firestore user update warning:', err.message));
       } catch (e) {}
@@ -1539,6 +2185,205 @@ app.all('/api/auth/confirm-email', async (req, res) => {
   }
 });
 
+// RECUPERACIÓN DE CONTRASEÑA: 1. Generar código aleatorio único, guardarlo en BD y enviarlo al correo
+app.post('/api/auth/send-recovery-code', async (req, res) => {
+  try {
+    const email = (req.body && req.body.email ? String(req.body.email) : '').trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa tu correo electrónico.' });
+    }
+    if (!email.includes('@') || !email.includes('.')) {
+      return res.status(400).json({ success: false, message: 'Por favor ingresa un correo electrónico válido.' });
+    }
+
+    // Generar código aleatorio de 6 dígitos único e irrepetible para cada solicitud
+    const code = Math.floor(100000 + Math.random() * 900000).toString();
+    await saveVerificationCode(email, code);
+    console.log(`[RECUPERACIÓN] Código de seguridad generado para ${email}: ${code}`);
+
+    // Enviar código de seguridad al correo del usuario mediante el servicio SMTP de Nodemailer
+    const emailConfig = getEmailConfig();
+    let emailSent = false;
+    let mailError = null;
+
+    if (emailConfig.user && emailConfig.pass && nodemailer) {
+      try {
+        const transporter = createTransporter(emailConfig);
+        const fromAddress = `"${emailConfig.fromName || 'Nativa Alimentos & Cosmética Natural'}" <${emailConfig.fromEmail || emailConfig.user}>`;
+        
+        await transporter.sendMail({
+          from: fromAddress,
+          to: email,
+          subject: `🌿 Tu Código de Verificación Nativa: ${code}`,
+          html: `
+            <div style="font-family: 'Segoe UI', Arial, sans-serif; max-width: 580px; margin: 0 auto; border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); background: #ffffff;">
+              <div style="background: #1f361a; padding: 26px 20px; text-align: center; color: #ffffff;">
+                <h1 style="margin: 0; font-size: 26px; letter-spacing: 2px;">NATIVA</h1>
+                <p style="margin: 6px 0 0 0; font-size: 13px; color: #a7f3d0; text-transform: uppercase; letter-spacing: 1px;">Alimentos & Cosmética Natural Consciente</p>
+              </div>
+              <div style="padding: 30px 24px; text-align: center;">
+                <h2 style="color: #1f361a; margin-top: 0; font-size: 22px;">Código de Verificación</h2>
+                <p style="color: #4b5563; font-size: 15px; line-height: 1.6; margin-bottom: 24px;">
+                  Hemos recibido una solicitud para verificar tu identidad y restablecer tu contraseña en Nativa.
+                </p>
+                <div style="background: #f0fdf4; border: 2px dashed #86efac; border-radius: 12px; padding: 22px; margin: 24px auto; max-width: 320px;">
+                  <div style="font-size: 12px; color: #166534; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;">Tu código de seguridad</div>
+                  <div style="font-size: 36px; font-weight: 800; color: #1f361a; letter-spacing: 6px; font-family: monospace;">${code}</div>
+                  <div style="font-size: 12px; color: #6b7280; margin-top: 8px;">Válido por 15 minutos</div>
+                </div>
+                <p style="color: #6b7280; font-size: 13px; line-height: 1.5; margin-top: 24px;">
+                  Ingresa este código en la pantalla de verificación para continuar. Si tú no solicitaste este código, puedes ignorar este mensaje de forma segura.
+                </p>
+              </div>
+              <div style="background: #f8fafc; padding: 16px; text-align: center; font-size: 12px; color: #94a3b8; border-top: 1px solid #e5e7eb;">
+                Nativa &copy; 2026 - Productos Naturales. Todos los derechos reservados.
+              </div>
+            </div>
+          `
+        });
+        emailSent = true;
+        console.log(`Verification code successfully sent via email to: ${email}`);
+      } catch (err) {
+        console.error('Error sending verification code email:', err.message);
+        mailError = err.message;
+      }
+    }
+
+    return res.json({
+      success: true,
+      message: emailSent
+        ? `Código de verificación enviado al correo ${email}. Revisa tu bandeja de entrada o spam.`
+        : `Código generado en la base de datos para ${email}.`,
+      email,
+      emailSent
+    });
+  } catch (err) {
+    console.error('Send recovery code error:', err);
+    res.status(500).json({ success: false, message: 'Error al enviar código de verificación: ' + err.message });
+  }
+});
+
+// RECUPERACIÓN DE CONTRASEÑA: 2. Confirmar si el código ingresado por el usuario es el correcto
+app.post('/api/auth/verify-recovery-code', async (req, res) => {
+  try {
+    const email = (req.body && req.body.email ? String(req.body.email) : '').trim().toLowerCase();
+    const code = (req.body && req.body.code ? String(req.body.code) : '').trim();
+
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'El correo electrónico es requerido.' });
+    }
+    if (!code) {
+      return res.status(400).json({ success: false, message: 'El código ingresado es inválido.' });
+    }
+
+    const record = await getVerificationCode(email);
+    if (!record) {
+      return res.status(400).json({ success: false, message: 'El código ingresado es inválido.' });
+    }
+
+    if (Date.now() > record.expiresAt) {
+      return res.status(400).json({ success: false, message: 'El código ingresado es inválido.' });
+    }
+
+    if (record.used) {
+      return res.status(400).json({ success: false, message: 'El código ingresado es inválido.' });
+    }
+
+    // Validar coincidencia estricta del código
+    if (String(record.code).trim() !== String(code).trim()) {
+      return res.status(400).json({ success: false, message: 'El código ingresado es inválido.' });
+    }
+
+    // Marcar código como verificado
+    await markVerificationCodeVerified(email);
+
+    return res.json({
+      success: true,
+      message: 'Código de verificación confirmado con éxito.',
+      verified: true
+    });
+  } catch (err) {
+    console.error('Verify recovery code error:', err);
+    res.status(500).json({ success: false, message: 'El código ingresado es inválido.' });
+  }
+});
+
+// RECUPERACIÓN DE CONTRASEÑA: 3. Restablecer la nueva contraseña tras validar el código
+app.post('/api/auth/reset-password', async (req, res) => {
+  try {
+    const email = (req.body && req.body.email ? String(req.body.email) : '').trim().toLowerCase();
+    const code = (req.body && req.body.code ? String(req.body.code) : '').trim();
+    const newPassword = (req.body && req.body.newPassword ? String(req.body.newPassword) : '').trim();
+
+    if (!email || !code || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Todos los campos son obligatorios.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'La contraseña debe tener al menos 6 caracteres.' });
+    }
+
+    const record = await getVerificationCode(email);
+    if (!record || String(record.code).trim() !== String(code).trim() || !record.verified || record.used) {
+      return res.status(400).json({ success: false, message: 'El código no ha sido verificado, ya ha sido utilizado o ha expirado.' });
+    }
+
+    // 1. Si es el Administrador
+    const adminCfg = getAdminConfig();
+    if (email === adminCfg.email.toLowerCase()) {
+      adminCfg.password = newPassword;
+      adminCfg.updatedAt = new Date().toISOString();
+      saveAdminConfig(adminCfg);
+    } else {
+      // 2. Si es usuario regular
+      const users = getUsersFromServer();
+      let userIdx = users.findIndex(u => (u.email || '').toLowerCase() === email);
+      if (userIdx >= 0) {
+        users[userIdx].password = newPassword;
+        users[userIdx].updatedAt = new Date().toISOString();
+      } else {
+        users.push({
+          email,
+          name: '',
+          lastname: '',
+          phone: '',
+          password: newPassword,
+          provider: 'password',
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        });
+        userIdx = users.length - 1;
+      }
+      fs.writeFileSync(USERS_FILE, JSON.stringify(users, null, 2), 'utf8');
+
+      if (firebaseDb) {
+        try {
+          const { doc, setDoc } = require('firebase/firestore');
+          const docId = email.replace(/[^a-zA-Z0-9_-]/g, '_');
+          await setDoc(doc(firebaseDb, 'users', docId), {
+            email,
+            password: newPassword,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+        } catch (e) {
+          console.warn('Error saving password to Firestore during reset:', e);
+        }
+      }
+    }
+
+    // Invalidad el código usado
+    await markVerificationCodeUsed(email);
+
+    return res.json({
+      success: true,
+      message: '¡Tu contraseña ha sido restablecida exitosamente!'
+    });
+  } catch (err) {
+    console.error('Reset password error:', err);
+    res.status(500).json({ success: false, message: 'Error al restablecer contraseña: ' + err.message });
+  }
+});
+
 // GESTIÓN DE PRODUCTOS: Obtener catálogo completo
 app.get('/api/products', (req, res) => {
   try {
@@ -1679,8 +2524,10 @@ app.get('/api/auth/oauth-url', (req, res) => {
   const redirectUri = `${origin}/auth/callback`;
 
   if (provider === 'google') {
-    const googleClientId = process.env.GOOGLE_CLIENT_ID;
+    let googleClientId = (process.env.GOOGLE_CLIENT_ID || '').trim();
     if (googleClientId) {
+      // Limpiar prefijos http:// o https:// y barras inclinadas finales que invalidan el Client ID en Google
+      googleClientId = googleClientId.replace(/^https?:\/\//i, '').replace(/\/+$/, '').trim();
       const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(googleClientId)}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=code&scope=openid%20email%20profile&prompt=select_account`;
       return res.json({ success: true, url: googleAuthUrl, hasCustomKey: true });
     }
@@ -1690,8 +2537,9 @@ app.get('/api/auth/oauth-url', (req, res) => {
       hasCustomKey: false
     });
   } else if (provider === 'facebook') {
-    const facebookAppId = process.env.FACEBOOK_APP_ID;
+    let facebookAppId = (process.env.FACEBOOK_APP_ID || '').trim();
     if (facebookAppId) {
+      facebookAppId = facebookAppId.replace(/^https?:\/\//i, '').replace(/\/+$/, '').trim();
       const fbAuthUrl = `https://www.facebook.com/v19.0/dialog/oauth?client_id=${encodeURIComponent(facebookAppId)}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email,public_profile&response_type=code`;
       return res.json({ success: true, url: fbAuthUrl, hasCustomKey: true });
     }
@@ -1728,10 +2576,13 @@ app.get(['/auth/callback', '/auth/callback/'], (req, res) => {
         <p style="font-size: 14px; color: #64748b;">Conectando con tu cuenta de Nativa y cerrando ventana...</p>
       </div>
       <script>
+        const queryParams = new URLSearchParams(window.location.search);
+        const emailParam = queryParams.get('email') || '';
+        const nameParam = queryParams.get('name') || '';
         const user = {
-          email: 'cliente.nativa@gmail.com',
-          name: 'Cliente',
-          lastname: 'Nativa',
+          email: emailParam,
+          name: nameParam,
+          lastname: '',
           provider: 'OAuth'
         };
         if (window.opener) {

@@ -1512,47 +1512,41 @@
       if (stored) {
         try {
           const parsed = JSON.parse(stored);
-          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+          if (Array.isArray(parsed)) return parsed;
         } catch (e) {
           console.error(e);
         }
       }
-
-      // Pedido demo con fecha de hoy para nuevo usuario
-      const defaultOrder = {
-        id: 'NAT-TC-389423',
-        date: new Date().toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' }),
-        timestamp: Date.now(),
-        items: [
-          { id: 1, name: 'Granola Nativa Artesanal', price: 18500, qty: 1, img: 'img/productos/Granola_Nativa.png' },
-          { id: 3, name: 'Infusión Relax y Calma', price: 14500, qty: 1, img: 'img/productos/Infusión_relax.png' }
-        ],
-        shippingCost: 3900,
-        total: 36900,
-        status: 'En Preparación', // 'Confirmación', 'En Preparación', 'Envío en Tránsito', 'En Reparto', 'Entregado'
-        paymentMethod: 'Tarjeta de Crédito / Débito',
-        carrier: 'Envía Express Colombia',
-        trackingNumber: 'ENV-COL-948271',
-        shippingAddress: {
-          fullName: 'Carlos Méndez',
-          phone: '+57 312 456 7890',
-          email: 'carlos.mendez@nativanatural.com',
-          address: 'Calle 7 # 12-45',
-          city: 'Garzón',
-          department: 'Huila'
-        }
-      };
-
-      const initialList = [defaultOrder];
-      localStorage.setItem('nativa_orders', JSON.stringify(initialList));
-      return initialList;
+      return [];
     }
 
     async function syncOrdersWithServer() {
       try {
         const res = await fetch('/api/orders');
         const data = await res.json();
-        if (data && data.success && Array.isArray(data.orders) && data.orders.length > 0) {
+        if (data && data.success && Array.isArray(data.orders)) {
+          if (data.orders.length === 0) {
+            localStorage.setItem('nativa_orders', JSON.stringify([]));
+            const countSpan = document.getElementById('perfil-orders-count');
+            if (countSpan) countSpan.textContent = '0';
+            const container = document.getElementById('perfil-orders-list-container');
+            if (container) {
+              container.innerHTML = `
+                <div style="text-align:center; padding:40px 16px; background:#ffffff; border:1px dashed #cfe0cb; border-radius:14px;">
+                  <div style="width:58px; height:58px; border-radius:50%; background:#e8f4e5; display:inline-flex; align-items:center; justify-content:center; color:var(--verde-bosque); font-size:26px; margin-bottom:12px;">
+                    <i class="fas fa-box-open"></i>
+                  </div>
+                  <h5 style="margin:0 0 6px 0; color:var(--verde-bosque); font-size:18px; font-weight:700;">Aún no tienes pedidos registrados</h5>
+                  <p style="font-size:13.5px; color:var(--text-muted); margin:0 0 18px 0; max-width:440px; margin-left:auto; margin-right:auto;">Explora nuestro catálogo de productos conscientes y realiza tu primera compra.</p>
+                  <a href="index.html#portfolio" class="btn btn-primary" style="text-decoration:none; display:inline-flex;">
+                    <i class="fas fa-store"></i> Ver Catálogo de Productos
+                  </a>
+                </div>
+              `;
+            }
+            return;
+          }
+
           const stored = localStorage.getItem('nativa_orders');
           let localOrders = [];
           if (stored) {
@@ -2129,6 +2123,13 @@
       btnFinalizarCompra.addEventListener('click', () => {
         if (!cart || cart.length === 0) {
           showToast('Tu carrito está vacío. Agrega productos antes de finalizar.');
+          return;
+        }
+        const userEmail = localStorage.getItem('nativa_user_email');
+        if (!userEmail) {
+          closeCart();
+          showToast('Debes iniciar sesión o registrarte para realizar tu compra.');
+          window.location.href = 'login.html?redirect=' + encodeURIComponent('index.html?checkout=true') + '&reason=checkout';
           return;
         }
         window.location.href = 'index.html?checkout=true';

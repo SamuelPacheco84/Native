@@ -1,1 +1,23 @@
-[]
+[
+  {
+    "email": "samueldpp12@gmail.com",
+    "name": "Samuel",
+    "lastname": "Pacheco",
+    "phone": "300 000 0000",
+    "password": "SuperPassword123",
+    "provider": "admin",
+    "role": "Super Administrador Nativa",
+    "createdAt": "2026-09-20T21:12:53.629Z",
+    "updatedAt": "2026-09-20T21:32:00.000Z"
+  },
+  {
+    "email": "samueldpp008@gmail.com",
+    "name": "Samuel",
+    "lastname": "Pacheco",
+    "phone": "3005427742",
+    "provider": "password",
+    "createdAt": "2026-09-21T12:04:06.154Z",
+    "updatedAt": "2026-09-21T12:07:30.273Z",
+    "password": "SuperPassword123"
+  }
+]
